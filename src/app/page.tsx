@@ -35,7 +35,7 @@ export default function Home() {
           damping: 18,    // slightly underdamped for a small springy pop bounce
         }}
       >
-        <TrainerCard onEnterPortfolio={() => startTransition("/portfolio")} />
+        <TrainerCard onEnterPortfolio={(tab) => startTransition(`/portfolio?tab=${tab}`)} />
       </motion.div>
 
       {/* sizing controls panel in bottom right */}

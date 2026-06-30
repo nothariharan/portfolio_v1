@@ -6,8 +6,10 @@ import { useCardTilt } from "../../hooks/use-card-tilt";
 import { CardFront } from "./card-front";
 import { CardBack } from "./card-back";
 
+import type { TabKey } from "../portfolio/data";
+
 interface TrainerCardProps {
-  onEnterPortfolio: () => void;
+  onEnterPortfolio: (tab: TabKey) => void;
 }
 
 export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
@@ -20,7 +22,7 @@ export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
   }
 
   return (
-    <div className="perspective-1000 w-[700px] max-w-full h-[494px] flex items-center justify-center p-2">
+    <div className="perspective-1000 w-[700px] max-w-full h-[580px] flex items-center justify-center p-2">
       {/* outer container handles 3d mouse-tilt and floating idle animation */}
       <motion.div
         className="w-full h-full relative cursor-pointer select-none"
