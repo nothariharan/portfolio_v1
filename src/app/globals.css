@@ -1,26 +1,56 @@
 @import "tailwindcss";
+@import "../styles/pixel.css";
+
+/* setup custom tailwind theme variables */
+@theme {
+  --font-pixel: var(--font-pixel), monospace;
+  --font-sans: var(--font-sans), sans-serif;
+  --font-serif: var(--font-serif), serif;
+  --font-card: var(--font-card), monospace;
+  
+  /* classic gba trainer card color palette */
+  --color-gba-teal: #d0e8e0;
+  --color-gba-yellow: #ebd67d;
+  --color-gba-card-bg: #f8f8f8;
+  --color-gba-text-dark: #3f3f3f;
+  --color-gba-text-light: #5d5d5d;
+  
+  /* main portfolio dark theme colors */
+  --color-portfolio-bg: #0d0d0d;
+  --color-portfolio-card: #151515;
+  --color-portfolio-text: #f0ede8;
+  --color-portfolio-accent: #ebd67d;
+}
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #f8f8f8;
+  --foreground: #3f3f3f;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
 }
+
+/* general layout tweaks */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* custom 3d card transition helpers */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+

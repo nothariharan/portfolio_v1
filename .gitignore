@@ -39,3 +39,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# editor / os
+.idea
+.vscode
+Thumbs.db
+
+# wakatime
+.wakatime-project
+
+# local preview screenshots
+.card-preview.png
+*.preview.png
+
+# local working files & design references (not part of the app)
+/plan/
+/logs.md
+/card1.jpg
+/card2.webp
+/card3.png
