@@ -13,12 +13,20 @@ interface TrainerCardProps {
 }
 
 export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(true);
+  // pause the idle float while the cursor is on the card so buttons are a
+  // stable target — a bobbing card makes clicks (mousedown/up) miss.
+  const [isHovered, setIsHovered] = useState(false);
   const { rotateX, rotateY, handleMouseMove, handleMouseLeave } = useCardTilt();
 
   // flip state toggle
   function handleCardClick() {
     setIsFlipped(!isFlipped);
+  }
+
+  function handleLeave() {
+    setIsHovered(false);
+    handleMouseLeave();
   }
 
   return (
@@ -32,17 +40,17 @@ export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
           transformStyle: "preserve-3d",
         }}
         animate={{
-          y: [0, -8, 0], // slow sine-wave hover movement
+          // settle to rest while hovered; otherwise slow sine-wave float
+          y: isHovered ? 0 : [0, -8, 0],
         }}
         transition={{
-          y: {
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          },
+          y: isHovered
+            ? { duration: 0.4, ease: "easeOut" }
+            : { duration: 4, repeat: Infinity, ease: "easeInOut" },
         }}
         onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={handleLeave}
         onClick={handleCardClick}
       >
         {/* inner container handles card flipping */}

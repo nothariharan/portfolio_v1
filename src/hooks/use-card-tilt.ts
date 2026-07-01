@@ -7,9 +7,10 @@ export function useCardTilt() {
   const x = useMotionValue(0.5);
   const y = useMotionValue(0.5);
 
-  // transform normalized values into rotation degrees
-  const rotateX = useTransform(y, [0, 1], [12, -12]);
-  const rotateY = useTransform(x, [0, 1], [-12, 12]);
+  // transform normalized values into rotation degrees — kept gentle so the
+  // card doesn't skew buttons out from under the cursor while interacting
+  const rotateX = useTransform(y, [0, 1], [6, -6]);
+  const rotateY = useTransform(x, [0, 1], [-6, 6]);
 
   // add spring physics for smooth interpolation
   const springConfig = { damping: 25, stiffness: 150 };

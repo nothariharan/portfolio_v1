@@ -376,61 +376,34 @@ export const BACK_SUMMARY: Record<
   },
 };
 
-// back-of-card per-section: one big line + a row of icon links
-export type BackIcon = {
-  kind: "proj" | "logo" | "social";
-  ref: string; // proj key, /logos key, or social name
-  url?: string;
-  label: string;
-};
+// ===== back-of-card content (the flip side), per the latest spec =====
 
-export const BACK_SECTIONS: Record<TabKey, { line: string; icons: BackIcon[] }> = {
-  projects: {
-    line: "20+ projects shipped — AI, web & civic tech.",
-    icons: [
-      { kind: "proj", ref: "cofound", url: "https://cofounder-alpha.vercel.app", label: "CoFound" },
-      { kind: "proj", ref: "monkeyspeak", url: "https://monkeyspeak-delta.vercel.app", label: "MonkeySpeak" },
-      { kind: "proj", ref: "vahanlive", url: "https://vahan-live.vercel.app", label: "VahanLive (winner)" },
-      { kind: "proj", ref: "mugen", url: "https://mugen-flax.vercel.app", label: "Mugen" },
-      { kind: "proj", ref: "visor", url: "https://github.com/nothariharan/Visor", label: "Visor" },
-      { kind: "proj", ref: "gurren", url: "https://github.com/nothariharan/gurren", label: "Gurren" },
-    ],
-  },
-  experience: {
-    line: "AI / full-stack builder · SAP intern · CS student.",
-    icons: [
-      { kind: "social", ref: "linkedin", url: "https://www.linkedin.com/in/nmhariharan/", label: "LinkedIn" },
-      { kind: "social", ref: "github", url: "https://github.com/nothariharan", label: "GitHub" },
-      { kind: "social", ref: "leetcode", url: "https://leetcode.com/nothariharan", label: "LeetCode" },
-      { kind: "social", ref: "mail", url: "mailto:nothariharan@gmail.com", label: "Email" },
-    ],
-  },
-  honors: {
-    line: "3 hackathon wins · Hacktoberfest Golden · YC '26.",
-    icons: [
-      { kind: "social", ref: "trophy", url: "https://vahan-live.vercel.app", label: "VahanLive — winner" },
-      { kind: "social", ref: "leetcode", url: "https://leetcode.com/nothariharan", label: "LeetCode 1700+" },
-      { kind: "social", ref: "github", url: "https://github.com/nothariharan", label: "GitHub" },
-      { kind: "social", ref: "linkedin", url: "https://www.linkedin.com/in/nmhariharan/", label: "LinkedIn" },
-    ],
-  },
-  skills: {
-    line: "AI · full-stack web · DevOps · cloud.",
-    icons: [
-      { kind: "logo", ref: "python", label: "Python" },
-      { kind: "logo", ref: "pytorch", label: "PyTorch" },
-      { kind: "logo", ref: "react", label: "React" },
-      { kind: "logo", ref: "nextjs", label: "Next.js" },
-      { kind: "logo", ref: "nodejs", label: "Node.js" },
-      { kind: "logo", ref: "fastapi", label: "FastAPI" },
-      { kind: "logo", ref: "mongodb", label: "MongoDB" },
-      { kind: "logo", ref: "postgresql", label: "PostgreSQL" },
-      { kind: "logo", ref: "docker", label: "Docker" },
-      { kind: "logo", ref: "kubernetes", label: "Kubernetes" },
-      { kind: "logo", ref: "aws", label: "AWS" },
-      { kind: "logo", ref: "vercel", label: "Vercel" },
-      { kind: "logo", ref: "git", label: "Git" },
-      { kind: "logo", ref: "typescript", label: "TypeScript" },
-    ],
-  },
-};
+// PROJECTS — three highlighted projects, each with description + icons
+export const BACK_PROJECTS = [
+  { name: "CoFound", icon: "cofound", desc: "Multi-agent founder OS — plan, build & ship.", stack: ["fastapi", "react", "mongodb"], live: "https://cofounder-alpha.vercel.app", repo: "https://github.com/nothariharan/CoFound" },
+  { name: "MonkeySpeak", icon: "monkeyspeak", desc: "Voice-typing benchmark — live WPM & filler words.", stack: ["nextjs", "supabase"], live: "https://monkeyspeak-delta.vercel.app", repo: "https://github.com/nothariharan/monkeyspeak" },
+  { name: "Yui", icon: "yui", desc: "AI travel concierge — proactive multi-agent trips.", stack: ["python", "react"], live: "", repo: "https://github.com/nothariharan" },
+];
+
+// EXPERIENCE — education + internship, chronological, links lead out (LinkedIn)
+export const BACK_EXPERIENCE = [
+  { year: "AUG 2025", title: "B.Tech CS — IIIT SriCity", sub: "Dual degree begins", icon: "grad", url: "https://www.linkedin.com/in/nmhariharan/" },
+  { year: "AUG 2025", title: "BS — IIT Patna", sub: "Dual-degree programme", icon: "grad", url: "https://www.linkedin.com/in/nmhariharan/" },
+  { year: "2025 — NOW", title: "SAP Security Intern — Rinexis", sub: "SOD analyzer & ITGC audit tooling", icon: "brief", url: "https://www.linkedin.com/in/nmhariharan/" },
+];
+
+// HONORS — kept simple, links redirect out
+export const BACK_HONORS = [
+  { title: "Hacktoberfest Golden '25", sub: "Top-tier open-source contributor", icon: "code", url: "https://github.com/nothariharan" },
+  { title: "YC Startup School '26", sub: "Y Combinator — India cohort", icon: "star", url: "https://www.startupschool.org/" },
+  { title: "10+ Hackathons · multiple wins", sub: "VahanLive, AMUHACKS, Cosmix & more", icon: "trophy", url: "https://www.linkedin.com/in/nmhariharan/" },
+];
+
+// SKILLS — grouped by domain, plus the AI tools I work with
+export const BACK_SKILLS: { label: string; icons: string[] }[] = [
+  { label: "AI / ML", icons: ["python", "pytorch", "opencv", "numpy", "pandas", "gemini"] },
+  { label: "FULL-STACK", icons: ["react", "nextjs", "nodejs", "fastapi", "express", "typescript", "tailwindcss", "html5", "css3"] },
+  { label: "DEVOPS", icons: ["docker", "kubernetes", "git", "github", "linux", "bash", "nginx", "githubactions"] },
+  { label: "CLOUD", icons: ["aws", "gcp", "vercel", "firebase", "supabase", "redis"] },
+  { label: "TOOLS", icons: ["claude", "openai", "gemini", "cursor", "copilot"] },
+];

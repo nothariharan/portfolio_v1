@@ -392,7 +392,7 @@ export function CardFront() {
         </div>
 
         {/* ---------- bottom band: EXP  +  CURRENTLY banner ---------- */}
-        <div className="relative z-10 flex gap-3 mt-auto items-stretch h-[152px]">
+        <div className="relative z-10 flex gap-3 mt-auto mb-1 items-stretch h-[132px]">
           {/* EXP */}
           <div className="w-[30%] shrink-0 flex flex-col justify-center">
             <div className="flex items-center gap-2 mb-2.5">
