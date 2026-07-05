@@ -3,11 +3,9 @@
 import type { ReactNode } from "react";
 import { TRAINER_ID, PANELS, type TabKey } from "./data";
 
-/* ================================================================== */
-/*  Shared pixel primitives for the DATA FILE backside               */
-/* ================================================================== */
+// shared pixel components
 
-// red emblem used in headers
+// red emblem in headers
 export function Emblem({ size = 26 }: { size?: number }) {
   return (
     <svg viewBox="0 0 100 100" width={size} height={size} className="shrink-0" aria-hidden>
@@ -19,7 +17,7 @@ export function Emblem({ size = 26 }: { size?: number }) {
   );
 }
 
-// small white logo tile (re-used from the front card)
+// small white logo tile
 export function LogoTile({ k, size = 38, name }: { k: string; size?: number; name?: string }) {
   return (
     <div
@@ -32,7 +30,7 @@ export function LogoTile({ k, size = 38, name }: { k: string; size?: number; nam
   );
 }
 
-// "+N" tile to indicate more
+// plus n tile for extra tech
 export function MoreTile({ n, size = 38 }: { n: number; size?: number }) {
   return (
     <div
@@ -73,7 +71,7 @@ export function Stars({ n, total = 5 }: { n: number; total?: number }) {
   );
 }
 
-// stat tile (icon + big value + label) used along the top of sections
+// top stat tile
 export function StatTile({ value, label, children }: { value: string; label: string; children: ReactNode }) {
   return (
     <div className="flex-1 min-w-0 rounded-[8px] bg-[#f4f2ec] px-2 py-2.5 flex flex-col items-center gap-1 shadow-[inset_0_0_0_2px_#d9d4ca,0_2px_0_rgba(0,0,0,0.08)]">
@@ -84,9 +82,7 @@ export function StatTile({ value, label, children }: { value: string; label: str
   );
 }
 
-/* ================================================================== */
-/*  Bottom-nav tab icons                                              */
-/* ================================================================== */
+// bottom navigation tab icons
 
 export function TabIcon({ tab, active }: { tab: TabKey; active: boolean }) {
   const c = active ? "#c23a33" : "#5d6b64";
@@ -129,9 +125,7 @@ export function TabIcon({ tab, active }: { tab: TabKey; active: boolean }) {
   }
 }
 
-/* ================================================================== */
-/*  The framed DATA FILE shell                                       */
-/* ================================================================== */
+// data file display frame
 
 export function DataFileShell({
   active,
@@ -150,7 +144,7 @@ export function DataFileShell({
         className="w-full max-w-[1180px] h-[min(95vh,900px)] rounded-[14px] overflow-hidden flex flex-col font-card text-[#2b2b2b]"
         style={{ boxShadow: "0 0 0 3px #cdeeea, 0 0 0 13px #3f9b94, 0 0 0 16px #14403d, 0 18px 50px rgba(0,0,0,0.5)" }}
       >
-        {/* header */}
+        {/* header bar */}
         <div
           className="relative flex items-center justify-between px-4 h-[52px] shrink-0"
           style={{
@@ -170,7 +164,7 @@ export function DataFileShell({
           </div>
         </div>
 
-        {/* ===== section panels = top navigation ===== */}
+        {/* navigation tab buttons */}
         <div className="shrink-0 bg-[#e9e7e0] px-3 sm:px-4 pt-3 pb-2 flex gap-2 sm:gap-3">
           {PANELS.map((panel) => {
             const on = panel.tab === active;
@@ -212,7 +206,7 @@ export function DataFileShell({
           })}
         </div>
 
-        {/* body */}
+        {/* body container */}
         <div className="flex-1 min-h-0 bg-[#e9e7e0] overflow-y-auto overflow-x-hidden">{children}</div>
 
         {/* bottom bar */}
@@ -237,7 +231,7 @@ export function DataFileShell({
   );
 }
 
-// person mascot — re-used across sections (kept tasteful, one per screen)
+// sprite mascot used in sections
 export function Mascot({ className = "" }: { className?: string }) {
   return (
     <img

@@ -2,8 +2,11 @@
 
 import { Container, Reveal, SectionHeading, LogoChip, GitHubIcon, ArrowIcon } from "./ui";
 import { PROJECTS, PROJECT_META } from "../portfolio/data";
+import { useTransition } from "@/hooks/use-transition";
 
 export function Projects() {
+  const { startTransition } = useTransition();
+
   return (
     <section id="projects" className="scroll-mt-20 py-24 sm:py-32">
       <Container>
@@ -79,14 +82,12 @@ export function Projects() {
         </div>
 
         <Reveal>
-          <a
-            href="https://github.com/nothariharan"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-10 inline-flex items-center gap-2 text-sm text-portfolio-text/60 transition-colors hover:text-portfolio-accent"
+          <button
+            onClick={() => startTransition("/portfolio/projects")}
+            className="mt-10 inline-flex items-center gap-2 text-sm text-portfolio-text/60 transition-colors hover:text-portfolio-accent cursor-pointer"
           >
-            See more on GitHub <ArrowIcon />
-          </a>
+            View all projects <ArrowIcon />
+          </button>
         </Reveal>
       </Container>
     </section>

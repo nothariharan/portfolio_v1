@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 /* ================================================================== */
 /*  Small reusable marks                                              */
@@ -41,7 +41,7 @@ type Focus = {
   labelColor: string;
   sub: string;
   dashed?: boolean;
-  icon: React.ReactNode;
+  img: string;
 };
 
 const FOCUS: Focus[] = [
@@ -51,20 +51,7 @@ const FOCUS: Focus[] = [
     fill: "#c8a9ec",
     border: "#8a5bc4",
     labelColor: "#7d4fb3",
-    icon: (
-      <svg viewBox="0 0 36 36" className="w-[54px] h-[54px]">
-        <rect x="9" y="9" width="18" height="18" rx="1" fill="#5e2f9e" />
-        <text x="18" y="22" textAnchor="middle" fontSize="9" fontWeight="700" fill="#fff" fontFamily="monospace">AI</text>
-        {[12, 18, 24].map((p) => (
-          <g key={p} stroke="#5e2f9e" strokeWidth="2">
-            <line x1={p} y1="4" x2={p} y2="9" />
-            <line x1={p} y1="27" x2={p} y2="32" />
-            <line x1="4" y1={p} x2="9" y2={p} />
-            <line x1="27" y1={p} x2="32" y2={p} />
-          </g>
-        ))}
-      </svg>
-    ),
+    img: "/sprites/focus_ai.png",
   },
   {
     label: "WEB APP",
@@ -72,15 +59,7 @@ const FOCUS: Focus[] = [
     fill: "#a8d2f2",
     border: "#5a9bd6",
     labelColor: "#2f78bf",
-    icon: (
-      <svg viewBox="0 0 36 36" className="w-[54px] h-[54px]" fill="none" stroke="#1f5a96" strokeWidth="2">
-        <circle cx="18" cy="18" r="13" />
-        <ellipse cx="18" cy="18" rx="5.5" ry="13" />
-        <line x1="5" y1="18" x2="31" y2="18" />
-        <line x1="8" y1="11" x2="28" y2="11" />
-        <line x1="8" y1="25" x2="28" y2="25" />
-      </svg>
-    ),
+    img: "/sprites/focus_web.png",
   },
   {
     label: "DEVOPS",
@@ -88,12 +67,7 @@ const FOCUS: Focus[] = [
     fill: "#a9d99f",
     border: "#5aa84d",
     labelColor: "#3f8f33",
-    icon: (
-      <svg viewBox="0 0 36 36" className="w-[54px] h-[54px]" fill="none" stroke="#2c6b22" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="14 11 7 18 14 25" />
-        <polyline points="22 11 29 18 22 25" />
-      </svg>
-    ),
+    img: "/sprites/focus_devops.png",
   },
   {
     label: "EXPLORING",
@@ -102,9 +76,17 @@ const FOCUS: Focus[] = [
     border: "#bfc4c9",
     labelColor: "#9a9ea3",
     dashed: true,
-    icon: <span className="text-[52px] leading-none font-pixel" style={{ color: "#a4a9af" }}>?</span>,
+    img: "/sprites/focus_explore.png",
   },
 ];
+
+// pixel-style border stack for slanted cards (inner color ring + dark outer edge + drop)
+function slantedCardBorder(border: string, dashed?: boolean) {
+  return {
+    boxShadow: `inset 0 0 0 2px ${border}, inset 0 0 0 4px rgba(255,255,255,0.45), 0 0 0 2px #2c2c2c, 0 3px 0 rgba(0,0,0,0.18)`,
+    border: dashed ? `2px dashed ${border}` : undefined,
+  } as const;
+}
 
 /* ================================================================== */
 /*  STACK — technology logos (only JS/TS sit on colored squares)      */
@@ -133,12 +115,12 @@ function StackTile({ name, logo, more }: { name: string; logo?: string; more?: b
   return (
     <div className="group relative shrink-0">
       <div
-        className="w-[40px] h-[40px] bg-white rounded-[5px] flex items-center justify-center transition-all duration-150 shadow-[inset_0_0_0_2px_#2c2c2c,0_2px_0_rgba(0,0,0,0.22)] group-hover:-translate-y-0.5 group-hover:shadow-[inset_0_0_0_2px_#1fc4e0,0_4px_0_rgba(0,0,0,0.22)]"
+        className="w-[38px] h-[38px] bg-white rounded-[5px] flex items-center justify-center transition-all duration-150 shadow-[inset_0_0_0_2px_#2c2c2c,0_2px_0_rgba(0,0,0,0.22)] group-hover:-translate-y-0.5 group-hover:shadow-[inset_0_0_0_2px_#1fc4e0,0_4px_0_rgba(0,0,0,0.22)]"
       >
         {more ? (
           <span className="font-pixel text-[8px] leading-none text-[#9aa0a6] group-hover:text-[#1f9fb8]">MORE</span>
         ) : (
-          <img src={logo} alt={name} className="w-[27px] h-[27px] object-contain" />
+          <img src={logo} alt={name} className="w-[25px] h-[25px] object-contain" />
         )}
       </div>
       {/* retro tooltip */}
@@ -229,6 +211,62 @@ const CURRENT = [
 
 const LINK_BLUE = "#2f6fb0";
 
+// slanted parallelogram slot — used in the footer badge strip
+function SlantedSlot({
+  title,
+  earned,
+  attachIndex = 0,
+  children,
+}: {
+  title?: string;
+  earned?: boolean;
+  attachIndex?: number;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div
+      title={title}
+      className="w-[34px] h-[34px] shrink-0 overflow-hidden cursor-help"
+      style={{
+        transform: "skewX(-9deg)",
+        marginLeft: attachIndex > 0 ? -8 : 0,
+        zIndex: attachIndex,
+      }}
+    >
+      <div
+        className="w-full h-full flex items-center justify-center"
+        style={{
+          background: earned ? "#fb651e" : "#c2cfc9",
+          boxShadow: earned
+            ? "inset 0 0 0 2px #b54400, inset 0 0 0 4px rgba(255,255,255,0.3), 0 0 0 2px #2c2c2c, 0 2px 0 rgba(0,0,0,0.2)"
+            : "inset 0 0 0 2px #8fa59a, inset 0 0 0 4px rgba(255,255,255,0.25), 0 0 0 2px #2c2c2c, 0 2px 0 rgba(0,0,0,0.15)",
+        }}
+      >
+        {children ? <div style={{ transform: "skewX(9deg)" }}>{children}</div> : null}
+      </div>
+    </div>
+  );
+}
+
+// faithful Y Combinator mark for the earned footer badge
+function YcBadge() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" aria-hidden>
+      <text
+        x="12"
+        y="17"
+        textAnchor="middle"
+        fontSize="15"
+        fontWeight="700"
+        fill="#fff"
+        fontFamily="Arial, Helvetica, sans-serif"
+      >
+        Y
+      </text>
+    </svg>
+  );
+}
+
 function QuickLink({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
     <a
@@ -253,11 +291,7 @@ function QuickLink({ href, label, children }: { href: string; label: string; chi
 const PINK_DIVIDER = "#f0d6d8";
 
 export function CardFront() {
-  const [id, setId] = useState("80445");
-
-  useEffect(() => {
-    setId(Math.floor(10000 + Math.random() * 90000).toString());
-  }, []);
+  const [id] = useState(() => Math.floor(10000 + Math.random() * 90000).toString());
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-[#f7f6f3] text-slate-800 select-none">
@@ -297,7 +331,7 @@ export function CardFront() {
       </div>
 
       {/* ===================== MAIN ===================== */}
-      <div className="relative px-4 pt-2.5 pb-2 flex flex-col" style={{ height: "calc(100% - 50px - 44px)" }}>
+      <div className="relative px-4 pt-2 pb-2 flex flex-col" style={{ height: "calc(100% - 50px - 44px)" }}>
         {/* faded watermark rings behind the avatar */}
         <svg viewBox="0 0 100 100" className="absolute right-[-58px] top-[14px] w-[320px] h-[320px] pointer-events-none" aria-hidden>
           <circle cx="50" cy="50" r="48" fill="#f1cdd1" opacity="0.7" />
@@ -314,7 +348,7 @@ export function CardFront() {
         />
 
         {/* ---------- left info column (NAME / FOCUS / STACK) ---------- */}
-        <div className="relative z-10 w-[64%] flex flex-col gap-2">
+        <div className="relative z-10 w-[64%] flex flex-col gap-1.5">
           {/* NAME */}
           <div>
             <div className="flex items-center gap-2.5">
@@ -328,45 +362,53 @@ export function CardFront() {
             <div className="h-px mt-2" style={{ background: PINK_DIVIDER }} />
           </div>
 
-          {/* FOCUS */}
+          {/* FOCUS — attached slanted illustrated cards */}
           <div>
-            <div className="flex items-center gap-2.5 mb-2">
+            <div className="flex items-center gap-2.5 mb-1.5">
               <Bullet />
               <span className="font-pixel text-[12px] leading-none text-[#6b6f76]">FOCUS:</span>
             </div>
-            <div className="flex gap-2 pl-[26px]">
-              {FOCUS.map((f) => (
-                <div key={f.label} className="flex-1 min-w-0 flex flex-col items-center gap-1.5">
+            <div className="flex pl-[26px]">
+              {FOCUS.map((f, i) => (
+                <div
+                  key={f.label}
+                  className="flex-1 min-w-0 flex flex-col items-center gap-1"
+                  style={{ marginLeft: i > 0 ? -10 : 0, zIndex: i }}
+                >
                   <div
-                    className="w-full flex items-center justify-center py-1 rounded-[6px]"
+                    className="w-full h-[48px] overflow-hidden flex items-center justify-center p-1"
                     style={{
                       background: f.fill,
-                      boxShadow: `inset 0 0 0 2.5px ${f.border}, 0 2px 0 rgba(0,0,0,0.12)`,
-                      border: f.dashed ? `2px dashed ${f.border}` : undefined,
                       transform: "skewX(-9deg)",
+                      ...slantedCardBorder(f.border, f.dashed),
                     }}
                   >
-                    <div style={{ transform: "skewX(9deg)" }}>{f.icon}</div>
+                    <img
+                      src={f.img}
+                      alt={f.label}
+                      className="w-full h-full object-contain object-center pixelated"
+                      draggable={false}
+                    />
                   </div>
                   <span className="font-pixel text-[9px] leading-none tracking-tight text-center" style={{ color: f.labelColor }}>
                     {f.label}
                   </span>
-                  <span className="font-card text-[11px] leading-[1.15] text-center text-[#8a8f96] px-0.5">
+                  <span className="font-card text-[10px] leading-[1.1] text-center text-[#8a8f96] px-0.5">
                     {f.sub}
                   </span>
                 </div>
               ))}
             </div>
-            <div className="h-px mt-2.5" style={{ background: PINK_DIVIDER }} />
+            <div className="h-px mt-2" style={{ background: PINK_DIVIDER }} />
           </div>
 
           {/* STACK */}
           <div>
-            <div className="flex items-center gap-2.5 mb-2">
+            <div className="flex items-center gap-2.5 mb-1.5">
               <Bullet />
               <span className="font-pixel text-[12px] leading-none text-[#6b6f76]">STACK:</span>
             </div>
-            <div className="flex flex-col gap-2 pl-[26px]">
+            <div className="flex flex-col gap-1.5 pl-[26px]">
               {/* core technologies */}
               <div className="flex items-center gap-2.5">
                 <span className="font-pixel text-[8px] leading-none text-[#a4a9af] w-[34px] text-right">CORE</span>
@@ -387,12 +429,12 @@ export function CardFront() {
                 </div>
               </div>
             </div>
-            <div className="h-px mt-2.5" style={{ background: PINK_DIVIDER }} />
+            <div className="h-px mt-2" style={{ background: PINK_DIVIDER }} />
           </div>
         </div>
 
         {/* ---------- bottom band: EXP  +  CURRENTLY banner ---------- */}
-        <div className="relative z-10 flex gap-3 mt-auto mb-1 items-stretch h-[132px]">
+        <div className="relative z-10 flex gap-3 mt-auto items-stretch h-[126px]">
           {/* EXP */}
           <div className="w-[30%] shrink-0 flex flex-col justify-center">
             <div className="flex items-center gap-2 mb-2.5">
@@ -445,23 +487,21 @@ export function CardFront() {
         </div>
       </div>
 
-      {/* ===================== FOOTER: YC badge + empty wells ===================== */}
-      <div className="relative h-[44px] flex items-center gap-2 px-4" style={{ background: "#cdd9d4", boxShadow: "inset 0 2px 0 rgba(0,0,0,0.08)" }}>
+      {/* ===================== FOOTER: attached slanted badge strip ===================== */}
+      <div
+        className="relative h-[44px] flex items-center px-4 shrink-0"
+        style={{
+          background: "#cdd9d4",
+          boxShadow: "inset 0 2px 0 rgba(0,0,0,0.08)",
+        }}
+      >
         {/* earned: Y Combinator — Starter School */}
-        <div
-          title="Y Combinator · Starter School"
-          className="w-[30px] h-[30px] rounded-[5px] flex items-center justify-center shrink-0 cursor-help"
-          style={{ background: "#f0640f", boxShadow: "inset 0 0 0 2px #b54400, 0 1px 0 rgba(0,0,0,0.25)" }}
-        >
-          <span className="font-pixel text-white text-[14px] leading-none">Y</span>
-        </div>
-        {/* empty placeholder wells */}
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div
-            key={i}
-            className="w-[30px] h-[30px] rounded-[5px] shrink-0"
-            style={{ background: "#c2cfc9", boxShadow: "inset 0 0 0 2px #b2c0b9" }}
-          />
+        <SlantedSlot title="Y Combinator · Starter School" earned attachIndex={0}>
+          <YcBadge />
+        </SlantedSlot>
+        {/* empty placeholder wells — attached to the earned badge */}
+        {Array.from({ length: 3 }).map((_, i) => (
+          <SlantedSlot key={i} title="Badge slot — locked" attachIndex={i + 1} />
         ))}
       </div>
     </div>

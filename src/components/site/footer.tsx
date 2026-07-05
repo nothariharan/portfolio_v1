@@ -48,7 +48,7 @@ export function Footer({ onBack }: { onBack: () => void }) {
             </div>
           </div>
 
-          {/* the easter egg — run the transition in reverse, back to the card */}
+          {/* reverse transition back to the card view */}
           <button
             onClick={onBack}
             className="group flex items-center gap-3 rounded-full border border-white/12 px-5 py-3 transition-colors hover:border-portfolio-accent"

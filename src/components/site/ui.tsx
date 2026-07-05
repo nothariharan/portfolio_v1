@@ -3,17 +3,14 @@
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 
-/* ------------------------------------------------------------------ *
- *  Shared building blocks for the minimal main portfolio             *
- *  Dark, typography-first. Pixel font only for tiny accent labels.   *
- * ------------------------------------------------------------------ */
+// shared layout components
 
-// centered content column with consistent horizontal padding
+// centered layout container
 export function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
   return <div className={`mx-auto w-full max-w-5xl px-6 sm:px-8 ${className}`}>{children}</div>;
 }
 
-// subtle scroll-triggered fade + rise. nothing bouncy.
+// scroll reveal animation wrapper
 export function Reveal({
   children,
   delay = 0,
@@ -36,7 +33,7 @@ export function Reveal({
   );
 }
 
-// small pixel-font eyebrow + serif title, used to open every section
+// standardized section header
 export function SectionHeading({
   index,
   label,
@@ -58,7 +55,7 @@ export function SectionHeading({
   );
 }
 
-// white tile holding a /logos brand svg — readable on the dark bg
+// brand logo badge container
 export function LogoChip({ k, size = 34, label }: { k: string; size?: number; label?: string }) {
   return (
     <span
@@ -76,7 +73,7 @@ export function LogoChip({ k, size = 34, label }: { k: string; size?: number; la
   );
 }
 
-/* ---- inline social / utility icons (thin stroke, currentColor) ---- */
+// social and link icons
 
 export function GitHubIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (

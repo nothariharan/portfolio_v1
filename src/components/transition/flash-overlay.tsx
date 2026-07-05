@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useTransition } from "../../hooks/use-transition";
 
-// overlay for the full-screen pokemon white flash transition
+// full-screen white flash transition overlay
 export function FlashOverlay() {
   const { isTransitioning } = useTransition();
 

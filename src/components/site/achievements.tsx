@@ -3,7 +3,7 @@
 import { Container, Reveal, SectionHeading } from "./ui";
 import { HONORS, type Honor } from "../portfolio/data";
 
-// badge → accent colour
+// badge mapping to accent colors
 const BADGE_COLOR: Record<Honor["badge"], string> = {
   Winner: "#ebd67d",
   "Runner Up": "#c9a15a",
@@ -13,7 +13,7 @@ const BADGE_COLOR: Record<Honor["badge"], string> = {
   Participant: "#8a8f96",
 };
 
-// a compact glyph per honour shape
+// custom glyph for each honor shape
 const SHAPE_GLYPH: Record<Honor["shape"], string> = {
   trophy: "🏆",
   medal: "🥇",

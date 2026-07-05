@@ -10,14 +10,14 @@ export function Experience() {
         <SectionHeading index="02" label="EXPERIENCE" title="The journey so far" />
 
         <div className="relative">
-          {/* rail */}
+          {/* timeline vertical rail */}
           <div className="absolute bottom-2 left-[7px] top-2 w-px bg-white/10" />
 
           <div className="space-y-10">
             {TIMELINE.map((item, i) => (
               <Reveal key={i} delay={i * 0.05}>
                 <div className="relative pl-10">
-                  {/* node */}
+                  {/* timeline node indicator */}
                   <span
                     className={`absolute left-0 top-1.5 h-[15px] w-[15px] rounded-full border-2 ${
                       item.current

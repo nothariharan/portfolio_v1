@@ -7,7 +7,7 @@ import { Container, GitHubIcon, LinkedInIcon, MailIcon } from "./ui";
 export function Hero() {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden pt-14">
-      {/* very subtle radial glow so the dark isn't flat */}
+      {/* subtle radial glow for the dark background */}
       <div
         className="pointer-events-none absolute -top-40 right-0 h-[520px] w-[520px] rounded-full opacity-[0.07] blur-3xl"
         style={{ background: "radial-gradient(circle, #ebd67d 0%, transparent 70%)" }}
@@ -77,7 +77,7 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* the pixel sprite sitting quietly — the only pixel art up here */}
+          {/* floating pixel mascot */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -95,7 +95,7 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* scroll cue */}
+        {/* scroll cue indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

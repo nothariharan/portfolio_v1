@@ -12,7 +12,7 @@ import { Skills } from "@/components/site/skills";
 import { Achievements } from "@/components/site/achievements";
 import { Footer } from "@/components/site/footer";
 
-// which card tab maps to which section anchor
+// map tab names to section element ids
 const TAB_ANCHOR: Record<string, string> = {
   projects: "projects",
   experience: "experience",
@@ -25,7 +25,7 @@ function PortfolioInner() {
   const params = useSearchParams();
   const tab = params.get("tab");
 
-  // dark backdrop for the whole minimal world
+  // set dark background class for portfolio layout
   useEffect(() => {
     document.body.classList.remove("bg-gba-teal");
     document.body.style.background = "#0d0d0d";
@@ -35,13 +35,13 @@ function PortfolioInner() {
     };
   }, []);
 
-  // deep-link: if arriving from a card section, jump to it after mount
+  // scroll to specific section if coming from card deep link
   useEffect(() => {
     const anchor = tab ? TAB_ANCHOR[tab] : undefined;
     if (!anchor) return;
     const el = document.getElementById(anchor);
     if (el) {
-      // let the page paint first, then scroll into view
+      // scroll smoothly to target element
       requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" }));
     }
   }, [tab]);
@@ -49,17 +49,28 @@ function PortfolioInner() {
   const backToCard = () => startTransition("/");
 
   return (
-    <div className="min-h-screen bg-portfolio-bg font-sans text-portfolio-text selection:bg-portfolio-accent/30">
-      <SiteNav onBack={backToCard} />
-      <main>
-        <Hero />
-        <About />
-        <Experience />
-        <Projects />
-        <Skills />
-        <Achievements />
-      </main>
-      <Footer onBack={backToCard} />
+    <div className="min-h-screen bg-portfolio-bg font-sans text-portfolio-text selection:bg-portfolio-accent/30 bg-dot-grid relative">
+      
+      {/* centered content wrapper with side rail borders */}
+      <div className="mx-auto max-w-5xl border-l border-r border-white/5 bg-portfolio-bg/25 min-h-screen flex flex-col">
+        <SiteNav onBack={backToCard} />
+        <main className="flex-1">
+          <Hero />
+          <div className="horizontal-rail" />
+          <About />
+          <div className="horizontal-rail" />
+          <Experience />
+          <div className="horizontal-rail" />
+          <Projects />
+          <div className="horizontal-rail" />
+          <Skills />
+          <div className="horizontal-rail" />
+          <Achievements />
+        </main>
+        <div className="horizontal-rail" />
+        <Footer onBack={backToCard} />
+      </div>
+      
     </div>
   );
 }

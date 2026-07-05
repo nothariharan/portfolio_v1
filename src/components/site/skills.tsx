@@ -3,7 +3,7 @@
 import { Container, Reveal, SectionHeading, LogoChip } from "./ui";
 import { BACK_SKILLS } from "../portfolio/data";
 
-// nicer display names for a few of the raw logo keys
+// pretty display names for logo keys
 const NAMES: Record<string, string> = {
   nextjs: "Next.js",
   nodejs: "Node.js",

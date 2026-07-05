@@ -11,7 +11,7 @@ interface TransitionContextType {
 
 const TransitionContext = createContext<TransitionContextType | undefined>(undefined);
 
-// provider to wrap around root layout
+// provider to wrap root layout
 export function TransitionProvider({ children }: { children: ReactNode }) {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const router = useRouter();
@@ -20,7 +20,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
   // reset transition state when route successfully changes
   useEffect(() => {
     if (isTransitioning) {
-      // wait a bit for fadeout to finish
+      // wait for fadeout transition
       const timer = setTimeout(() => {
         setIsTransitioning(false);
       }, 600);
@@ -28,13 +28,13 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
     }
   }, [pathname]);
 
-  // trigger flash, navigate at peak flash, then pathname change triggers fadeout
+  // trigger flash, navigate at peak flash, then pathname changes
   function startTransition(url: string) {
     setIsTransitioning(true);
     
     setTimeout(() => {
       router.push(url);
-    }, 350); // sync with peak opacity of flash overlay
+    }, 350);
   }
 
   return (

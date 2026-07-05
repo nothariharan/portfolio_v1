@@ -1,13 +1,10 @@
-// ------------------------------------------------------------------
-// Real portfolio content for N. Hariharan (Hari).
-// Sourced strictly from his knowledge base — no invented metrics.
-// ------------------------------------------------------------------
+// real portfolio content for n. hariharan (hari)
 
 export const TRAINER_ID = "99705";
 
 export type TabKey = "projects" | "experience" | "honors" | "skills";
 
-/* ===================== PROJECTS ===================== */
+// projects data
 
 export type Project = {
   id: string;
@@ -125,7 +122,7 @@ export const PROJECTS: Project[] = [
   },
 ];
 
-// per-project icon key (/sprites/proj_<icon>.png) + short list description
+// project metadata mapping icons and descriptions
 export const PROJECT_META: Record<string, { icon: string; listDesc: string }> = {
   "001": { icon: "cofound", listDesc: "Multi-agent founder OS to build, ship & scale faster." },
   "002": { icon: "monkeyspeak", listDesc: "Voice-typing benchmark — clocks WPM & filler words." },
@@ -137,7 +134,7 @@ export const PROJECT_META: Record<string, { icon: string; listDesc: string }> = 
 
 export const TOTAL_BUILT = "20+";
 
-/* ===================== EXPERIENCE ===================== */
+// experience data
 
 export const EXP_STATS = [
   { value: "5", label: "EXPERIENCES" },
@@ -218,10 +215,10 @@ export const SKILLS_GAINED = [
   "SAP Security",
 ];
 
-// real, not a fabricated percentage — education context
+// education background
 export const EDUCATION = "B.Tech CS · IIIT SriCity × IIT Patna (dual degree, since Aug 2025)";
 
-/* ===================== HONORS ===================== */
+// honors data
 
 export const HONOR_STATS = [
   { value: "8", label: "ACHIEVEMENTS", icon: "trophy" },
@@ -261,7 +258,7 @@ export const FEATURED_HONOR = {
   extraTech: 1,
 };
 
-/* ===================== SKILLS ===================== */
+// skills data
 
 export const SKILL_STATS = [
   { value: "30+", label: "TECHNOLOGIES", icon: "code" },
@@ -319,7 +316,7 @@ export const SKILL_STATS_FOOTER = [
   { label: "Public Repos", value: "13+", icon: "github" },
 ];
 
-/* ===================== BACK-OF-CARD PANELS ===================== */
+// back-of-card panels data
 
 export const PANELS: { tab: TabKey; label: string; img: string; accent: string }[] = [
   { tab: "projects", label: "PROJECTS", img: "/sprites/panel_projects.png", accent: "#5fd0e6" },
@@ -328,8 +325,7 @@ export const PANELS: { tab: TabKey; label: string; img: string; accent: string }
   { tab: "skills", label: "SKILLS", img: "/sprites/panel_skills.png", accent: "#9aa0f0" },
 ];
 
-// quick summaries shown in the back's footer when hovering a section,
-// each with a real live link pulled from the knowledge base / README.
+// summaries for card back sections pulled from the knowledge base / README.
 export const BACK_SUMMARY: Record<
   TabKey,
   { tagline: string; lines: string[]; stat: string; link: { label: string; url: string } }
@@ -376,30 +372,30 @@ export const BACK_SUMMARY: Record<
   },
 };
 
-// ===== back-of-card content (the flip side), per the latest spec =====
+// back-of-card lists content
 
-// PROJECTS — three highlighted projects, each with description + icons
+// high-level projects summaries for the back face
 export const BACK_PROJECTS = [
   { name: "CoFound", icon: "cofound", desc: "Multi-agent founder OS — plan, build & ship.", stack: ["fastapi", "react", "mongodb"], live: "https://cofounder-alpha.vercel.app", repo: "https://github.com/nothariharan/CoFound" },
   { name: "MonkeySpeak", icon: "monkeyspeak", desc: "Voice-typing benchmark — live WPM & filler words.", stack: ["nextjs", "supabase"], live: "https://monkeyspeak-delta.vercel.app", repo: "https://github.com/nothariharan/monkeyspeak" },
   { name: "Yui", icon: "yui", desc: "AI travel concierge — proactive multi-agent trips.", stack: ["python", "react"], live: "", repo: "https://github.com/nothariharan" },
 ];
 
-// EXPERIENCE — education + internship, chronological, links lead out (LinkedIn)
+// experience highlights
 export const BACK_EXPERIENCE = [
   { year: "AUG 2025", title: "B.Tech CS — IIIT SriCity", sub: "Dual degree begins", icon: "grad", url: "https://www.linkedin.com/in/nmhariharan/" },
   { year: "AUG 2025", title: "BS — IIT Patna", sub: "Dual-degree programme", icon: "grad", url: "https://www.linkedin.com/in/nmhariharan/" },
   { year: "2025 — NOW", title: "SAP Security Intern — Rinexis", sub: "SOD analyzer & ITGC audit tooling", icon: "brief", url: "https://www.linkedin.com/in/nmhariharan/" },
 ];
 
-// HONORS — kept simple, links redirect out
+// honors list
 export const BACK_HONORS = [
   { title: "Hacktoberfest Golden '25", sub: "Top-tier open-source contributor", icon: "code", url: "https://github.com/nothariharan" },
   { title: "YC Startup School '26", sub: "Y Combinator — India cohort", icon: "star", url: "https://www.startupschool.org/" },
   { title: "10+ Hackathons · multiple wins", sub: "VahanLive, AMUHACKS, Cosmix & more", icon: "trophy", url: "https://www.linkedin.com/in/nmhariharan/" },
 ];
 
-// SKILLS — grouped by domain, plus the AI tools I work with
+// skills grouped by type
 export const BACK_SKILLS: { label: string; icons: string[] }[] = [
   { label: "AI / ML", icons: ["python", "pytorch", "opencv", "numpy", "pandas", "gemini"] },
   { label: "FULL-STACK", icons: ["react", "nextjs", "nodejs", "fastapi", "express", "typescript", "tailwindcss", "html5", "css3"] },

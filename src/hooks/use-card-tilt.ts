@@ -1,23 +1,22 @@
 import { useMotionValue, useSpring, useTransform } from "framer-motion";
 import { MouseEvent } from "react";
 
-// custom hook for that 3d holographic tilt on hover
+// custom hook for 3d hover tilt effect
 export function useCardTilt() {
-  // raw motion values from 0 to 1
+  // raw values from 0 to 1
   const x = useMotionValue(0.5);
   const y = useMotionValue(0.5);
 
-  // transform normalized values into rotation degrees — kept gentle so the
-  // card doesn't skew buttons out from under the cursor while interacting
+  // map values to rotation degrees, kept gentle so buttons are stable
   const rotateX = useTransform(y, [0, 1], [6, -6]);
   const rotateY = useTransform(x, [0, 1], [-6, 6]);
 
-  // add spring physics for smooth interpolation
+  // spring physics for smooth tracking
   const springConfig = { damping: 25, stiffness: 150 };
   const springX = useSpring(rotateY, springConfig);
   const springY = useSpring(rotateX, springConfig);
 
-  // update tilt based on cursor position relative to the element box
+  // update tilt based on cursor coordinates
   function handleMouseMove(event: MouseEvent<HTMLDivElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
     const width = rect.width;

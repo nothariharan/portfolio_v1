@@ -15,7 +15,7 @@ interface CardBackProps {
   onEnterPortfolio: (tab: TabKey) => void;
 }
 
-/* ---- small icons ---- */
+// small utility icons
 function SvgIcon({ name }: { name: string }) {
   switch (name) {
     case "grad":
@@ -80,7 +80,7 @@ function SvgIcon({ name }: { name: string }) {
   }
 }
 
-// white tile holding a /logos svg — lifts on hover so it feels alive
+// white tile holding a technology logo that lifts on hover
 function LogoChip({ k, size = 30 }: { k: string; size?: number }) {
   return (
     <span
@@ -98,7 +98,7 @@ function LogoChip({ k, size = 30 }: { k: string; size?: number }) {
   );
 }
 
-// small bordered link button — clear hover lift + press feedback
+// link button with a hover lift and click feedback
 function LinkBtn({ href, title, children }: { href: string; title: string; children: React.ReactNode }) {
   return (
     <a
@@ -120,7 +120,7 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-[#f7f6f3] text-slate-800 select-none flex flex-col">
-      {/* ===================== HEADER ===================== */}
+      {/* header bar */}
       <div
         className="relative flex items-center justify-between px-3.5 h-[42px] shrink-0"
         style={{
@@ -140,8 +140,8 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
         <span className="font-pixel text-[8px] leading-none text-white/85">HOVER A SECTION ▸</span>
       </div>
 
-      {/* ===================== 4 BOXED SECTIONS (shorter) ===================== */}
-      <div className="flex flex-[0.78] min-h-0 gap-2 px-3.5 pt-2.5 pb-1.5">
+      {/* 4 selectable subfolders */}
+      <div className="flex flex-[0.62] min-h-0 gap-2 px-3.5 pt-2.5 pb-1.5">
         {PANELS.map((panel, i) => {
           const on = i === sel;
           return (
@@ -174,9 +174,9 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
         })}
       </div>
 
-      {/* ===================== SECTION DETAIL ===================== */}
-      <div className="flex-[1.55] min-h-0 mx-3 mb-3 rounded-[8px] p-3 flex flex-col" style={{ background: "#f1eee8", boxShadow: "inset 0 0 0 2px #dcd7cf, 0 2px 0 rgba(0,0,0,0.1)" }}>
-        {/* label */}
+      {/* details box */}
+      <div className="flex-[1.9] min-h-0 mx-3 mb-3 rounded-[8px] p-3 flex flex-col" style={{ background: "#f1eee8", boxShadow: "inset 0 0 0 2px #dcd7cf, 0 2px 0 rgba(0,0,0,0.1)" }}>
+        {/* header label */}
         <div className="flex items-center gap-2 mb-2 shrink-0">
           <span className="w-[26px] h-[26px] rounded-[6px] bg-white flex items-center justify-center shrink-0" style={{ boxShadow: `inset 0 0 0 2px ${active.accent}` }}>
             <TabIcon tab={active.tab} active />
@@ -184,9 +184,9 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
           <span className="font-pixel px-2.5 py-1.5 rounded-[5px] text-[11px] leading-none text-[#21304a]" style={{ background: active.accent }}>{active.label}</span>
         </div>
 
-        {/* body */}
+        {/* main details */}
         <div className="flex-1 min-h-0 overflow-y-auto pr-0.5">
-          {/* PROJECTS */}
+          {/* projects sublist */}
           {active.tab === "projects" && (
             <div className="flex flex-col gap-2">
               {BACK_PROJECTS.map((p) => (
@@ -218,10 +218,10 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
             </div>
           )}
 
-          {/* EXPERIENCE — chronological timeline */}
+          {/* experience timeline */}
           {active.tab === "experience" && (
             <div className="relative pl-7">
-              {/* rail */}
+              {/* timeline guide line */}
               <div className="absolute left-[11px] top-2 bottom-6 w-[2px]" style={{ background: "#cfc8ba" }} />
               {BACK_EXPERIENCE.map((e, i) => (
                 <div key={i} className="relative mb-2.5">
@@ -255,7 +255,7 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
             </div>
           )}
 
-          {/* HONORS — rows + more-details button */}
+          {/* honors sublist */}
           {active.tab === "honors" && (
             <div className="flex flex-col gap-2">
               {BACK_HONORS.map((r) => (
@@ -293,7 +293,7 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
             </div>
           )}
 
-          {/* SKILLS — grouped icon rows + tools (bigger, fills the space) */}
+          {/* skills logo lines */}
           {active.tab === "skills" && (
             <div className="flex flex-col justify-between h-full gap-1.5 py-0.5">
               {BACK_SKILLS.map((g) => (
@@ -310,7 +310,7 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
           )}
         </div>
 
-        {/* footer: hint + main portfolio */}
+        {/* bottom footer hint and button */}
         <div className="flex items-center justify-between border-t pt-2 mt-2 gap-2 shrink-0" style={{ borderColor: "#e3ddd4" }}>
           <span className="font-card text-[16px] text-slate-500 leading-none">tap an icon to open ↗</span>
           <button

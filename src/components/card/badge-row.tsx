@@ -25,9 +25,10 @@ const BADGES: Badge[] = [
 export function BadgeRow() {
   const [activeBadge, setActiveBadge] = useState<Badge | null>(null);
 
-  // helper to render gym badge icons in svg
+  // helper to render gym badge icons as svgs
   function renderBadgeShape(shape: string, color: string) {
-    const colorClass = color.split(" ")[0]; // get the background color class
+    // get the background color class
+    const colorClass = color.split(" ")[0];
     
     // retro pixel-style paths for badges
     switch (shape) {
@@ -86,7 +87,7 @@ export function BadgeRow() {
 
   return (
     <div className="relative flex flex-col mt-4">
-      {/* header strip for badge row */}
+      {/* header strip for the badge row */}
       <div className="flex items-center justify-between mb-1 px-1 border-b-2 border-slate-300 pb-1">
         <span className="text-[8px] font-pixel text-gba-text-light">BADGES</span>
         {activeBadge ? (
@@ -98,7 +99,7 @@ export function BadgeRow() {
         )}
       </div>
 
-      {/* badges grid */}
+      {/* badges layout grid */}
       <div className="grid grid-cols-8 gap-1.5 justify-items-center">
         {BADGES.map((badge) => (
           <div
@@ -112,7 +113,7 @@ export function BadgeRow() {
         ))}
       </div>
 
-      {/* badge details bar */}
+      {/* badge details readout bar */}
       <div className="mt-2 h-7 bg-slate-100 pixel-border-sm flex items-center px-2">
         <p className="text-[7px] font-pixel text-gba-text-dark leading-tight truncate">
           {activeBadge ? activeBadge.description : "gym badges earned through development trials..."}
