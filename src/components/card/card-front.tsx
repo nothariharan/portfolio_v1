@@ -89,7 +89,7 @@ function slantedCardBorder(border: string, dashed?: boolean) {
 }
 
 /* ================================================================== */
-/*  STACK — technology logos (only JS/TS sit on colored squares)      */
+/*  STACK — technology logos (only JS/TS sit on colored squares) might change it later honestly     */
 /* ================================================================== */
 
 // official multi-color SVG logos live inside pixel tiles — the retro feel comes from the
@@ -226,7 +226,7 @@ function SlantedSlot({
   return (
     <div
       title={title}
-      className="w-[34px] h-[34px] shrink-0 overflow-hidden cursor-help"
+      className="w-[34px] h-[32px] shrink-0 cursor-help"
       style={{
         transform: "skewX(-9deg)",
         marginLeft: attachIndex > 0 ? -8 : 0,
@@ -234,7 +234,7 @@ function SlantedSlot({
       }}
     >
       <div
-        className="w-full h-full flex items-center justify-center"
+        className="w-full h-full flex items-center justify-center p-0.5"
         style={{
           background: earned ? "#fb651e" : "#c2cfc9",
           boxShadow: earned
@@ -331,7 +331,7 @@ export function CardFront() {
       </div>
 
       {/* ===================== MAIN ===================== */}
-      <div className="relative px-4 pt-2 pb-2 flex flex-col" style={{ height: "calc(100% - 50px - 44px)" }}>
+      <div className="relative px-4 pt-2 pb-2 flex flex-col" style={{ height: "calc(100% - 50px - 48px)" }}>
         {/* faded watermark rings behind the avatar */}
         <svg viewBox="0 0 100 100" className="absolute right-[-58px] top-[14px] w-[320px] h-[320px] pointer-events-none" aria-hidden>
           <circle cx="50" cy="50" r="48" fill="#f1cdd1" opacity="0.7" />
@@ -372,11 +372,11 @@ export function CardFront() {
               {FOCUS.map((f, i) => (
                 <div
                   key={f.label}
-                  className="flex-1 min-w-0 flex flex-col items-center gap-1"
+                  className="flex-1 min-w-0 flex flex-col items-center"
                   style={{ marginLeft: i > 0 ? -10 : 0, zIndex: i }}
                 >
                   <div
-                    className="w-full h-[48px] overflow-hidden flex items-center justify-center p-1"
+                    className="w-full h-[48px] overflow-hidden flex items-center justify-center"
                     style={{
                       background: f.fill,
                       transform: "skewX(-9deg)",
@@ -386,16 +386,18 @@ export function CardFront() {
                     <img
                       src={f.img}
                       alt={f.label}
-                      className="w-full h-full object-contain object-center pixelated"
+                      className="w-full h-full object-contain object-center pixelated scale-[1.45]"
                       draggable={false}
                     />
                   </div>
-                  <span className="font-pixel text-[9px] leading-none tracking-tight text-center" style={{ color: f.labelColor }}>
-                    {f.label}
-                  </span>
-                  <span className="font-card text-[10px] leading-[1.1] text-center text-[#8a8f96] px-0.5">
-                    {f.sub}
-                  </span>
+                  <div className="flex flex-col items-center gap-1 mt-2.5 pt-0.5 w-full">
+                    <span className="font-pixel text-[9px] leading-none tracking-tight text-center" style={{ color: f.labelColor }}>
+                      {f.label}
+                    </span>
+                    <span className="font-card text-[10px] leading-[1.2] text-center text-[#8a8f96] px-0.5">
+                      {f.sub}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -489,7 +491,7 @@ export function CardFront() {
 
       {/* ===================== FOOTER: attached slanted badge strip ===================== */}
       <div
-        className="relative h-[44px] flex items-center px-4 shrink-0"
+        className="relative h-[48px] flex items-center px-4 py-1.5 shrink-0"
         style={{
           background: "#cdd9d4",
           boxShadow: "inset 0 2px 0 rgba(0,0,0,0.08)",
