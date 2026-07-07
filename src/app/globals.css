@@ -6,6 +6,8 @@
   --font-pixel: var(--font-pixel), monospace;
   --font-sans: var(--font-sans), sans-serif;
   --font-serif: var(--font-serif), serif;
+  --font-display: var(--font-display), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
   --font-card: var(--font-card), monospace;
   
   /* classic gba trainer card color palette */
@@ -15,11 +17,13 @@
   --color-gba-text-dark: #3f3f3f;
   --color-gba-text-light: #5d5d5d;
   
-  /* main portfolio dark theme colors */
-  --color-portfolio-bg: #0d0d0d;
-  --color-portfolio-card: #151515;
-  --color-portfolio-text: #f0ede8;
-  --color-portfolio-accent: #ebd67d;
+  /* main portfolio — minimal dark theme (tedawf-inspired grayscale) */
+  --color-portfolio-bg: #030712;
+  --color-portfolio-card: #0a0f1c;
+  --color-portfolio-text: #f9fafb;
+  --color-portfolio-muted: #9ca3af;
+  --color-portfolio-border: #1f2937;
+  --color-portfolio-accent: #f9fafb;
 }
 
 :root {
@@ -38,6 +42,17 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+}
+
+/* smooth in-page anchor scrolling for the portfolio nav */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 /* custom 3d card transition helpers */

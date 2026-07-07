@@ -1,67 +1,58 @@
 "use client";
 
-import { Container, Reveal, SectionHeading } from "./ui";
-import { HONORS, type Honor } from "../portfolio/data";
-
-// badge mapping to accent colors
-const BADGE_COLOR: Record<Honor["badge"], string> = {
-  Winner: "#ebd67d",
-  "Runner Up": "#c9a15a",
-  Finalist: "#4ec9b0",
-  Contributor: "#5aa9d6",
-  Certificate: "#a88ad6",
-  Participant: "#8a8f96",
-};
-
-// custom glyph for each honor shape
-const SHAPE_GLYPH: Record<Honor["shape"], string> = {
-  trophy: "🏆",
-  medal: "🥇",
-  shield: "🛡",
-  code: "⌘",
-  cert: "❖",
-  star: "★",
-};
+import { Section, Reveal, SectionHeading, ArrowIcon } from "./ui";
+import { FEATURED_ACHIEVEMENTS, ACHIEVEMENTS } from "./portfolio-data";
+import { useTransition } from "@/hooks/use-transition";
 
 export function Achievements() {
-  return (
-    <section id="achievements" className="scroll-mt-20 py-24 sm:py-32">
-      <Container>
-        <SectionHeading index="05" label="ACHIEVEMENTS" title="Milestones earned" />
+  const { startTransition } = useTransition();
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {HONORS.map((h, i) => {
-            const color = BADGE_COLOR[h.badge];
-            return (
-              <Reveal key={h.title} delay={(i % 2) * 0.06}>
-                <div className="flex h-full items-start gap-4 rounded-xl border border-white/8 bg-portfolio-card/60 p-5 transition-colors hover:border-white/20">
-                  <span
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-lg"
-                    style={{ background: `${color}18`, color }}
-                  >
-                    {SHAPE_GLYPH[h.shape]}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="truncate text-[15px] text-portfolio-text">{h.title}</h3>
-                    </div>
-                    <p className="mt-1 text-sm text-portfolio-text/60">{h.sub}</p>
-                    <div className="mt-3 flex items-center gap-2.5">
-                      <span
-                        className="rounded-full px-2 py-0.5 font-pixel text-[7px] tracking-wide"
-                        style={{ color, background: `${color}1a` }}
-                      >
-                        {h.badge.toUpperCase()}
-                      </span>
-                      <span className="text-xs text-portfolio-text/40">{h.date}</span>
-                    </div>
-                  </div>
+  return (
+    <Section id="achievements">
+      <SectionHeading
+        title="recent wins"
+        action={
+          <button
+            onClick={() => startTransition("/portfolio/achievements")}
+            className="inline-flex items-center gap-1 text-[13px] text-portfolio-muted transition-colors hover:text-portfolio-text cursor-pointer"
+          >
+            all {ACHIEVEMENTS.length} achievements <ArrowIcon className="h-3.5 w-3.5" />
+          </button>
+        }
+      />
+
+      <ul className="flex flex-col">
+        {FEATURED_ACHIEVEMENTS.map((a, i) => (
+          <Reveal key={a.title} delay={i * 0.05}>
+            <li className="group flex items-start gap-4 border-t border-portfolio-border/70 py-4 first:border-t-0">
+              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-portfolio-border bg-portfolio-card text-base">
+                {a.icon}
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-baseline justify-between gap-3">
+                  <h3 className="text-[15px] font-semibold text-portfolio-text">{a.title}</h3>
+                  <span className="shrink-0 font-mono text-[11px] text-portfolio-muted">{a.date}</span>
                 </div>
-              </Reveal>
-            );
-          })}
-        </div>
-      </Container>
-    </section>
+                <p className="mt-0.5 text-[12px] text-portfolio-muted/80">{a.event}</p>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-portfolio-muted">{a.note}</p>
+
+                {a.tracks && (
+                  <div className="mt-2.5 flex flex-wrap gap-1.5">
+                    {a.tracks.map((t) => (
+                      <span
+                        key={t.label}
+                        className="inline-flex items-center gap-1 rounded-md border border-portfolio-border bg-portfolio-border/40 px-2 py-0.5 font-mono text-[10px] text-portfolio-text/80"
+                      >
+                        <span className="text-portfolio-muted">{t.label}</span> {t.result}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </li>
+          </Reveal>
+        ))}
+      </ul>
+    </Section>
   );
 }

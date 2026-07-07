@@ -1,53 +1,37 @@
 "use client";
 
-import { Container, Reveal, SectionHeading, LogoChip } from "./ui";
+import { Section, Reveal, SectionHeading, TechTag } from "./ui";
 import { BACK_SKILLS } from "../portfolio/data";
 
-// pretty display names for logo keys
-const NAMES: Record<string, string> = {
-  nextjs: "Next.js",
-  nodejs: "Node.js",
-  fastapi: "FastAPI",
-  html5: "HTML5",
-  css3: "CSS3",
-  tailwindcss: "Tailwind",
-  githubactions: "Actions",
-  postgresql: "SQL",
-  opencv: "OpenCV",
-  pytorch: "PyTorch",
+const LABELS: Record<string, string> = {
+  "AI / ML": "ai / ml",
+  "FULL-STACK": "full-stack",
+  DEVOPS: "devops",
+  CLOUD: "cloud",
+  TOOLS: "tools",
 };
-
-const pretty = (k: string) => NAMES[k] ?? k.charAt(0).toUpperCase() + k.slice(1);
 
 export function Skills() {
   return (
-    <section id="skills" className="scroll-mt-20 py-24 sm:py-32">
-      <Container>
-        <SectionHeading index="04" label="SKILLS" title="Tools in my belt" />
+    <Section id="skills">
+      <SectionHeading title="skills & tools" />
 
-        <div className="space-y-10">
-          {BACK_SKILLS.map((group, gi) => (
-            <Reveal key={group.label} delay={gi * 0.05}>
-              <div className="grid gap-4 border-t border-white/8 pt-6 sm:grid-cols-[160px_1fr]">
-                <span className="font-pixel text-[10px] tracking-wider text-portfolio-accent">
-                  {group.label}
-                </span>
-                <div className="flex flex-wrap gap-2.5">
-                  {group.icons.map((k) => (
-                    <span
-                      key={k}
-                      className="flex items-center gap-2 rounded-lg border border-white/8 bg-portfolio-card/60 py-1.5 pl-1.5 pr-3 transition-colors hover:border-white/20"
-                    >
-                      <LogoChip k={k} size={26} label={pretty(k)} />
-                      <span className="text-sm text-portfolio-text/80">{pretty(k)}</span>
-                    </span>
-                  ))}
-                </div>
+      <div className="flex flex-col gap-5">
+        {BACK_SKILLS.map((group, gi) => (
+          <Reveal key={group.label} delay={gi * 0.04}>
+            <div className="grid gap-2 sm:grid-cols-[110px_1fr] sm:items-start">
+              <span className="pt-1 text-[12px] font-medium text-portfolio-muted">
+                {LABELS[group.label] ?? group.label.toLowerCase()}
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {group.icons.map((k) => (
+                  <TechTag key={k} k={k} />
+                ))}
               </div>
-            </Reveal>
-          ))}
-        </div>
-      </Container>
-    </section>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </Section>
   );
 }
