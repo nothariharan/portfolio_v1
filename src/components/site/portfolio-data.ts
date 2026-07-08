@@ -440,3 +440,120 @@ export const STATS = [
   { value: "9", label: "hackathon wins" },
   { value: "1700+", label: "leetcode rating" },
 ];
+
+// ------------------------------------------------------------------
+// Journey timeline — the full "so far", newest first
+// (curated from wiki/life/timeline.md)
+// ------------------------------------------------------------------
+
+export type JourneyKind = "education" | "work" | "win" | "ship" | "milestone";
+
+export type JourneyEntry = {
+  date: string;
+  title: string;
+  desc: string;
+  kind: JourneyKind;
+  icon: string;
+};
+
+export const JOURNEY_KIND_META: Record<JourneyKind, { color: string; label: string }> = {
+  education: { color: "#10b981", label: "education" },
+  work: { color: "#8b5cf6", label: "work" },
+  win: { color: "#f59e0b", label: "win" },
+  ship: { color: "#38bdf8", label: "shipped" },
+  milestone: { color: "#ec4899", label: "milestone" },
+};
+
+export const JOURNEY: JourneyEntry[] = [
+  {
+    date: "Jun 2026",
+    title: "Building CoFound",
+    desc: "multi-agent founder OS — my current main project. also shipped monkeyspeak (voice wpm benchmark) and SlopOS (a fake OS made of slop, on purpose).",
+    kind: "ship",
+    icon: "🚀",
+  },
+  {
+    date: "May 2026",
+    title: "gurren shipped",
+    desc: "a local-first windows dev overlay with on-device rag — press a hotkey, ask your codebase anything.",
+    kind: "ship",
+    icon: "⌘",
+  },
+  {
+    date: "Apr 2026",
+    title: "YC Startup School India '26",
+    desc: "selected for y combinator's founder programme in bangalore. startup thinking, baked in.",
+    kind: "milestone",
+    icon: "🚀",
+  },
+  {
+    date: "Apr 2026",
+    title: "Four hackathon wins in a single day",
+    desc: "swept four tracks at abhisarga '26 — bepop (🥇 cosmix), team rocket (replicate), yui (ideaverse) and veda (agentica).",
+    kind: "win",
+    icon: "🏆",
+  },
+  {
+    date: "Apr 2026",
+    title: "Mugen shipped",
+    desc: "an explainable ai bias auditor that maps findings to the eu ai act, eeoc and ecoa.",
+    kind: "ship",
+    icon: "🧪",
+  },
+  {
+    date: "Mar 2026",
+    title: "The prolific month",
+    desc: "shipped stitch n sense, bharat seva, justask, visor, team rocket, bepop, yui and veda — eight projects in one month.",
+    kind: "ship",
+    icon: "⚡",
+  },
+  {
+    date: "Feb 2026",
+    title: "AMUHACKS 5.0 — 1st place",
+    desc: "won with justask, a brutalist career roadmap drawn as a subway metro map.",
+    kind: "win",
+    icon: "🥇",
+  },
+  {
+    date: "Feb 2026",
+    title: "Two 2nd places in one weekend",
+    desc: "global game jam (visage, a host-switching platformer) and gdg techsprint (lensfix, campus maintenance).",
+    kind: "win",
+    icon: "🥈",
+  },
+  {
+    date: "Jan 2026",
+    title: "First hackathon win",
+    desc: "vahanlive took the mvp sprint challenge — real-time bus tracking with driver phones as gps beacons.",
+    kind: "win",
+    icon: "🏆",
+  },
+  {
+    date: "Nov 2025",
+    title: "Synergia Hackathon win",
+    desc: "real-time underwater computer vision with yolov8 — detection, tracking and risk scoring.",
+    kind: "win",
+    icon: "🏆",
+  },
+  {
+    date: "Oct 2025",
+    title: "Hacktoberfest Golden Contributor",
+    desc: "highest-tier open-source contributor for 2025 — meaningful prs merged across repos.",
+    kind: "milestone",
+    icon: "🎖️",
+  },
+  {
+    date: "Aug 2025",
+    title: "Started dual-degree CS",
+    desc: "iiit sri city × iit patna — building in parallel with coursework from day one.",
+    kind: "education",
+    icon: "🎓",
+  },
+  {
+    date: "2025 — 2026",
+    title: "SAP Security Intern @ Rinexis",
+    desc: "built a multi-tenant sap security saas — segregation-of-duties analysis and itgc audit tooling.",
+    kind: "work",
+    icon: "💼",
+  },
+];

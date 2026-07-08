@@ -29,7 +29,7 @@ export default function ProjectsDirectory() {
     [filter],
   );
 
-  const backToPortfolio = () => startTransition("/portfolio?tab=projects");
+  const backToPortfolio = () => startTransition("/portfolio");
 
   return (
     <div className="min-h-screen bg-portfolio-bg font-sans text-portfolio-text antialiased selection:bg-white/15">

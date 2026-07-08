@@ -1,40 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { SITE } from "./content";
+import { useTransition } from "@/hooks/use-transition";
 
 const LINKS = [
-  { id: "about", label: "home" },
-  { id: "experience", label: "experience" },
-  { id: "projects", label: "projects" },
-  { id: "skills", label: "skills" },
-  { id: "achievements", label: "awards" },
+  { id: "home", label: "home", href: "/portfolio" },
+  { id: "experience", label: "experience", href: "/portfolio/experience" },
+  { id: "projects", label: "projects", href: "/portfolio/projects" },
+  { id: "skills", label: "skills", href: "/portfolio/skills" },
+  { id: "achievements", label: "awards", href: "/portfolio/achievements" },
 ];
 
-export function SiteNav({ onBack }: { onBack: () => void }) {
-  const [active, setActive] = useState("about");
+export function SiteNav({ onBack, active = "home" }: { onBack: () => void; active?: string }) {
+  const { startTransition } = useTransition();
 
-  // scrollspy — highlight the section currently in view
-  useEffect(() => {
-    const sections = LINKS.map((l) => document.getElementById(l.id)).filter(
-      (el): el is HTMLElement => Boolean(el),
-    );
-    if (!sections.length) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // pick the section whose top sits nearest just below the sticky header
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible[0]) setActive(visible[0].target.id);
-      },
-      { rootMargin: "-72px 0px -70% 0px", threshold: 0 },
-    );
-
-    sections.forEach((s) => observer.observe(s));
-    return () => observer.disconnect();
-  }, []);
+  const go = (id: string, href: string) => {
+    if (id === "home" && active === "home") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    startTransition(href);
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-portfolio-bg/70 backdrop-blur-md">
@@ -51,10 +37,10 @@ export function SiteNav({ onBack }: { onBack: () => void }) {
 
         <div className="hidden items-center gap-6 sm:flex">
           {LINKS.map((l) => (
-            <a
+            <button
               key={l.id}
-              href={`#${l.id}`}
-              className={`relative text-sm transition-colors ${
+              onClick={() => go(l.id, l.href)}
+              className={`relative text-sm transition-colors cursor-pointer ${
                 active === l.id ? "text-portfolio-text" : "text-portfolio-muted hover:text-portfolio-text"
               }`}
             >
@@ -62,7 +48,7 @@ export function SiteNav({ onBack }: { onBack: () => void }) {
               {active === l.id && (
                 <span className="absolute -bottom-1.5 left-0 right-0 mx-auto h-1 w-1 rounded-full bg-portfolio-text" />
               )}
-            </a>
+            </button>
           ))}
         </div>
 

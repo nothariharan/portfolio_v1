@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 
 /* ================================================================== */
 /*  Small reusable marks                                              */
@@ -285,6 +286,67 @@ function QuickLink({ href, label, children }: { href: string; label: string; chi
 }
 
 /* ================================================================== */
+/*  POKE AVATAR — the standing sprite reacts when you click it         */
+/* ================================================================== */
+
+const POKE_LINES = ["hi! 👋", "let's build", "thumbs up!", "ship it 🚀", "gg", "3am again", "npm run dev"];
+
+function PokeAvatar() {
+  const controls = useAnimationControls();
+  const [line, setLine] = useState<string | null>(null);
+  const [pokes, setPokes] = useState(0);
+  const timer = useRef<number | undefined>(undefined);
+
+  const poke = (e: React.MouseEvent) => {
+    e.stopPropagation(); // don't flip the card
+    const next = pokes % POKE_LINES.length;
+    setPokes((p) => p + 1);
+    setLine(POKE_LINES[next]);
+    controls.start({
+      y: [0, -18, 0, -6, 0],
+      rotate: [0, -3, 3, -1, 0],
+      transition: { duration: 0.6, ease: "easeOut" },
+    });
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setLine(null), 1500);
+  };
+
+  return (
+    <div className="absolute right-[-6px] top-[-2px] z-20 h-[252px] w-[150px]">
+      {/* pixel speech bubble */}
+      <AnimatePresence>
+        {line && (
+          <motion.div
+            initial={{ opacity: 0, y: 6, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 4, scale: 0.9 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            className="absolute left-[-6px] top-[18px] z-30 whitespace-nowrap rounded-[6px] bg-white px-2 py-1.5 font-pixel text-[9px] leading-none text-[#2c2c2c]"
+            style={{ boxShadow: "0 0 0 2px #2c2c2c, 0 3px 0 rgba(0,0,0,0.2)" }}
+          >
+            {line}
+            <span
+              className="absolute -bottom-[6px] left-4 h-[8px] w-[8px] rotate-45 bg-white"
+              style={{ boxShadow: "2px 2px 0 #2c2c2c" }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.img
+        src="/sprites/hari_stand.png"
+        alt="Hariharan — click me"
+        title="poke me!"
+        animate={controls}
+        onClick={poke}
+        draggable={false}
+        className="absolute right-0 bottom-0 h-[252px] cursor-pointer object-contain pixelated drop-shadow-[2px_4px_2px_rgba(0,0,0,0.16)] transition-[filter] hover:drop-shadow-[0_0_10px_rgba(232,80,76,0.5)] active:scale-[0.98]"
+      />
+    </div>
+  );
+}
+
+/* ================================================================== */
 /*  CARD FRONT                                                        */
 /* ================================================================== */
 
@@ -340,12 +402,8 @@ export function CardFront() {
           <circle cx="50" cy="50" r="9" fill="#f7f6f3" />
         </svg>
 
-        {/* avatar — stands free on the right, overlapping the watermark */}
-        <img
-          src="/sprites/hari1.png"
-          alt="Hariharan"
-          className="absolute right-0 top-[-2px] h-[252px] object-contain pixelated drop-shadow-[2px_4px_2px_rgba(0,0,0,0.16)] pointer-events-none"
-        />
+        {/* avatar — stands free on the right, overlapping the watermark; click to poke */}
+        <PokeAvatar />
 
         {/* ---------- left info column (NAME / FOCUS / STACK) ---------- */}
         <div className="relative z-10 w-[64%] flex flex-col gap-1.5">

@@ -82,7 +82,7 @@ export function Hero() {
             transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className="hidden shrink-0 rounded-xl border border-portfolio-border bg-gradient-to-b from-white/[0.05] to-transparent p-3 sm:block"
           >
-            <img src="/sprites/hari1.png" alt="Hariharan" className="pixelated h-36 w-auto" />
+            <img src="/sprites/hari_sit.png" alt="Hariharan" className="pixelated h-48 w-auto" />
           </motion.div>
         </div>
 
