@@ -1,9 +1,43 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { SITE } from "./content";
 import { STATS } from "./portfolio-data";
 import { Container, GitHubIcon, LinkedInIcon, MailIcon } from "./ui";
+
+// sitting loop for the portfolio hero — frames are already lined up on the feet
+// s1 typing / s2 typing shift / s3 grab coffee / s4 sip / s5 back to typing
+const SIT_FRAMES = [
+  "/sprites/sit-norm/s1.png",
+  "/sprites/sit-norm/s2.png",
+  "/sprites/sit-norm/s3.png",
+  "/sprites/sit-norm/s4.png",
+  "/sprites/sit-norm/s5.png",
+];
+// type for a bit, reach for coffee, sip twice, then back to work
+const SIT_SEQ = [0, 0, 0, 1, 1, 2, 3, 3, 4, 4, 0];
+const SIT_MS = 750;
+
+function SittingSprite() {
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), SIT_MS);
+    return () => clearInterval(id);
+  }, []);
+
+  const src = SIT_FRAMES[SIT_SEQ[tick % SIT_SEQ.length]];
+
+  return (
+    <img
+      src={src}
+      alt="Hariharan"
+      className="pixelated h-52 w-auto object-contain object-bottom select-none"
+      draggable={false}
+    />
+  );
+}
 
 const fade = {
   initial: { opacity: 0, y: 12, filter: "blur(6px)" },
@@ -82,7 +116,7 @@ export function Hero() {
             transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className="hidden shrink-0 rounded-xl border border-portfolio-border bg-gradient-to-b from-white/[0.05] to-transparent p-3 sm:block"
           >
-            <img src="/sprites/hari_sit.png" alt="Hariharan" className="pixelated h-48 w-auto" />
+            <SittingSprite />
           </motion.div>
         </div>
 

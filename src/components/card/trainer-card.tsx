@@ -14,14 +14,13 @@ interface TrainerCardProps {
 
 export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
-  
-  // pause idle float while hover is active so buttons are stable
+
+  // keep the float chill while you're hovering so buttons don't bounce
   const [isHovered, setIsHovered] = useState(false);
   const { rotateX, rotateY, handleMouseMove, handleMouseLeave } = useCardTilt();
 
-  // toggle card flip state
   function handleCardClick() {
-    setIsFlipped(!isFlipped);
+    setIsFlipped((prev) => !prev);
   }
 
   function handleLeave() {
@@ -31,7 +30,7 @@ export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
 
   return (
     <div className="perspective-1000 w-[680px] max-w-full h-[525px] flex items-center justify-center p-2">
-      {/* outer container handles 3d tilt and hover float animations */}
+      {/* tilt + float live here; flip is on the inner shell */}
       <motion.div
         className="w-full h-full relative cursor-pointer select-none"
         style={{
@@ -40,7 +39,7 @@ export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
           transformStyle: "preserve-3d",
         }}
         animate={{
-          // hover stops float, otherwise float on a sine wave
+          // float when idle, settle when hovered
           y: isHovered ? 0 : [0, -8, 0],
         }}
         transition={{
@@ -53,7 +52,7 @@ export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
         onMouseLeave={handleLeave}
         onClick={handleCardClick}
       >
-        {/* inner card flip animator */}
+        {/* actual flip */}
         <motion.div
           className="w-full h-full relative"
           style={{
@@ -68,7 +67,7 @@ export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
             damping: 20,
           }}
         >
-          {/* front face card slot with a custom shadows bezel */}
+          {/* front */}
           <div
             className="absolute inset-0 backface-hidden rounded-lg overflow-hidden"
             style={{
@@ -77,11 +76,10 @@ export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
             }}
           >
             <CardFront />
-            {/* subtle holographic diagonal overlay sheen */}
             <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 pointer-events-none opacity-30" />
           </div>
 
-          {/* back face card slot with standard shadows bezel */}
+          {/* back */}
           <div
             className="absolute inset-0 backface-hidden rounded-lg overflow-hidden"
             style={{
