@@ -72,7 +72,7 @@ export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
             className="absolute inset-0 backface-hidden rounded-lg overflow-hidden"
             style={{
               boxShadow:
-                "0 0 0 2px #cdeeea, 0 0 0 12px #3f9b94, 0 0 0 14px #14403d, 0 16px 36px rgba(0,0,0,0.45)",
+                "0 0 0 3px #33406b, 0 0 0 8px #f2e6bc, 0 0 0 11px #33406b, 0 0 0 13px #1f2a44, 0 16px 36px rgba(0,0,0,0.45)",
             }}
           >
             <CardFront />
@@ -85,7 +85,7 @@ export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
             style={{
               transform: "rotateY(180deg)",
               boxShadow:
-                "0 0 0 2px #cdeeea, 0 0 0 12px #3f9b94, 0 0 0 14px #14403d, 0 16px 36px rgba(0,0,0,0.45)",
+                "0 0 0 3px #33406b, 0 0 0 8px #f2e6bc, 0 0 0 11px #33406b, 0 0 0 13px #1f2a44, 0 16px 36px rgba(0,0,0,0.45)",
             }}
           >
             <CardBack onEnterPortfolio={onEnterPortfolio} />

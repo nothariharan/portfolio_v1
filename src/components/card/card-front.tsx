@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { TRAINER_ID } from "../portfolio/data";
 
 /* ================================================================== */
 /*  Small reusable marks                                              */
@@ -10,9 +11,9 @@ import { useEffect, useState } from "react";
 function Bullet({ size = 16 }: { size?: number }) {
   return (
     <svg viewBox="0 0 100 100" width={size} height={size} className="shrink-0" aria-hidden>
-      <circle cx="50" cy="50" r="45" fill="#fff" stroke="#a7adb4" strokeWidth="8" />
-      <rect x="5" y="45" width="90" height="10" fill="#a7adb4" />
-      <circle cx="50" cy="50" r="13" fill="#fff" stroke="#a7adb4" strokeWidth="8" />
+      <circle cx="50" cy="50" r="45" fill="#fff" stroke="#8b95b8" strokeWidth="8" />
+      <rect x="5" y="45" width="90" height="10" fill="#8b95b8" />
+      <circle cx="50" cy="50" r="13" fill="#fff" stroke="#8b95b8" strokeWidth="8" />
     </svg>
   );
 }
@@ -83,7 +84,7 @@ const FOCUS: Focus[] = [
 // pixel-style border stack for slanted cards (inner color ring + dark outer edge + drop)
 function slantedCardBorder(border: string, dashed?: boolean) {
   return {
-    boxShadow: `inset 0 0 0 2px ${border}, inset 0 0 0 4px rgba(255,255,255,0.45), 0 0 0 2px #2c2c2c, 0 3px 0 rgba(0,0,0,0.18)`,
+    boxShadow: `inset 0 0 0 2px ${border}, inset 0 0 0 4px rgba(255,255,255,0.45), 0 0 0 2px #33406b, 0 3px 0 rgba(0,0,0,0.18)`,
     border: dashed ? `2px dashed ${border}` : undefined,
   } as const;
 }
@@ -115,12 +116,12 @@ function StackTile({ name, logo, more }: { name: string; logo?: string; more?: b
   return (
     <div className="group relative shrink-0">
       <div
-        className="w-[38px] h-[38px] bg-white rounded-[5px] flex items-center justify-center transition-all duration-150 shadow-[inset_0_0_0_2px_#2c2c2c,0_2px_0_rgba(0,0,0,0.22)] group-hover:-translate-y-0.5 group-hover:shadow-[inset_0_0_0_2px_#1fc4e0,0_4px_0_rgba(0,0,0,0.22)]"
+        className="w-[34px] h-[34px] bg-white rounded-[5px] flex items-center justify-center transition-all duration-150 shadow-[inset_0_0_0_2px_#33406b,0_2px_0_rgba(0,0,0,0.22)] group-hover:-translate-y-0.5 group-hover:shadow-[inset_0_0_0_2px_#4a76c9,0_4px_0_rgba(0,0,0,0.22)]"
       >
         {more ? (
           <span className="font-pixel text-[8px] leading-none text-[#9aa0a6] group-hover:text-[#1f9fb8]">MORE</span>
         ) : (
-          <img src={logo} alt={name} className="w-[25px] h-[25px] object-contain" />
+          <img src={logo} alt={name} className="w-[22px] h-[22px] object-contain" />
         )}
       </div>
       {/* retro tooltip */}
@@ -140,7 +141,7 @@ function StackTile({ name, logo, more }: { name: string; logo?: string; more?: b
 
 function BarChartIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="w-[18px] h-[18px] shrink-0" fill="#3f9b46">
+    <svg viewBox="0 0 24 24" className="w-[14px] h-[14px] shrink-0" fill="#3f9b46">
       <rect x="3" y="13" width="4" height="8" />
       <rect x="10" y="8" width="4" height="13" />
       <rect x="17" y="3" width="4" height="18" />
@@ -148,61 +149,94 @@ function BarChartIcon() {
   );
 }
 
-/* ================================================================== */
-/*  CURRENTLY — progress rows over the generated desk scene           */
-/* ================================================================== */
-
-// segmented retro progress bar
-function SegBar({ color, filled, total = 12 }: { color: string; filled: number; total?: number }) {
+// tiny pixel marks for the EXP bullets
+function BuildMini() {
   return (
-    <span className="flex gap-[2px]">
-      {Array.from({ length: total }).map((_, i) => (
-        <span
-          key={i}
-          className="w-[8px] h-[8px] rounded-[1px]"
-          style={{ background: i < filled ? color : "rgba(255,255,255,0.16)" }}
-        />
-      ))}
-    </span>
-  );
-}
-
-function LaptopMini() {
-  return (
-    <svg viewBox="0 0 24 18" className="w-[18px] h-[14px]">
-      <rect x="4" y="2" width="16" height="11" rx="1" fill="#cfd6df" />
-      <rect x="6" y="4" width="12" height="7" fill="#1f2a38" />
-      <text x="12" y="9.8" textAnchor="middle" fontSize="5" fill="#5fe07a" fontFamily="monospace">&gt;_</text>
-      <path d="M2 16 H22 L20 13 H4 Z" fill="#aab3bf" />
+    <svg viewBox="0 0 16 16" className="w-[11px] h-[11px]" aria-hidden>
+      <rect x="2" y="9" width="12" height="5" fill="#5a9bd6" />
+      <rect x="4" y="5" width="8" height="4" fill="#7eb6e8" />
+      <rect x="6" y="2" width="4" height="3" fill="#a8d2f2" />
+      <rect x="7" y="11" width="2" height="3" fill="#2f78bf" />
     </svg>
   );
 }
 
-function BookMini() {
+function LearnMini() {
   return (
-    <svg viewBox="0 0 22 22" className="w-[16px] h-[16px]">
-      <rect x="4" y="3" width="14" height="16" rx="1" fill="#d4524a" />
-      <rect x="4" y="3" width="4" height="16" fill="#a83a33" />
-      <rect x="10" y="6" width="6" height="2" fill="#f3d9d6" />
-      <rect x="10" y="10" width="6" height="2" fill="#f3d9d6" />
+    <svg viewBox="0 0 16 16" className="w-[11px] h-[11px]" aria-hidden>
+      <rect x="2" y="3" width="12" height="10" fill="#c8a9ec" />
+      <rect x="2" y="3" width="3" height="10" fill="#8a5bc4" />
+      <rect x="7" y="5" width="5" height="2" fill="#f3e8ff" />
+      <rect x="7" y="9" width="5" height="2" fill="#f3e8ff" />
     </svg>
   );
 }
 
-function MugMini() {
+function ShipMini() {
   return (
-    <svg viewBox="0 0 24 22" className="w-[16px] h-[15px]">
-      <rect x="3" y="5" width="13" height="13" rx="1" fill="#e8e6df" />
-      <path d="M16 8 h3 a3 3 0 0 1 0 6 h-3 z" fill="none" stroke="#e8e6df" strokeWidth="2" />
-      <text x="9.5" y="14" textAnchor="middle" fontSize="6" fill="#3a7cc2" fontFamily="monospace">&lt;/&gt;</text>
+    <svg viewBox="0 0 16 16" className="w-[11px] h-[11px]" aria-hidden>
+      <rect x="3" y="8" width="10" height="5" fill="#5aa84d" />
+      <rect x="5" y="4" width="6" height="4" fill="#7fd66a" />
+      <rect x="7" y="2" width="2" height="2" fill="#f0c84a" />
+      <rect x="2" y="13" width="12" height="2" fill="#3f8f33" />
+    </svg>
+  );
+}
+
+const EXP_LINES = [
+  { label: "Building.", icon: <BuildMini />, accent: "#5a9bd6" },
+  { label: "Learning.", icon: <LearnMini />, accent: "#8a5bc4" },
+  { label: "Shipping.", icon: <ShipMini />, accent: "#5aa84d" },
+];
+
+/* ================================================================== */
+/*  CURRENTLY — what i'm up to right now                              */
+/* ================================================================== */
+
+// little pixel marks for each line
+function SapMini() {
+  return (
+    <svg viewBox="0 0 20 20" className="w-[16px] h-[16px]" aria-hidden>
+      <rect x="2" y="4" width="16" height="13" fill="#0f766e" />
+      <rect x="2" y="4" width="16" height="3" fill="#14b8a6" />
+      <rect x="5" y="9" width="4" height="3" fill="#ccfbf1" />
+      <rect x="11" y="9" width="4" height="3" fill="#ccfbf1" />
+      <rect x="8" y="13" width="4" height="4" fill="#99f6e4" />
+      <rect x="1" y="17" width="18" height="2" fill="#115e59" />
+    </svg>
+  );
+}
+
+function StealthMini() {
+  return (
+    <svg viewBox="0 0 20 20" className="w-[16px] h-[16px]" aria-hidden>
+      <rect x="3" y="8" width="14" height="8" fill="#334155" />
+      <rect x="5" y="4" width="10" height="5" fill="#1e293b" />
+      <rect x="7" y="11" width="2" height="2" fill="#38bdf8" />
+      <rect x="11" y="11" width="2" height="2" fill="#38bdf8" />
+      <rect x="8" y="14" width="4" height="2" fill="#64748b" />
+      <rect x="9" y="2" width="2" height="2" fill="#fbbf24" />
+    </svg>
+  );
+}
+
+function GrindMini() {
+  return (
+    <svg viewBox="0 0 20 20" className="w-[16px] h-[16px]" aria-hidden>
+      <rect x="7" y="2" width="6" height="3" fill="#fbbf24" />
+      <rect x="5" y="5" width="10" height="3" fill="#f59e0b" />
+      <rect x="8" y="8" width="4" height="7" fill="#d97706" />
+      <rect x="6" y="15" width="8" height="3" fill="#b45309" />
+      <rect x="14" y="10" width="4" height="4" fill="#fde68a" />
+      <rect x="15" y="11" width="2" height="2" fill="#f59e0b" />
     </svg>
   );
 }
 
 const CURRENT = [
-  { icon: <LaptopMini />, label: "Building something cool", color: "#5fe07a", filled: 10 },
-  { icon: <BookMini />, label: "Mastering AI & System Design", color: "#49a6ff", filled: 7 },
-  { icon: <MugMini />, label: "Shipping & learning everyday", color: "#b07cf0", filled: 8 },
+  { icon: <SapMini />, label: "SAP Software Integration @ Rinexis", accent: "#5fe0c8" },
+  { icon: <StealthMini />, label: "SWE @ stealth startup", accent: "#49a6ff" },
+  { icon: <GrindMini />, label: "Hackathonmaxxing & Tokenmaxxing", accent: "#f0c84a" },
 ];
 
 /* ================================================================== */
@@ -226,43 +260,41 @@ function SlantedSlot({
   return (
     <div
       title={title}
-      className="w-[48px] h-[40px] shrink-0 cursor-help"
+      className="relative w-[46px] h-[32px] shrink-0 cursor-help"
       style={{
-        transform: "skewX(-9deg)",
-        marginLeft: attachIndex > 0 ? -10 : 0,
-        zIndex: attachIndex,
+        transform: "skewX(-10deg)",
+        // pull them together a bit, but keep leftmost on top so YC isn't covered
+        marginLeft: attachIndex > 0 ? -7 : 0,
+        zIndex: 20 - attachIndex,
       }}
     >
       <div
-        className="w-full h-full flex items-center justify-center p-0.5"
+        className="w-full h-full flex items-center justify-center overflow-visible"
         style={{
-          background: earned ? "#fb651e" : "#c2cfc9",
+          background: earned ? "#fb651e" : "#d8cca0",
           boxShadow: earned
-            ? "inset 0 0 0 2px #b54400, inset 0 0 0 4px rgba(255,255,255,0.3), 0 0 0 2px #2c2c2c, 0 2px 0 rgba(0,0,0,0.2)"
-            : "inset 0 0 0 2px #8fa59a, inset 0 0 0 4px rgba(255,255,255,0.25), 0 0 0 2px #2c2c2c, 0 2px 0 rgba(0,0,0,0.15)",
+            ? "inset 0 0 0 2px #b54400, inset 0 0 0 4px rgba(255,255,255,0.3), 0 0 0 2px #33406b, 0 2px 0 rgba(0,0,0,0.2)"
+            : "inset 0 0 0 2px #b3a678, inset 0 0 0 4px rgba(255,255,255,0.25), 0 0 0 2px #33406b, 0 2px 0 rgba(0,0,0,0.15)",
         }}
       >
-        {children ? <div style={{ transform: "skewX(9deg)" }}>{children}</div> : null}
+        {children ? (
+          <div className="flex items-center justify-center" style={{ transform: "skewX(10deg)" }}>
+            {children}
+          </div>
+        ) : null}
       </div>
     </div>
   );
 }
 
-// faithful Y Combinator mark for the earned footer badge
+// Y Combinator mark — path so it stays sharp after the unskew
 function YcBadge() {
   return (
-    <svg viewBox="0 0 24 24" className="w-[22px] h-[22px]" aria-hidden>
-      <text
-        x="12"
-        y="17"
-        textAnchor="middle"
-        fontSize="15"
-        fontWeight="700"
+    <svg viewBox="0 0 24 24" className="w-[16px] h-[16px]" aria-hidden>
+      <path
         fill="#fff"
-        fontFamily="Arial, Helvetica, sans-serif"
-      >
-        Y
-      </text>
+        d="M5.2 3.5h4.1L12 9.1l2.7-5.6h4.1l-4.9 8.6V20.5h-3.8v-8.4L5.2 3.5z"
+      />
     </svg>
   );
 }
@@ -329,13 +361,14 @@ function CardAvatar() {
 /*  CARD FRONT                                                        */
 /* ================================================================== */
 
-const PINK_DIVIDER = "#f0d6d8";
+const PINK_DIVIDER = "#e6d6a6";
 
 export function CardFront() {
-  const [id] = useState(() => Math.floor(10000 + Math.random() * 90000).toString());
+  // fixed trainer id — random per-render values break SSR hydration
+  const id = TRAINER_ID;
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-[#f7f6f3] text-slate-800 select-none">
+    <div className="relative w-full h-full overflow-hidden bg-[#f6ecc6] text-slate-800 select-none">
       {/* ===================== HEADER ===================== */}
       <div
         className="relative flex items-center justify-between px-3.5 h-[50px]"
@@ -364,7 +397,7 @@ export function CardFront() {
             </svg>
           </QuickLink>
 
-          <div className="flex items-baseline gap-1.5 px-3 py-1.5 rounded-[6px] bg-[#fbf6f4]" style={{ boxShadow: "inset 0 0 0 1.5px rgba(0,0,0,0.08)" }}>
+          <div className="flex items-baseline gap-1.5 px-3 py-1.5 rounded-[6px] bg-[#f8edc8]" style={{ boxShadow: "inset 0 0 0 1.5px rgba(90,70,20,0.25)" }}>
             <span className="font-pixel text-[11px] leading-none text-[#3a3a3a]">IDNo.</span>
             <span className="font-pixel text-[11px] leading-none text-[#3a3a3a]">{id}</span>
           </div>
@@ -372,28 +405,31 @@ export function CardFront() {
       </div>
 
       {/* ===================== MAIN ===================== */}
-      <div className="relative px-4 pt-2 pb-2 flex flex-col" style={{ height: "calc(100% - 50px - 52px)" }}>
+      <div className="relative px-4 pt-2 pb-1.5 flex flex-col" style={{ height: "calc(100% - 50px - 40px)" }}>
         {/* faded watermark rings behind the avatar */}
         <svg viewBox="0 0 100 100" className="absolute right-[-58px] top-[14px] w-[320px] h-[320px] pointer-events-none" aria-hidden>
-          <circle cx="50" cy="50" r="48" fill="#f1cdd1" opacity="0.7" />
-          <circle cx="50" cy="50" r="34" fill="#f7f6f3" />
-          <circle cx="50" cy="50" r="21" fill="#f1cdd1" opacity="0.7" />
-          <circle cx="50" cy="50" r="9" fill="#f7f6f3" />
+          <circle cx="50" cy="50" r="48" fill="#e9d795" opacity="0.7" />
+          <circle cx="50" cy="50" r="34" fill="#f6ecc6" />
+          <circle cx="50" cy="50" r="21" fill="#e9d795" opacity="0.7" />
+          <circle cx="50" cy="50" r="9" fill="#f6ecc6" />
         </svg>
 
         {/* avatar on the right over the rings — animation only */}
         <CardAvatar />
 
         {/* ---------- left info column (NAME / FOCUS / STACK) ---------- */}
-        <div className="relative z-10 w-[64%] flex flex-col gap-1.5">
+        <div
+          className="relative z-10 w-[64%] flex flex-col gap-1 rounded-[8px] px-2.5 py-1.5"
+          style={{ background: "#fdf6da", boxShadow: "0 0 0 2px #c9a04e, inset 0 0 0 2px #fffdf0" }}
+        >
           {/* NAME */}
           <div>
             <div className="flex items-center gap-2.5">
               <Bullet />
-              <span className="font-pixel text-[12px] leading-none text-[#6b6f76]">NAME:</span>
+              <span className="font-pixel text-[12px] leading-none text-[#56618c]">NAME:</span>
               <span className="font-pixel text-[14px] leading-none text-[#c23a33] tracking-wide">HARIHARAN</span>
             </div>
-            <div className="font-card text-[14px] leading-none text-[#6b6f76] pl-[26px] mt-1.5">
+            <div className="font-card text-[14px] leading-none text-[#56618c] pl-[26px] mt-1.5">
               AKA: Hari
             </div>
             <div className="h-px mt-2" style={{ background: PINK_DIVIDER }} />
@@ -403,7 +439,7 @@ export function CardFront() {
           <div>
             <div className="flex items-center gap-2.5 mb-1.5">
               <Bullet />
-              <span className="font-pixel text-[12px] leading-none text-[#6b6f76]">FOCUS:</span>
+              <span className="font-pixel text-[12px] leading-none text-[#56618c]">FOCUS:</span>
             </div>
             <div className="flex pl-[26px]">
               {FOCUS.map((f, i) => (
@@ -413,7 +449,7 @@ export function CardFront() {
                   style={{ marginLeft: i > 0 ? -10 : 0, zIndex: i }}
                 >
                   <div
-                    className="w-full h-[48px] overflow-hidden flex items-center justify-center"
+                    className="w-full h-[42px] overflow-hidden flex items-center justify-center"
                     style={{
                       background: f.fill,
                       transform: "skewX(-9deg)",
@@ -427,7 +463,7 @@ export function CardFront() {
                       draggable={false}
                     />
                   </div>
-                  <div className="flex flex-col items-center gap-1 mt-2.5 pt-0.5 w-full">
+                  <div className="flex flex-col items-center gap-1 mt-1.5 pt-0.5 w-full">
                     <span className="font-pixel text-[9px] leading-none tracking-tight text-center" style={{ color: f.labelColor }}>
                       {f.label}
                     </span>
@@ -445,7 +481,7 @@ export function CardFront() {
           <div>
             <div className="flex items-center gap-2.5 mb-1.5">
               <Bullet />
-              <span className="font-pixel text-[12px] leading-none text-[#6b6f76]">STACK:</span>
+              <span className="font-pixel text-[12px] leading-none text-[#56618c]">STACK:</span>
             </div>
             <div className="flex flex-col gap-1.5 pl-[26px]">
               {/* core technologies */}
@@ -468,70 +504,92 @@ export function CardFront() {
                 </div>
               </div>
             </div>
-            <div className="h-px mt-2" style={{ background: PINK_DIVIDER }} />
           </div>
         </div>
 
-        {/* ---------- bottom band: EXP  +  CURRENTLY banner ---------- */}
-        <div className="relative z-10 flex gap-3 mt-auto items-stretch h-[126px]">
-          {/* EXP */}
-          <div className="w-[30%] shrink-0 flex flex-col justify-center">
-            <div className="flex items-center gap-2 mb-2.5">
-              <Bullet />
-              <span className="font-pixel text-[12px] leading-none text-[#6b6f76]">EXP:</span>
-            </div>
-            <div className="flex items-center gap-2 mb-2.5 pl-[26px]">
-              <BarChartIcon />
-              <span className="font-pixel text-[13px] leading-none text-[#3f9b46] whitespace-nowrap">1+ YEAR</span>
-            </div>
-            <p className="font-card text-[16px] leading-snug text-[#6b6f76] pl-[26px]">
-              Building.<br />Learning.<br />Shipping.
-            </p>
-          </div>
-
-          {/* CURRENTLY — desk-scene banner with progress rows */}
+        {/* ---------- EXP — same outlined box language as the left panel ---------- */}
+        <div className="relative z-10 mt-auto pt-2 w-[32%] min-w-[150px] max-w-[190px] shrink-0">
           <div
-            className="relative flex-1 rounded-[8px] overflow-hidden"
-            style={{ boxShadow: "inset 0 0 0 2px #14403d, 0 2px 0 rgba(0,0,0,0.2)" }}
+            className="rounded-[7px] px-2 py-1.5 flex flex-col gap-1"
+            style={{ background: "#fdf6da", boxShadow: "0 0 0 2px #c9a04e, inset 0 0 0 2px #fffdf0" }}
           >
-            <img
-              src="/sprites/front_bg.png"
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover object-right pixelated"
-            />
-            {/* left darkening so the text stays legible */}
-            <div
-              className="absolute inset-0"
-              style={{ background: "linear-gradient(90deg, rgba(9,15,26,0.95) 32%, rgba(9,15,26,0.55) 58%, rgba(9,15,26,0) 78%)" }}
-            />
-            <div className="relative z-10 h-full p-2.5 flex flex-col">
-              <div className="flex items-center gap-1.5 mb-2">
-                <Bullet size={14} />
-                <span className="font-pixel text-[10px] leading-none text-[#f1ede3]">CURRENTLY:</span>
-                <span className="w-[9px] h-[9px] rounded-full bg-[#46c463] ml-1 shadow-[0_0_6px_#46c463]" />
-              </div>
-              <div className="flex flex-col gap-2">
-                {CURRENT.map((c, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <span className="w-[20px] shrink-0 flex justify-center">{c.icon}</span>
-                    <span className="flex flex-col gap-1">
-                      <span className="font-card text-[12px] leading-none text-[#ecead3]">{c.label}</span>
-                      <SegBar color={c.color} filled={c.filled} />
-                    </span>
-                  </div>
-                ))}
-              </div>
+            <div className="flex items-center gap-1.5">
+              <Bullet size={14} />
+              <span className="font-pixel text-[11px] leading-none text-[#56618c]">EXP:</span>
+              <BarChartIcon />
+              <span className="font-pixel text-[12px] leading-none text-[#3f9b46] whitespace-nowrap">1+ YEAR</span>
             </div>
+            <div className="flex flex-col gap-1">
+              {EXP_LINES.map((line) => (
+                <div key={line.label} className="flex items-center gap-1.5 min-w-0">
+                  <span
+                    className="w-[16px] h-[16px] shrink-0 flex items-center justify-center rounded-[2px]"
+                    style={{
+                      background: "#fffdf0",
+                      boxShadow: `inset 0 0 0 1px ${line.accent}88, 0 0 0 1px #c9a04e66`,
+                    }}
+                  >
+                    {line.icon}
+                  </span>
+                  <span className="font-card text-[12px] leading-none text-[#56618c]">{line.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CURRENTLY — top overlay, sits above footer / avatar / everything */}
+      <div
+        className="absolute right-3 bottom-[30px] z-50 w-[62%] max-w-[420px] h-[138px] rounded-[8px] overflow-hidden pointer-events-none"
+        style={{
+          boxShadow:
+            "inset 0 0 0 2px #33406b, 0 0 0 2px rgba(255,255,255,0.35), 0 8px 18px rgba(0,0,0,0.35)",
+        }}
+      >
+        <img
+          src="/sprites/front_bg.png"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover object-right pixelated"
+        />
+        {/* left darkening so the text stays legible */}
+        <div
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(90deg, rgba(9,15,26,0.96) 38%, rgba(9,15,26,0.6) 62%, rgba(9,15,26,0) 82%)" }}
+        />
+        <div className="relative z-10 h-full px-3 pt-2.5 pb-3.5 flex flex-col">
+          <div className="flex items-center gap-1.5 mb-2.5">
+            <Bullet size={14} />
+            <span className="font-pixel text-[10px] leading-none text-white">CURRENTLY:</span>
+            <span className="w-[9px] h-[9px] rounded-full bg-[#46c463] ml-1 shadow-[0_0_6px_#46c463]" />
+          </div>
+          <div className="flex flex-col gap-2.5">
+            {CURRENT.map((c, i) => (
+              <div key={i} className="flex items-center gap-2.5 min-w-0">
+                <span
+                  className="w-[24px] h-[24px] shrink-0 flex items-center justify-center rounded-[3px]"
+                  style={{
+                    background: "rgba(255,255,255,0.08)",
+                    boxShadow: `inset 0 0 0 1.5px ${c.accent}66`,
+                  }}
+                >
+                  {c.icon}
+                </span>
+                <span className="font-card text-[15px] leading-snug text-white">
+                  {c.label}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* ===================== FOOTER: attached slanted badge strip ===================== */}
       <div
-        className="relative h-[52px] flex items-center px-4 py-1.5 shrink-0"
+        className="relative z-20 h-[40px] flex items-center gap-0 px-4 py-1 shrink-0 overflow-visible"
         style={{
-          background: "#cdd9d4",
-          boxShadow: "inset 0 2px 0 rgba(0,0,0,0.08)",
+          background: "#ead9a8",
+          boxShadow: "inset 0 2px 0 #33406b, inset 0 -1px 0 rgba(0,0,0,0.08)",
         }}
       >
         {/* earned: Y Combinator — Starter School */}
@@ -542,6 +600,9 @@ export function CardFront() {
         {Array.from({ length: 3 }).map((_, i) => (
           <SlantedSlot key={i} title="Badge slot — locked" attachIndex={i + 1} />
         ))}
+        <span className="ml-auto font-pixel text-[9px] leading-none text-[#7a6a3d] tracking-wide">
+          PRESS <span className="text-[#c23a33]">A</span> TO FLIP ▸
+        </span>
       </div>
     </div>
   );
