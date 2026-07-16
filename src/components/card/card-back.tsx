@@ -9,27 +9,36 @@ import {
   BACK_SKILLS,
   type TabKey,
 } from "../portfolio/data";
-import { TabIcon } from "../portfolio/ui";
 
-interface CardBackProps {
-  onEnterPortfolio: (tab: TabKey) => void;
-}
+// pokemon menu palette shared across the back face
+const NAVY = "#33406b";
+const NAVY_SOFT = "#3d4d78";
+const LABEL_BLUE = "#4a6db5";
+const CREAM = "#f6ecc6";
+const PANEL_CREAM = "#fbf4d8";
+const ROW_CREAM = "#fffbe9";
 
-// small utility icons
-function SvgIcon({ name }: { name: string }) {
+// small utility icons — grad/brief/cloud take the row accent color
+function SvgIcon({ name, color = "#5d6b7a" }: { name: string; color?: string }) {
   switch (name) {
     case "grad":
       return (
-        <svg viewBox="0 0 24 24" className="w-[20px] h-[20px]" fill="#5d6b7a">
+        <svg viewBox="0 0 24 24" className="w-[20px] h-[20px]" fill={color}>
           <path d="M12 4 1 9l11 5 11-5z" />
           <path d="M5 12.2V16c0 1.4 3.1 2.8 7 2.8s7-1.4 7-2.8v-3.8l-7 3.1z" />
         </svg>
       );
     case "brief":
       return (
-        <svg viewBox="0 0 24 24" className="w-[20px] h-[20px]" fill="#5d6b7a">
+        <svg viewBox="0 0 24 24" className="w-[20px] h-[20px]" fill={color}>
           <path d="M9 5h6v2h4a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h4zm2 0v2h2V5z" />
           <rect x="3" y="11.5" width="18" height="2" fill="#fff" opacity="0.55" />
+        </svg>
+      );
+    case "cloud":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[20px] h-[20px]" fill={color}>
+          <path d="M7 18a4.5 4.5 0 0 1-.4-8.98 6 6 0 0 1 11.6 1.1A4 4 0 0 1 17.5 18z" />
         </svg>
       );
     case "code":
@@ -84,7 +93,7 @@ function SvgIcon({ name }: { name: string }) {
 function LogoChip({ k, size = 30 }: { k: string; size?: number }) {
   return (
     <span
-      className="group/chip relative rounded-[6px] bg-white flex items-center justify-center shrink-0 shadow-[inset_0_0_0_2px_#dcd7cf] transition-transform duration-150 ease-out will-change-transform hover:z-10 hover:-translate-y-[3px] hover:scale-[1.12] hover:shadow-[inset_0_0_0_2px_#c9d6d3,0_5px_10px_rgba(0,0,0,0.18)]"
+      className="group/chip relative rounded-[6px] bg-white flex items-center justify-center shrink-0 shadow-[inset_0_0_0_2px_#d9cba0] transition-transform duration-150 ease-out will-change-transform hover:z-10 hover:-translate-y-[3px] hover:scale-[1.12] hover:shadow-[inset_0_0_0_2px_#4a76c9,0_5px_10px_rgba(0,0,0,0.18)]"
       style={{ width: size, height: size }}
       title={k}
     >
@@ -107,11 +116,59 @@ function LinkBtn({ href, title, children }: { href: string; title: string; child
       rel="noopener noreferrer"
       title={title}
       onClick={(e) => e.stopPropagation()}
-      className="w-[30px] h-[30px] rounded-[6px] bg-white flex items-center justify-center shrink-0 cursor-pointer transition-all duration-150 ease-out will-change-transform hover:-translate-y-[3px] hover:scale-[1.12] hover:shadow-[0_5px_10px_rgba(0,0,0,0.2)] active:translate-y-0 active:scale-95 shadow-[inset_0_0_0_1.5px_#dcd7cf]"
+      className="w-[30px] h-[30px] rounded-[6px] bg-white flex items-center justify-center shrink-0 cursor-pointer transition-all duration-150 ease-out will-change-transform hover:-translate-y-[3px] hover:scale-[1.12] hover:shadow-[0_5px_10px_rgba(0,0,0,0.2)] active:translate-y-0 active:scale-95 shadow-[inset_0_0_0_1.5px_#d9cba0]"
     >
       {children}
     </a>
   );
+}
+
+// blinking red menu cursor, revealed on row hover
+function RedCursor() {
+  return (
+    <span
+      className="shrink-0 w-[10px] font-pixel text-[11px] leading-none text-[#c23a33] opacity-0 group-hover:opacity-100 transition-opacity duration-100"
+      aria-hidden
+    >
+      ▶
+    </span>
+  );
+}
+
+// cream list row with the classic navy double border and a colored accent stripe on the left
+function rowStyle(color: string) {
+  return {
+    background: ROW_CREAM,
+    boxShadow: `0 0 0 2px ${NAVY_SOFT}, inset 4px 0 0 ${color}, inset 0 0 0 2px #fffef6`,
+  } as const;
+}
+
+// pokemon type-style pill naming what the thing actually is
+function TypePill({ label, color }: { label: string; color: string }) {
+  return (
+    <span
+      className="font-pixel text-[7px] leading-none px-1.5 py-[3px] rounded-[3px] text-white shrink-0"
+      style={{ background: color, boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.22), 0 0 0 1.5px rgba(0,0,0,0.2)" }}
+    >
+      {label}
+    </span>
+  );
+}
+
+// icon tile tinted with the row accent color
+function IconTile({ color, size, children }: { color: string; size: number; children: React.ReactNode }) {
+  return (
+    <span
+      className="rounded-[6px] flex items-center justify-center shrink-0 overflow-hidden"
+      style={{ width: size, height: size, background: `${color}1f`, boxShadow: `inset 0 0 0 2px ${color}` }}
+    >
+      {children}
+    </span>
+  );
+}
+
+interface CardBackProps {
+  onEnterPortfolio: (tab: TabKey) => void;
 }
 
 export function CardBack({ onEnterPortfolio }: CardBackProps) {
@@ -119,7 +176,7 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
   const active = PANELS[sel];
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-[#f7f6f3] text-slate-800 select-none flex flex-col">
+    <div className="relative w-full h-full overflow-hidden text-slate-800 select-none flex flex-col" style={{ background: CREAM }}>
       {/* header bar */}
       <div
         className="relative flex items-center justify-between px-3.5 h-[42px] shrink-0"
@@ -137,11 +194,11 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
           </svg>
           <span className="font-pixel text-[13px] leading-none text-white tracking-wide drop-shadow-[2px_2px_0_rgba(0,0,0,0.22)]">DATA FILE</span>
         </div>
-        <span className="font-pixel text-[8px] leading-none text-white/85">HOVER A SECTION ▸</span>
+        <span className="font-pixel text-[8px] leading-none text-white/85">PRESS A TO FLIP</span>
       </div>
 
-      {/* 4 selectable subfolders */}
-      <div className="flex flex-[0.62] min-h-0 gap-2 px-3.5 pt-2.5 pb-1.5">
+      {/* pokemon-style tab buttons */}
+      <div className="flex gap-1.5 px-3.5 pt-3 shrink-0">
         {PANELS.map((panel, i) => {
           const on = i === sel;
           return (
@@ -152,55 +209,56 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
                 e.stopPropagation();
                 setSel(i);
               }}
-              className="group relative flex-1 min-w-0 h-full overflow-hidden cursor-pointer transition-all duration-150 ease-out active:scale-[0.98]"
-              style={{
-                transform: on ? "translateY(-3px)" : "none",
-                borderRadius: 6,
-                boxShadow: on
-                  ? `0 0 0 2px #fff, 0 0 0 4px ${panel.accent}, 0 4px 0 rgba(0,0,0,0.25)`
-                  : "0 0 0 2px #e3ddd2, 0 2px 0 rgba(0,0,0,0.18)",
-              }}
+              className="flex-1 min-w-0 font-pixel text-[9px] leading-none py-2.5 rounded-[6px] cursor-pointer transition-all duration-100 ease-out active:scale-[0.97]"
+              style={
+                on
+                  ? {
+                      background: "linear-gradient(180deg, #5b87d6 0%, #4a76c9 55%, #3f68b8 100%)",
+                      color: "#fff",
+                      boxShadow: `0 0 0 2px ${NAVY}, inset 0 2px 0 rgba(255,255,255,0.35), inset 0 -2px 0 rgba(0,0,0,0.2)`,
+                      transform: "translateY(-1px)",
+                    }
+                  : {
+                      background: "#fdf6dd",
+                      color: "#3d5380",
+                      boxShadow: `0 0 0 2px ${NAVY}, inset 0 -2px 0 rgba(0,0,0,0.1)`,
+                    }
+              }
             >
-              <img
-                src={panel.img}
-                alt={panel.label}
-                className="absolute inset-0 w-full h-full object-cover pixelated transition-all duration-200"
-                style={{ filter: on ? "saturate(1.05) brightness(1)" : "saturate(0.85) brightness(0.82)" }}
-              />
-              <div className="absolute inset-0 pointer-events-none" style={{ background: on ? "linear-gradient(180deg, rgba(8,18,40,0) 50%, rgba(8,18,40,0.86) 100%)" : "linear-gradient(180deg, rgba(8,18,40,0.25) 0%, rgba(8,18,40,0.8) 100%)" }} />
-              <span className="absolute bottom-1.5 left-0 right-0 text-center font-pixel text-[8px] leading-none tracking-wide drop-shadow-[1px_2px_0_rgba(0,0,0,0.9)]" style={{ color: on ? panel.accent : "#ffffff" }}>{panel.label}</span>
+              {panel.label}
             </button>
           );
         })}
       </div>
 
       {/* details box */}
-      <div className="flex-[1.9] min-h-0 mx-3 mb-3 rounded-[8px] p-3 flex flex-col" style={{ background: "#f1eee8", boxShadow: "inset 0 0 0 2px #dcd7cf, 0 2px 0 rgba(0,0,0,0.1)" }}>
-        {/* header label */}
-        <div className="flex items-center gap-2 mb-2 shrink-0">
-          <span className="w-[26px] h-[26px] rounded-[6px] bg-white flex items-center justify-center shrink-0" style={{ boxShadow: `inset 0 0 0 2px ${active.accent}` }}>
-            <TabIcon tab={active.tab} active />
-          </span>
-          <span className="font-pixel px-2.5 py-1.5 rounded-[5px] text-[11px] leading-none text-[#21304a]" style={{ background: active.accent }}>{active.label}</span>
-        </div>
-
-        {/* main details */}
-        <div className="flex-1 min-h-0 overflow-y-auto pr-0.5">
-          {/* projects sublist */}
+      <div
+        className="flex-1 min-h-0 mx-3.5 my-3 rounded-[8px] p-3 flex flex-col"
+        style={{ background: PANEL_CREAM, boxShadow: `0 0 0 2px ${NAVY}, inset 0 0 0 2px #fffbe8` }}
+      >
+        {/* main details — 3px padding keeps row borders from being clipped by the scroll area */}
+        <div className="flex-1 min-h-0 overflow-y-auto p-[3px] pr-1">
+          {/* projects — No. + name + one line + link, nothing else */}
           {active.tab === "projects" && (
             <div className="flex flex-col gap-2">
-              {BACK_PROJECTS.map((p) => (
-                <div key={p.name} className="flex items-center gap-2.5 rounded-[8px] p-2" style={{ background: "#faf8f2", boxShadow: "inset 0 0 0 1.5px #e3ddd0" }}>
-                  <img src={`/sprites/proj_${p.icon}.png`} alt={p.name} className="w-[42px] h-[42px] rounded-[8px] pixelated shrink-0" />
+              {BACK_PROJECTS.map((p, i) => (
+                <div key={p.name} className="group flex items-center gap-2 rounded-[6px] p-1.5 pl-2.5" style={rowStyle(p.color)}>
+                  <RedCursor />
+                  <IconTile color={p.color} size={36}>
+                    <img src={`/sprites/proj_${p.icon}.png`} alt={p.name} className="w-full h-full pixelated" />
+                  </IconTile>
                   <span className="min-w-0 flex-1">
-                    <span className="block font-pixel text-[13px] leading-none mb-1.5 text-[#2b2b2b]">{p.name}</span>
-                    <span className="block font-card text-[15px] leading-snug text-[#5a6068]">{p.desc}</span>
+                    <span className="flex items-center gap-1.5 mb-[3px]">
+                      <span className="font-pixel text-[7px] leading-none" style={{ color: p.color }}>
+                        No.{String(i + 1).padStart(3, "0")}
+                      </span>
+                      <TypePill label={p.tag} color={p.color} />
+                    </span>
+                    <span className="block font-pixel text-[11px] leading-none mb-[3px] text-[#2b2b2b]">{p.name}</span>
+                    <span className="block font-card text-[13px] leading-snug text-[#5a6068] truncate">{p.desc}</span>
                   </span>
                   <span className="flex items-center gap-1.5 shrink-0">
-                    {p.stack.map((k) => (
-                      <LogoChip key={k} k={k} size={26} />
-                    ))}
-                    {p.live && <LinkBtn href={p.live} title="Live demo"><SvgIcon name="globe" /></LinkBtn>}
+                    {p.live && <LinkBtn href={p.live} title="Live site"><SvgIcon name="globe" /></LinkBtn>}
                     <LinkBtn href={p.repo} title="Source"><SvgIcon name="github" /></LinkBtn>
                   </span>
                 </div>
@@ -210,46 +268,51 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
                   e.stopPropagation();
                   onEnterPortfolio("projects");
                 }}
-                className="font-pixel text-[10px] text-[#5a6068] py-2.5 rounded-[7px] cursor-pointer flex items-center justify-center gap-1.5 transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-95 hover:text-[#3f4650] active:translate-y-0 active:scale-[0.98]"
-                style={{ background: "#ece8df", boxShadow: "inset 0 0 0 1.5px #ded9cd" }}
+                className="group font-pixel text-[10px] text-[#3d5380] py-2 rounded-[6px] cursor-pointer flex items-center justify-center gap-1.5 transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-[0.98] active:translate-y-0 active:scale-[0.98]"
+                style={{ background: "#fdf6dd", boxShadow: `0 0 0 2px ${NAVY}, inset 0 -2px 0 rgba(0,0,0,0.1)` }}
               >
-                MORE PROJECTS → MAIN PORTFOLIO
+                <span className="text-[#c23a33] opacity-0 group-hover:opacity-100 transition-opacity">▶</span>
+                MORE PROJECTS…
               </button>
             </div>
           )}
 
           {/* experience timeline */}
           {active.tab === "experience" && (
-            <div className="relative pl-7">
+            <div className="relative pl-6">
               {/* timeline guide line */}
-              <div className="absolute left-[11px] top-2 bottom-6 w-[2px]" style={{ background: "#cfc8ba" }} />
+              <div className="absolute left-[8px] top-3 bottom-5 w-[2px]" style={{ background: "#d4c491" }} />
               {BACK_EXPERIENCE.map((e, i) => (
-                <div key={i} className="relative mb-2.5">
-                  <span className="absolute left-[-21px] top-3.5 w-[13px] h-[13px] rounded-full bg-white" style={{ boxShadow: `inset 0 0 0 3px ${active.accent}` }} />
+                <div key={i} className="relative mb-2">
+                  <span className="absolute left-[-21px] top-[16px] w-[12px] h-[12px] rounded-full bg-white z-10" style={{ boxShadow: `inset 0 0 0 3px ${e.color}` }} />
                   <a
                     href={e.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(ev) => ev.stopPropagation()}
-                    className="flex items-center gap-2.5 rounded-[8px] p-2.5 mr-[12%] cursor-pointer transition-transform hover:translate-x-0.5"
-                    style={{ background: "#faf8f2", boxShadow: "inset 0 0 0 1.5px #e3ddd0" }}
+                    className="group flex items-center gap-2 rounded-[6px] p-2 pl-3 cursor-pointer transition-transform hover:translate-x-0.5"
+                    style={rowStyle(e.color)}
                   >
-                    <span className="w-[32px] h-[32px] rounded-[7px] bg-white flex items-center justify-center shrink-0 shadow-[inset_0_0_0_2px_#e0dacd]">
-                      <SvgIcon name={e.icon} />
-                    </span>
+                    <RedCursor />
+                    <IconTile color={e.color} size={32}>
+                      <SvgIcon name={e.icon} color={e.color} />
+                    </IconTile>
                     <span className="min-w-0 flex-1">
-                      <span className="block font-pixel text-[9px] leading-none mb-1 text-[#3f9b46]">{e.year}</span>
+                      <span className="flex items-center gap-1.5 mb-1">
+                        <span className="font-pixel text-[8px] leading-none" style={{ color: e.color }}>{e.year}</span>
+                        <TypePill label={e.tag} color={e.color} />
+                      </span>
                       <span className="block font-pixel text-[11px] leading-none mb-1 text-[#2b2b2b]">{e.title}</span>
-                      <span className="block font-card text-[14px] leading-snug text-[#5a6068]">{e.sub}</span>
+                      <span className="block font-card text-[13px] leading-snug text-[#5a6068]">{e.sub}</span>
                     </span>
-                    <span className="w-[28px] h-[28px] rounded-[6px] bg-white flex items-center justify-center shrink-0 shadow-[inset_0_0_0_1.5px_#dcd7cf]">
+                    <span className="w-[28px] h-[28px] rounded-[6px] bg-white flex items-center justify-center shrink-0" style={{ boxShadow: "inset 0 0 0 1.5px #d9cba0" }}>
                       <SvgIcon name="linkedin" />
                     </span>
                   </a>
                 </div>
               ))}
-              <div className="relative">
-                <span className="absolute left-[-22px] top-1 w-[13px] h-[13px] rounded-full bg-[#f1eee8]" style={{ boxShadow: "inset 0 0 0 2px #cfc8ba" }} />
+              <div className="relative pl-1">
+                <span className="absolute left-[-19px] top-[2px] w-[10px] h-[10px] rounded-full" style={{ background: PANEL_CREAM, boxShadow: "inset 0 0 0 2px #d4c491" }} />
                 <span className="font-card text-[13px] text-slate-400 italic">⋯ more to come in the future</span>
               </div>
             </div>
@@ -265,17 +328,21 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="flex items-center gap-2.5 rounded-[8px] p-2.5 cursor-pointer transition-transform hover:translate-x-0.5"
-                  style={{ background: "#faf8f2", boxShadow: "inset 0 0 0 1.5px #e3ddd0" }}
+                  className="group flex items-center gap-2.5 rounded-[6px] p-2.5 pl-3 cursor-pointer transition-transform hover:translate-x-0.5"
+                  style={rowStyle(r.color)}
                 >
-                  <span className="w-[34px] h-[34px] rounded-[7px] bg-white flex items-center justify-center shrink-0 shadow-[inset_0_0_0_2px_#e0dacd]">
+                  <RedCursor />
+                  <IconTile color={r.color} size={34}>
                     <SvgIcon name={r.icon} />
-                  </span>
+                  </IconTile>
                   <span className="min-w-0 flex-1">
-                    <span className="block font-pixel text-[11px] leading-none mb-1.5 text-[#2b2b2b]">{r.title}</span>
+                    <span className="flex items-center gap-1.5 mb-1.5">
+                      <span className="font-pixel text-[11px] leading-none text-[#2b2b2b]">{r.title}</span>
+                      <TypePill label={r.tag} color={r.color} />
+                    </span>
                     <span className="block font-card text-[14px] leading-snug text-[#5a6068]">{r.sub}</span>
                   </span>
-                  <span className="w-[28px] h-[28px] rounded-[6px] bg-white flex items-center justify-center shrink-0 shadow-[inset_0_0_0_1.5px_#dcd7cf]">
+                  <span className="w-[28px] h-[28px] rounded-[6px] bg-white flex items-center justify-center shrink-0" style={{ boxShadow: "inset 0 0 0 1.5px #d9cba0" }}>
                     <SvgIcon name="linkedin" />
                   </span>
                 </a>
@@ -285,10 +352,11 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
                   e.stopPropagation();
                   onEnterPortfolio("honors");
                 }}
-                className="font-pixel text-[9px] text-[#5a6068] py-2.5 rounded-[7px] cursor-pointer flex items-center justify-center gap-1.5 transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-95 hover:text-[#3f4650] active:translate-y-0 active:scale-[0.98]"
-                style={{ background: "#ece8df", boxShadow: "inset 0 0 0 1.5px #ded9cd" }}
+                className="group font-pixel text-[9px] text-[#3d5380] py-2.5 rounded-[6px] cursor-pointer flex items-center justify-center gap-1.5 transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-[0.98] active:translate-y-0 active:scale-[0.98]"
+                style={{ background: "#fdf6dd", boxShadow: `0 0 0 2px ${NAVY}, inset 0 -2px 0 rgba(0,0,0,0.1)` }}
               >
-                MORE ELABORATED ACHIEVEMENTS →
+                <span className="text-[#c23a33] opacity-0 group-hover:opacity-100 transition-opacity">▶</span>
+                MORE ELABORATED ACHIEVEMENTS…
               </button>
             </div>
           )}
@@ -298,7 +366,7 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
             <div className="flex flex-col justify-between h-full gap-1.5 py-0.5">
               {BACK_SKILLS.map((g) => (
                 <div key={g.label} className="flex items-center gap-2.5">
-                  <span className="font-pixel text-[8px] leading-tight text-[#8a8f96] w-[58px] text-right shrink-0">{g.label}</span>
+                  <span className="font-pixel text-[8px] leading-tight w-[58px] text-right shrink-0" style={{ color: LABEL_BLUE }}>{g.label}</span>
                   <span className="flex items-center gap-1.5 flex-wrap">
                     {g.icons.map((k) => (
                       <LogoChip key={k} k={k} size={34} />
@@ -311,15 +379,15 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
         </div>
 
         {/* bottom footer hint and button */}
-        <div className="flex items-center justify-between border-t pt-2 mt-2 gap-2 shrink-0" style={{ borderColor: "#e3ddd4" }}>
-          <span className="font-card text-[16px] text-slate-500 leading-none">tap an icon to open ↗</span>
+        <div className="flex items-center justify-between border-t pt-2 mt-2 gap-2 shrink-0" style={{ borderColor: "#e0d3a4" }}>
+          <span className="font-card text-[16px] text-[#8a7c56] leading-none">tap an icon to open ↗</span>
           <button
             onClick={(e) => {
               e.stopPropagation();
               onEnterPortfolio(active.tab);
             }}
             className="shrink-0 font-pixel px-3 py-2.5 text-white text-[9px] leading-none rounded-[5px] cursor-pointer transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-[0.97]"
-            style={{ background: "#e0524a", boxShadow: "inset 0 0 0 2px #a32f28, 0 2px 0 rgba(0,0,0,0.3)" }}
+            style={{ background: "#e0524a", boxShadow: `0 0 0 2px ${NAVY}, inset 0 0 0 2px #a32f28, 0 2px 0 rgba(0,0,0,0.3)` }}
           >
             ▶ MAIN PORTFOLIO
           </button>

@@ -25,6 +25,22 @@ export type Project = {
 
 export const PROJECTS: Project[] = [
   {
+    id: "007",
+    name: "CERTAMEN",
+    short: "Certamen",
+    tags: ["AI", "AWS"],
+    color: "#c2453d",
+    blurb: "An open arena where any AI model competes live and the crowd bets — double-entry ledger on Aurora DSQL, live odds on DynamoDB.",
+    role: "Team Project",
+    duration: "Jul 2026",
+    team: "Hackathon",
+    status: "Live",
+    stack: ["nextjs", "aws"],
+    extraStack: 2,
+    url: "https://web-theta-khaki-90.vercel.app",
+    repo: "https://github.com/nothariharan/certamen",
+  },
+  {
     id: "001",
     name: "COFOUND",
     short: "CoFound",
@@ -124,6 +140,7 @@ export const PROJECTS: Project[] = [
 
 // project metadata mapping icons and descriptions
 export const PROJECT_META: Record<string, { icon: string; listDesc: string }> = {
+  "007": { icon: "certamen", listDesc: "Live arena where AI models battle & the crowd bets." },
   "001": { icon: "cofound", listDesc: "Multi-agent founder OS to build, ship & scale faster." },
   "002": { icon: "monkeyspeak", listDesc: "Voice-typing benchmark — clocks WPM & filler words." },
   "003": { icon: "visor", listDesc: "Visual OS for codebases — explore & query visually." },
@@ -374,25 +391,27 @@ export const BACK_SUMMARY: Record<
 
 // back-of-card lists content
 
-// high-level projects summaries for the back face
+// high-level projects summaries for the back face — tag + color give each row its own identity
 export const BACK_PROJECTS = [
-  { name: "CoFound", icon: "cofound", desc: "Multi-agent founder OS — plan, build & ship.", stack: ["fastapi", "react", "mongodb"], live: "https://cofounder-alpha.vercel.app", repo: "https://github.com/nothariharan/CoFound" },
-  { name: "MonkeySpeak", icon: "monkeyspeak", desc: "Voice-typing benchmark — live WPM & filler words.", stack: ["nextjs", "supabase"], live: "https://monkeyspeak-delta.vercel.app", repo: "https://github.com/nothariharan/monkeyspeak" },
-  { name: "Yui", icon: "yui", desc: "AI travel concierge — proactive multi-agent trips.", stack: ["python", "react"], live: "", repo: "https://github.com/nothariharan" },
+  { name: "CoFound", icon: "cofound", desc: "Multi-agent founder OS — plan, build & ship.", tag: "AI AGENTS", color: "#9b6cc4", live: "https://cofounder-alpha.vercel.app", repo: "https://github.com/nothariharan/CoFound" },
+  { name: "MonkeySpeak", icon: "monkeyspeak", desc: "Voice-typing benchmark — live WPM & filler words.", tag: "VOICE", color: "#d99a2c", live: "https://monkeyspeak-delta.vercel.app", repo: "https://github.com/nothariharan/monkeyspeak" },
+  { name: "Certamen", icon: "certamen", desc: "Open arena where AI models battle & the crowd bets.", tag: "AI ARENA", color: "#d4524a", live: "https://web-theta-khaki-90.vercel.app", repo: "https://github.com/nothariharan/certamen" },
+  { name: "Yui", icon: "yui", desc: "AI travel concierge — proactive multi-agent trips.", tag: "TRAVEL", color: "#4a9bd9", live: "https://yui-lemon-five.vercel.app", repo: "https://github.com/nothariharan/Yui" },
 ];
 
-// experience highlights
+// experience highlights — chronological, oldest first
 export const BACK_EXPERIENCE = [
-  { year: "AUG 2025", title: "B.Tech CS — IIIT SriCity", sub: "Dual degree begins", icon: "grad", url: "https://www.linkedin.com/in/nmhariharan/" },
-  { year: "AUG 2025", title: "BS — IIT Patna", sub: "Dual-degree programme", icon: "grad", url: "https://www.linkedin.com/in/nmhariharan/" },
-  { year: "2025 — NOW", title: "SAP Security Intern — Rinexis", sub: "SOD analyzer & ITGC audit tooling", icon: "brief", url: "https://www.linkedin.com/in/nmhariharan/" },
+  { year: "AUG 2025", title: "B.Tech CS — IIIT SriCity", sub: "Dual degree begins", icon: "grad", tag: "EDUCATION", color: "#4a76c9", url: "https://www.linkedin.com/in/nmhariharan/" },
+  { year: "AUG 2025", title: "BS — IIT Patna", sub: "Dual-degree programme", icon: "grad", tag: "EDUCATION", color: "#4a76c9", url: "https://www.linkedin.com/in/nmhariharan/" },
+  { year: "2025 — NOW", title: "SAP Security Intern — Rinexis", sub: "SOD analyzer & ITGC audit tooling", icon: "brief", tag: "INTERNSHIP", color: "#3f9b46", url: "https://www.linkedin.com/in/nmhariharan/" },
+  { year: "2026 — NOW", title: "Stealth Startup", sub: "Building a cloud-infrastructure product", icon: "cloud", tag: "STARTUP", color: "#9b6cc4", url: "https://www.linkedin.com/in/nmhariharan/" },
 ];
 
 // honors list
 export const BACK_HONORS = [
-  { title: "Hacktoberfest Golden '25", sub: "Top-tier open-source contributor", icon: "code", url: "https://github.com/nothariharan" },
-  { title: "YC Startup School '26", sub: "Y Combinator — India cohort", icon: "star", url: "https://www.startupschool.org/" },
-  { title: "10+ Hackathons · multiple wins", sub: "VahanLive, AMUHACKS, Cosmix & more", icon: "trophy", url: "https://www.linkedin.com/in/nmhariharan/" },
+  { title: "Hacktoberfest Golden '25", sub: "Top-tier open-source contributor", icon: "code", tag: "OPEN SOURCE", color: "#3f9b46", url: "https://github.com/nothariharan" },
+  { title: "YC Startup School '26", sub: "Y Combinator — India cohort", icon: "star", tag: "Y COMBINATOR", color: "#fb651e", url: "https://www.startupschool.org/" },
+  { title: "10+ Hackathons · multiple wins", sub: "VahanLive, AMUHACKS, Cosmix & more", icon: "trophy", tag: "HACKATHONS", color: "#d99a2c", url: "https://www.linkedin.com/in/nmhariharan/" },
 ];
 
 // skills grouped by type

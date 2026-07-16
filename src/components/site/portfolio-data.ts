@@ -47,6 +47,20 @@ export const CATEGORY_META: Record<Category, { color: string; glyph: string }> =
 
 export const PROJECTS: SiteProject[] = [
   {
+    slug: "certamen",
+    name: "Certamen",
+    tagline: "any ai model competes live. the crowd bets.",
+    description:
+      "an open arena where any AI model battles head-to-head while spectators back competitors on live parimutuel odds — double-entry ledger on aurora dsql, hot path on dynamodb streams, four services wired by sqs.",
+    category: "AI / Agents",
+    tech: ["nextjs", "typescript", "aws"],
+    date: "Jul 2026",
+    repo: "https://github.com/nothariharan/certamen",
+    live: "https://web-theta-khaki-90.vercel.app",
+    shot: "/shots/certamen.png",
+    featured: true,
+  },
+  {
     slug: "cofound",
     name: "CoFound",
     tagline: "an ai cofounder that actually shows up to standup.",
