@@ -36,7 +36,7 @@ export function Footer({ onBack }: { onBack: () => void }) {
 
           <div className="flex flex-col items-start gap-3 sm:items-end">
             {/* quick links to the dedicated routes */}
-            <nav className="flex items-center gap-4 font-mono text-[12px] text-portfolio-muted">
+            <nav className="flex flex-wrap items-center gap-4 font-mono text-[12px] text-portfolio-muted">
               <button onClick={() => startTransition("/portfolio")} className="transition-colors hover:text-portfolio-text cursor-pointer">
                 portfolio
               </button>
@@ -48,6 +48,9 @@ export function Footer({ onBack }: { onBack: () => void }) {
               </button>
               <button onClick={() => startTransition("/portfolio/achievements")} className="transition-colors hover:text-portfolio-text cursor-pointer">
                 achievements
+              </button>
+              <button onClick={() => startTransition("/portfolio/blog")} className="transition-colors hover:text-portfolio-text cursor-pointer">
+                blog
               </button>
             </nav>
 

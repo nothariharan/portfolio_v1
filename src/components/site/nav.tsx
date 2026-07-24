@@ -9,6 +9,7 @@ const LINKS = [
   { id: "projects", label: "projects", href: "/portfolio/projects" },
   { id: "skills", label: "skills", href: "/portfolio/skills" },
   { id: "achievements", label: "awards", href: "/portfolio/achievements" },
+  { id: "blog", label: "blog", href: "/portfolio/blog" },
 ];
 
 export function SiteNav({ onBack, active = "home" }: { onBack: () => void; active?: string }) {
