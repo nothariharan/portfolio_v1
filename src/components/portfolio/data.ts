@@ -1,6 +1,7 @@
 // real portfolio content for n. hariharan (hari)
 
-export const TRAINER_ID = "99705";
+export const TRAINER_ID = "67420";
+
 
 export type TabKey = "projects" | "experience" | "honors" | "skills";
 
@@ -24,6 +25,38 @@ export type Project = {
 };
 
 export const PROJECTS: Project[] = [
+  {
+    id: "008",
+    name: "SCOUT",
+    short: "Scout",
+    tags: ["Voice", "Agents"],
+    color: "#5b87d6",
+    blurb: "Autonomous voice buyer — calls vendors, haggles, only trusts verified quotes. Built for Hack-Nation #6.",
+    role: "Solo Builder",
+    duration: "Jul 2026",
+    team: "Hackathon",
+    status: "Submitted",
+    stack: ["nextjs", "typescript"],
+    extraStack: 2,
+    url: "https://scout-dusky-six.vercel.app",
+    repo: "https://github.com/nothariharan/scout",
+  },
+  {
+    id: "009",
+    name: "SLOPMARK",
+    short: "Slopmark",
+    tags: ["AI", "Eval"],
+    color: "#d99a2c",
+    blurb: "Honest AI slop detector — fixed harness with rule-based verifiers, never LLM-as-judge.",
+    role: "Solo Builder",
+    duration: "Jul 2026",
+    team: "Solo",
+    status: "Live",
+    stack: ["nextjs", "supabase"],
+    extraStack: 1,
+    url: "https://slopmark.vercel.app",
+    repo: "https://github.com/nothariharan/slopmark",
+  },
   {
     id: "007",
     name: "CERTAMEN",
@@ -140,6 +173,8 @@ export const PROJECTS: Project[] = [
 
 // project metadata mapping icons and descriptions
 export const PROJECT_META: Record<string, { icon: string; listDesc: string }> = {
+  "008": { icon: "scout", listDesc: "Voice buyer agent — haggles vendors with verified quotes." },
+  "009": { icon: "slopmark", listDesc: "Honest AI slop benchmarks — rule-based, not vibes." },
   "007": { icon: "certamen", listDesc: "Live arena where AI models battle & the crowd bets." },
   "001": { icon: "cofound", listDesc: "Multi-agent founder OS to build, ship & scale faster." },
   "002": { icon: "monkeyspeak", listDesc: "Voice-typing benchmark — clocks WPM & filler words." },
@@ -149,15 +184,15 @@ export const PROJECT_META: Record<string, { icon: string; listDesc: string }> = 
   "006": { icon: "mugen", listDesc: "Audits AI models for bias before the EU AI Act does." },
 };
 
-export const TOTAL_BUILT = "20+";
+export const TOTAL_BUILT = "22+";
 
 // experience data
 
 export const EXP_STATS = [
   { value: "5", label: "EXPERIENCES" },
-  { value: "20+", label: "PROJECTS" },
-  { value: "5", label: "HACKATHONS" },
-  { value: "3", label: "WINS" },
+  { value: "22+", label: "PROJECTS" },
+  { value: "10+", label: "HACKATHONS" },
+  { value: "9", label: "WINS" },
 ];
 
 export type TimelineItem = {
@@ -393,17 +428,17 @@ export const BACK_SUMMARY: Record<
 
 // high-level projects summaries for the back face — tag + color give each row its own identity
 export const BACK_PROJECTS = [
+  { name: "Scout", icon: "scout", desc: "Voice buyer agent — haggles with verified quotes only.", tag: "VOICE AGENT", color: "#5b87d6", live: "https://scout-dusky-six.vercel.app", repo: "https://github.com/nothariharan/scout" },
+  { name: "Slopmark", icon: "slopmark", desc: "Honest AI slop benchmarks — rule-based verifiers.", tag: "AI EVAL", color: "#d99a2c", live: "https://slopmark.vercel.app", repo: "https://github.com/nothariharan/slopmark" },
   { name: "CoFound", icon: "cofound", desc: "Multi-agent founder OS — plan, build & ship.", tag: "AI AGENTS", color: "#9b6cc4", live: "https://cofounder-alpha.vercel.app", repo: "https://github.com/nothariharan/CoFound" },
-  { name: "MonkeySpeak", icon: "monkeyspeak", desc: "Voice-typing benchmark — live WPM & filler words.", tag: "VOICE", color: "#d99a2c", live: "https://monkeyspeak-delta.vercel.app", repo: "https://github.com/nothariharan/monkeyspeak" },
   { name: "Certamen", icon: "certamen", desc: "Open arena where AI models battle & the crowd bets.", tag: "AI ARENA", color: "#d4524a", live: "https://web-theta-khaki-90.vercel.app", repo: "https://github.com/nothariharan/certamen" },
-  { name: "Yui", icon: "yui", desc: "AI travel concierge — proactive multi-agent trips.", tag: "TRAVEL", color: "#4a9bd9", live: "https://yui-lemon-five.vercel.app", repo: "https://github.com/nothariharan/Yui" },
 ];
 
 // experience highlights — chronological, oldest first
 export const BACK_EXPERIENCE = [
   { year: "AUG 2025", title: "B.Tech CS — IIIT SriCity", sub: "Dual degree begins", icon: "grad", tag: "EDUCATION", color: "#4a76c9", url: "https://www.linkedin.com/in/nmhariharan/" },
   { year: "AUG 2025", title: "BS — IIT Patna", sub: "Dual-degree programme", icon: "grad", tag: "EDUCATION", color: "#4a76c9", url: "https://www.linkedin.com/in/nmhariharan/" },
-  { year: "2025 — NOW", title: "SAP Security Intern — Rinexis", sub: "SOD analyzer & ITGC audit tooling", icon: "brief", tag: "INTERNSHIP", color: "#3f9b46", url: "https://www.linkedin.com/in/nmhariharan/" },
+  { year: "MAY 2026 — NOW", title: "SAP Security Intern — Rinexis", sub: "SOD analyzer & ITGC audit tooling", icon: "brief", tag: "INTERNSHIP", color: "#3f9b46", url: "https://www.linkedin.com/in/nmhariharan/" },
   { year: "2026 — NOW", title: "Stealth Startup", sub: "Building a cloud-infrastructure product", icon: "cloud", tag: "STARTUP", color: "#9b6cc4", url: "https://www.linkedin.com/in/nmhariharan/" },
 ];
 
@@ -416,9 +451,9 @@ export const BACK_HONORS = [
 
 // skills grouped by type
 export const BACK_SKILLS: { label: string; icons: string[] }[] = [
-  { label: "AI / ML", icons: ["python", "pytorch", "opencv", "numpy", "pandas", "gemini"] },
-  { label: "FULL-STACK", icons: ["react", "nextjs", "nodejs", "fastapi", "express", "typescript", "tailwindcss", "html5", "css3"] },
+  { label: "AI / ML", icons: ["python", "pytorch", "opencv", "numpy", "pandas", "gemini", "huggingface", "openai"] },
+  { label: "FULL-STACK", icons: ["react", "nextjs", "nodejs", "fastapi", "express", "typescript", "tailwindcss", "mongodb", "supabase"] },
   { label: "DEVOPS", icons: ["docker", "kubernetes", "git", "github", "linux", "bash", "nginx", "githubactions"] },
-  { label: "CLOUD", icons: ["aws", "gcp", "vercel", "firebase", "supabase", "redis"] },
-  { label: "TOOLS", icons: ["claude", "openai", "gemini", "cursor", "copilot"] },
+  { label: "CLOUD", icons: ["aws", "gcp", "vercel", "firebase", "supabase", "redis", "electron"] },
+  { label: "TOOLS", icons: ["claude", "openai", "gemini", "cursor", "copilot", "kimi", "opencode", "huggingface"] },
 ];

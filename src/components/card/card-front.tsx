@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { TRAINER_ID } from "../portfolio/data";
 
 /* ================================================================== */
@@ -236,7 +235,7 @@ function GrindMini() {
 const CURRENT = [
   { icon: <SapMini />, label: "SAP Software Integration @ Rinexis", accent: "#5fe0c8" },
   { icon: <StealthMini />, label: "SWE @ stealth startup", accent: "#49a6ff" },
-  { icon: <GrindMini />, label: "Hackathonmaxxing & Tokenmaxxing", accent: "#f0c84a" },
+  { icon: <GrindMini />, label: "Scout · Hack-Nation #6 (results Jul 25)", accent: "#f0c84a" },
 ];
 
 /* ================================================================== */
@@ -308,7 +307,7 @@ function QuickLink({ href, label, children }: { href: string; label: string; chi
       title={label}
       aria-label={label}
       onClick={(e) => e.stopPropagation()}
-      className="w-[24px] h-[24px] rounded-[5px] flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95"
+      className="w-[22px] h-[22px] rounded-[5px] flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95"
       style={{ background: LINK_BLUE, boxShadow: "inset 0 0 0 1.5px #21527f, 0 1px 0 rgba(0,0,0,0.25)" }}
     >
       {children}
@@ -317,37 +316,15 @@ function QuickLink({ href, label, children }: { href: string; label: string; chi
 }
 
 /* ================================================================== */
-/*  AVATAR — just loops through stand frames, no click stuff           */
+/*  AVATAR — static final sprite                                      */
 /* ================================================================== */
 
-// five stand frames, all cropped the same so the feet don't jump
-// s1 thumbs up / s2 neutral / s3 arms crossed / s4 peace+wink / s5 eyes closed
-const STAND_FRAMES = [
-  "/sprites/stand-norm/s1.png",
-  "/sprites/stand-norm/s2.png",
-  "/sprites/stand-norm/s3.png",
-  "/sprites/stand-norm/s4.png",
-  "/sprites/stand-norm/s5.png",
-];
-// hang on neutral a bit, then cycle the poses
-const IDLE_SEQ = [1, 1, 1, 4, 4, 3, 3, 2, 0, 0, 1];
-
 function CardAvatar() {
-  const [tick, setTick] = useState(0);
-
-  // ~1.6s per frame so it feels idle, not twitchy
-  useEffect(() => {
-    const id = setInterval(() => setTick((t) => t + 1), 1600);
-    return () => clearInterval(id);
-  }, []);
-
-  const src = STAND_FRAMES[IDLE_SEQ[tick % IDLE_SEQ.length]];
-
   return (
-    <div className="absolute right-[36px] top-[-2px] z-20 h-[230px] w-[120px] pointer-events-none">
+    <div className="absolute right-[12px] top-[-8px] z-20 h-[290px] w-[170px] pointer-events-none">
       <div className="absolute inset-0 drop-shadow-[2px_4px_4px_rgba(0,0,0,0.22)]">
         <img
-          src={src}
+          src="/harifinal.png"
           alt="Hariharan"
           className="h-full w-full object-contain object-bottom pixelated select-none"
           draggable={false}
@@ -384,20 +361,25 @@ export function CardFront() {
           </span>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
-          <QuickLink href="https://x.com/" label="X">
+        <div className="flex items-center gap-1.5 shrink-0">
+          <QuickLink href="https://github.com/nothariharan" label="GitHub">
             <svg viewBox="0 0 24 24" className="w-[13px] h-[13px]" fill="#fff" aria-hidden>
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.657l-5.214-6.817-5.966 6.817H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              <path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05A9.3 9.3 0 0 1 12 6.84c.85 0 1.7.12 2.5.34 1.9-1.32 2.74-1.05 2.74-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.03 10.03 0 0 0 22 12.26C22 6.58 17.52 2 12 2z" />
+            </svg>
+          </QuickLink>
+          <QuickLink href="https://www.linkedin.com/in/nmhariharan/" label="LinkedIn">
+            <svg viewBox="0 0 24 24" className="w-[13px] h-[13px]" fill="#fff" aria-hidden>
+              <path d="M6.34 8.95H2.67V21h3.67V8.95zM4.5 3C3.12 3 2 4.12 2 5.5S3.12 8 4.5 8 7 6.88 7 5.5 5.88 3 4.5 3zM21.33 21h-3.66v-5.89c0-1.4-.03-3.2-1.95-3.2-1.95 0-2.25 1.52-2.25 3.1V21H9.8V8.95h3.51v1.65h.05c.49-.93 1.68-1.9 3.46-1.9 3.7 0 4.51 2.44 4.51 5.61V21z" />
             </svg>
           </QuickLink>
           <QuickLink href="mailto:nmhariharanme@gmail.com" label="Email">
-            <svg viewBox="0 0 24 24" className="w-[14px] h-[14px]" fill="none" aria-hidden>
+            <svg viewBox="0 0 24 24" className="w-[13px] h-[13px]" fill="none" aria-hidden>
               <rect x="2.5" y="5" width="19" height="14" rx="2" fill="#fff" />
               <path d="M3.5 6.5 L12 13 L20.5 6.5" stroke={LINK_BLUE} strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </QuickLink>
 
-          <div className="flex items-baseline gap-1.5 px-3 py-1.5 rounded-[6px] bg-[#f8edc8]" style={{ boxShadow: "inset 0 0 0 1.5px rgba(90,70,20,0.25)" }}>
+          <div className="flex items-baseline gap-1.5 px-2.5 py-1.5 rounded-[6px] bg-[#f8edc8]" style={{ boxShadow: "inset 0 0 0 1.5px rgba(90,70,20,0.25)" }}>
             <span className="font-pixel text-[11px] leading-none text-[#3a3a3a]">IDNo.</span>
             <span className="font-pixel text-[11px] leading-none text-[#3a3a3a]">{id}</span>
           </div>

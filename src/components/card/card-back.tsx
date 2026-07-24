@@ -155,6 +155,30 @@ function TypePill({ label, color }: { label: string; color: string }) {
   );
 }
 
+// project thumb — uses sprite if we have one, otherwise a letter tile
+function ProjectThumb({ icon, name, color }: { icon: string; name: string; color: string }) {
+  const [ok, setOk] = useState(true);
+  if (!ok) {
+    return (
+      <span
+        className="font-pixel text-[11px] leading-none text-white"
+        style={{ textShadow: "1px 1px 0 rgba(0,0,0,0.35)" }}
+      >
+        {name.slice(0, 1).toUpperCase()}
+      </span>
+    );
+  }
+  return (
+    <img
+      src={`/sprites/proj_${icon}.png`}
+      alt={name}
+      className="w-full h-full pixelated"
+      onError={() => setOk(false)}
+      style={{ background: color }}
+    />
+  );
+}
+
 // icon tile tinted with the row accent color
 function IconTile({ color, size, children }: { color: string; size: number; children: React.ReactNode }) {
   return (
@@ -197,14 +221,20 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
         <span className="font-pixel text-[8px] leading-none text-white/85">PRESS A TO FLIP</span>
       </div>
 
-      {/* pokemon-style tab buttons */}
-      <div className="flex gap-1.5 px-3.5 pt-3 shrink-0">
+      {/* pokemon-style tab buttons — hover + focus both switch the panel */}
+      <div className="flex gap-1.5 px-3.5 pt-3 shrink-0" role="tablist" aria-label="Data file sections">
         {PANELS.map((panel, i) => {
           const on = i === sel;
           return (
             <button
               key={panel.tab}
-              onMouseEnter={() => setSel(i)}
+              type="button"
+              role="tab"
+              aria-selected={on}
+              aria-controls={`panel-${panel.tab}`}
+              id={`tab-${panel.tab}`}
+              onPointerEnter={() => setSel(i)}
+              onFocus={() => setSel(i)}
               onClick={(e) => {
                 e.stopPropagation();
                 setSel(i);
@@ -235,9 +265,12 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
       <div
         className="flex-1 min-h-0 mx-3.5 my-3 rounded-[8px] p-3 flex flex-col"
         style={{ background: PANEL_CREAM, boxShadow: `0 0 0 2px ${NAVY}, inset 0 0 0 2px #fffbe8` }}
+        role="tabpanel"
+        id={`panel-${active.tab}`}
+        aria-labelledby={`tab-${active.tab}`}
       >
-        {/* main details — 3px padding keeps row borders from being clipped by the scroll area */}
-        <div className="flex-1 min-h-0 overflow-y-auto p-[3px] pr-1">
+        {/* main details — key forces a clean swap when the topic changes */}
+        <div key={active.tab} className="flex-1 min-h-0 overflow-y-auto p-[3px] pr-1 animate-[fadeIn_120ms_ease-out]">
           {/* projects — No. + name + one line + link, nothing else */}
           {active.tab === "projects" && (
             <div className="flex flex-col gap-2">
@@ -245,7 +278,7 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
                 <div key={p.name} className="group flex items-center gap-2 rounded-[6px] p-1.5 pl-2.5" style={rowStyle(p.color)}>
                   <RedCursor />
                   <IconTile color={p.color} size={36}>
-                    <img src={`/sprites/proj_${p.icon}.png`} alt={p.name} className="w-full h-full pixelated" />
+                    <ProjectThumb icon={p.icon} name={p.name} color={p.color} />
                   </IconTile>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center gap-1.5 mb-[3px]">
@@ -361,15 +394,20 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
             </div>
           )}
 
-          {/* skills logo lines */}
+          {/* skills logo lines — bigger chips so the panel doesn't look empty */}
           {active.tab === "skills" && (
-            <div className="flex flex-col justify-between h-full gap-1.5 py-0.5">
+            <div className="flex flex-col justify-between h-full gap-2 py-0.5">
               {BACK_SKILLS.map((g) => (
-                <div key={g.label} className="flex items-center gap-2.5">
-                  <span className="font-pixel text-[8px] leading-tight w-[58px] text-right shrink-0" style={{ color: LABEL_BLUE }}>{g.label}</span>
-                  <span className="flex items-center gap-1.5 flex-wrap">
+                <div key={g.label} className="flex items-center gap-3 min-w-0">
+                  <span
+                    className="font-pixel text-[10px] leading-tight w-[72px] text-right shrink-0"
+                    style={{ color: LABEL_BLUE }}
+                  >
+                    {g.label}
+                  </span>
+                  <span className="flex items-center gap-2 flex-1 flex-wrap content-center">
                     {g.icons.map((k) => (
-                      <LogoChip key={k} k={k} size={34} />
+                      <LogoChip key={k} k={k} size={42} />
                     ))}
                   </span>
                 </div>

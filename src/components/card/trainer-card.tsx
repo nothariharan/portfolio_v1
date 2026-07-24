@@ -67,10 +67,11 @@ export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
             damping: 20,
           }}
         >
-          {/* front */}
+          {/* front — disable hits when flipped so the back can receive hover */}
           <div
             className="absolute inset-0 backface-hidden rounded-lg overflow-hidden"
             style={{
+              pointerEvents: isFlipped ? "none" : "auto",
               boxShadow:
                 "0 0 0 3px #33406b, 0 0 0 8px #f2e6bc, 0 0 0 11px #33406b, 0 0 0 13px #1f2a44, 0 16px 36px rgba(0,0,0,0.45)",
             }}
@@ -79,11 +80,12 @@ export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
             <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 pointer-events-none opacity-30" />
           </div>
 
-          {/* back */}
+          {/* back — only interactive when facing the user */}
           <div
             className="absolute inset-0 backface-hidden rounded-lg overflow-hidden"
             style={{
               transform: "rotateY(180deg)",
+              pointerEvents: isFlipped ? "auto" : "none",
               boxShadow:
                 "0 0 0 3px #33406b, 0 0 0 8px #f2e6bc, 0 0 0 11px #33406b, 0 0 0 13px #1f2a44, 0 16px 36px rgba(0,0,0,0.45)",
             }}

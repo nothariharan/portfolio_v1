@@ -17,13 +17,12 @@ export const SITE = {
   // two short first-person paragraphs, written the way he writes
   about: [
     "i'm hari — a dual-degree cs student at iiit sri city and iit patna who ships fast and wide. most days i'm building ai agents and full-stack products, turning rough ideas into deployed things (usually somewhere around 3am).",
-    "so far that's 18+ projects, 9 hackathon wins — four of them in a single day — a hacktoberfest golden badge, yc startup school '26, and an sap security internship at rinexis. i care about shipping real products, not demos. and yeah, the pixel trainer card was me too.",
+    "so far that's 22+ projects, 9 hackathon wins — four of them in a single day — a hacktoberfest golden badge, yc startup school '26, and an sap security internship at rinexis. i care about shipping real products, not demos. and yeah, the pixel trainer card was me too.",
   ],
 
   email: "nmhariharanme@gmail.com",
   socials: {
     github: "https://github.com/nothariharan",
     linkedin: "https://www.linkedin.com/in/nmhariharan/",
-    leetcode: "https://leetcode.com/nothariharan",
   },
 };

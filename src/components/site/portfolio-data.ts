@@ -47,6 +47,55 @@ export const CATEGORY_META: Record<Category, { color: string; glyph: string }> =
 
 export const PROJECTS: SiteProject[] = [
   {
+    slug: "scout",
+    name: "Scout",
+    tagline: "an autonomous voice buyer that haggles for you.",
+    description:
+      "calls vendors, negotiates, and only trusts verified quotes — elevenlabs voice agent + twilio + live web research. built for hack-nation #6 (the negotiator challenge).",
+    category: "AI / Agents",
+    tech: ["nextjs", "typescript", "elevenlabs", "twilio"],
+    date: "Jul 2026",
+    repo: "https://github.com/nothariharan/scout",
+    live: "https://scout-dusky-six.vercel.app",
+    award: "⏳ Hack-Nation #6 · results Jul 25",
+    featured: true,
+  },
+  {
+    slug: "slopmark",
+    name: "Slopmark",
+    tagline: "honest ai slop detection — no llm-as-judge.",
+    description:
+      "rule-based verifiers put models through a fixed harness so 'slop' scores aren't just another model vibing. next.js + openrouter + supabase.",
+    category: "AI / Agents",
+    tech: ["nextjs", "typescript", "supabase", "openrouter"],
+    date: "Jul 2026",
+    repo: "https://github.com/nothariharan/slopmark",
+    live: "https://slopmark.vercel.app",
+    featured: true,
+  },
+  {
+    slug: "crux",
+    name: "Crux",
+    tagline: "deadline-first study os — upload, extract, plan, practice.",
+    description:
+      "turns messy course material into a study plan that actually respects the exam date. next.js + supabase + inngest + bedrock/textract. building for openai build week.",
+    category: "AI / Agents",
+    tech: ["nextjs", "typescript", "supabase", "aws"],
+    date: "Jul 2026",
+    repo: "https://github.com/nothariharan/crux",
+  },
+  {
+    slug: "tecora",
+    name: "Tecora",
+    tagline: "folders and search for your ai chats. local-first.",
+    description:
+      "browser extension that cleans up the chaos of living in claude / chatgpt / gemini — folders, search, bulk cleanup, export. wxt + react + dexie. no cloud brain, just yours.",
+    category: "Dev Tools",
+    tech: ["typescript", "react", "wxt"],
+    date: "Jul 2026",
+    repo: "https://github.com/nothariharan/Tecora",
+  },
+  {
     slug: "certamen",
     name: "Certamen",
     tagline: "any ai model competes live. the crowd bets.",
@@ -87,7 +136,6 @@ export const PROJECTS: SiteProject[] = [
     live: "https://justask-one.vercel.app",
     award: "🥇 1st · AMUHACKS 5.0",
     shot: "/shots/justask.png",
-    featured: true,
   },
   {
     slug: "yui",
@@ -415,14 +463,14 @@ export const WORK: ExpRow[] = [
     title: "AI / Full-Stack Builder",
     org: "Independent",
     period: "2025 — Present",
-    desc: "shipping ai agents, civic tech and developer tools — 18+ projects, most of them deployed and in front of real users.",
+    desc: "shipping ai agents, civic tech and developer tools — 22+ projects, most of them deployed and in front of real users.",
     icon: "laptop",
   },
   {
     title: "SAP Security Intern",
     org: "Rinexis",
-    period: "2025 — 2026",
-    desc: "built a multi-tenant sap security saas from the inside.",
+    period: "May 2026 — Present",
+    desc: "building a multi-tenant sap security saas from the inside.",
     icon: "brief",
     bullets: [
       "SOD analyzer — segregation-of-duties conflict detection across sap role assignments, generating auditor remediation reports.",
@@ -450,7 +498,7 @@ export const EDUCATION: ExpRow[] = [
 
 // small headline stats
 export const STATS = [
-  { value: "18+", label: "projects shipped" },
+  { value: "22+", label: "projects shipped" },
   { value: "9", label: "hackathon wins" },
   { value: "1700+", label: "leetcode rating" },
 ];
@@ -480,9 +528,16 @@ export const JOURNEY_KIND_META: Record<JourneyKind, { color: string; label: stri
 
 export const JOURNEY: JourneyEntry[] = [
   {
+    date: "Jul 2026",
+    title: "Scout + Slopmark shipped",
+    desc: "scout — autonomous voice buyer for hack-nation #6 (results jul 25). slopmark — honest ai-slop benchmarks with rule-based verifiers. also cooking crux (openai build week) and tecora.",
+    kind: "ship",
+    icon: "🚀",
+  },
+  {
     date: "Jun 2026",
     title: "Building CoFound",
-    desc: "multi-agent founder OS — my current main project. also shipped monkeyspeak (voice wpm benchmark) and SlopOS (a fake OS made of slop, on purpose).",
+    desc: "multi-agent founder OS — still a main product. also shipped monkeyspeak (voice wpm benchmark) and SlopOS (a fake OS made of slop, on purpose).",
     kind: "ship",
     icon: "🚀",
   },
@@ -564,9 +619,9 @@ export const JOURNEY: JourneyEntry[] = [
     icon: "🎓",
   },
   {
-    date: "2025 — 2026",
+    date: "May 2026 — Present",
     title: "SAP Security Intern @ Rinexis",
-    desc: "built a multi-tenant sap security saas — segregation-of-duties analysis and itgc audit tooling.",
+    desc: "building a multi-tenant sap security saas — segregation-of-duties analysis and itgc audit tooling.",
     kind: "work",
     icon: "💼",
   },
