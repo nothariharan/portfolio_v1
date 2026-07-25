@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Section, SectionHeading, ExpIcon, ArrowIcon } from "./ui";
+import { Section, SectionHeading, RowMark, ArrowIcon } from "./ui";
 import { WORK, EDUCATION, type ExpRow } from "./portfolio-data";
 import { useTransition } from "@/hooks/use-transition";
 
@@ -14,8 +14,8 @@ function RowList({ rows }: { rows: ExpRow[] }) {
           key={`${r.title}-${r.org}`}
           className="flex items-start gap-4 border-t border-portfolio-border/70 py-5 first:border-t-0"
         >
-          <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-portfolio-border bg-portfolio-card text-portfolio-muted">
-            <ExpIcon name={r.icon} />
+          <span className="mt-0.5 shrink-0">
+            <RowMark name={r.icon} size={36} />
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex items-baseline justify-between gap-3">

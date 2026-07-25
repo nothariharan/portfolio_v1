@@ -2,8 +2,8 @@
 // Full portfolio catalog for the main site (/portfolio + sub-routes).
 // Every fact here is sourced from the /Desktop/Hariharan knowledge base
 // (wiki/projects, wiki/achievements, wiki/life). Taglines keep Hari's
-// lowercase, punchy voice. Live URLs are exact — screenshots of the six
-// deployed apps live in /public/shots.
+// lowercase, punchy voice. Live URLs are exact — real screenshots of
+// deployed apps live in /public/shots (captured from production).
 // ------------------------------------------------------------------
 
 export type Category =
@@ -58,6 +58,7 @@ export const PROJECTS: SiteProject[] = [
     repo: "https://github.com/nothariharan/scout",
     live: "https://scout-dusky-six.vercel.app",
     award: "⏳ Hack-Nation #6 · results Jul 25",
+    shot: "/shots/scout.png",
     featured: true,
   },
   {
@@ -71,6 +72,7 @@ export const PROJECTS: SiteProject[] = [
     date: "Jul 2026",
     repo: "https://github.com/nothariharan/slopmark",
     live: "https://slopmark.vercel.app",
+    shot: "/shots/slopmark.png",
     featured: true,
   },
   {
@@ -83,6 +85,9 @@ export const PROJECTS: SiteProject[] = [
     tech: ["nextjs", "typescript", "supabase", "aws"],
     date: "Jul 2026",
     repo: "https://github.com/nothariharan/crux",
+    live: "https://crux-snowy.vercel.app",
+    shot: "/shots/crux.png",
+    featured: true,
   },
   {
     slug: "tecora",
@@ -281,6 +286,8 @@ export const PROJECTS: SiteProject[] = [
     tech: ["react", "nodejs", "aws", "gemini"],
     date: "Mar 2026",
     repo: "https://github.com/nothariharan/Bharat_Seva",
+    live: "https://bharat-seva-alpha.vercel.app",
+    shot: "/shots/bharat-seva.png",
   },
   {
     slug: "mandisaathi",
@@ -340,7 +347,8 @@ export type Achievement = {
   title: string;
   event: string;
   result: "1st" | "2nd" | "Winner" | "Golden" | "Participant" | "Selected";
-  icon: string; // emoji
+  /** Simple Icons key or emoji fallback */
+  icon: string;
   date: string;
   note: string; // one line, Hari's voice
   project?: string; // related project name
@@ -354,7 +362,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: "YC Startup School India '26",
     event: "Y Combinator · Bangalore",
     result: "Selected",
-    icon: "🚀",
+    icon: "ycombinator",
     date: "Apr 2026",
     note: "yc founder education for india — serious startup intent, not just hackathon projects.",
     project: "CoFound",
@@ -391,7 +399,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: "Global Game Jam '26 — 2nd place",
     event: "GGJ26 · IIIT Sri City (theme: Mask)",
     result: "2nd",
-    icon: "🥈",
+    icon: "unity",
     date: "Feb 2026",
     note: "a 16-bit platformer where host switching is the mask mechanic.",
     project: "Visage",
@@ -401,7 +409,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: "GDG TechSprint — 2nd place",
     event: "Google Developer Groups",
     result: "2nd",
-    icon: "🥈",
+    icon: "google",
     date: "Feb 2026",
     note: "snap a photo of a broken light, gemini routes it to the right department.",
     project: "LensFix",
@@ -429,7 +437,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: "Hacktoberfest 2025 — Golden Contributor",
     event: "DigitalOcean × GitHub",
     result: "Golden",
-    icon: "🎖️",
+    icon: "digitalocean",
     date: "Oct 2025",
     note: "highest tier — 4+ meaningful prs merged across open-source repos in october.",
   },
@@ -454,7 +462,8 @@ export type ExpRow = {
   org: string;
   period: string;
   desc: string;
-  icon: string; // ExpIcon key
+  /** Simple Icons key (black BrandTile) or ExpIcon glyph name */
+  icon: string;
   bullets?: string[];
 };
 
@@ -464,14 +473,14 @@ export const WORK: ExpRow[] = [
     org: "Independent",
     period: "2025 — Present",
     desc: "shipping ai agents, civic tech and developer tools — 22+ projects, most of them deployed and in front of real users.",
-    icon: "laptop",
+    icon: "huggingface",
   },
   {
     title: "SAP Security Intern",
     org: "Rinexis",
     period: "May 2026 — Present",
     desc: "building a multi-tenant sap security saas from the inside.",
-    icon: "brief",
+    icon: "bash",
     bullets: [
       "SOD analyzer — segregation-of-duties conflict detection across sap role assignments, generating auditor remediation reports.",
       "ITGC audit tool — it general controls for sox / soc 2, with finding lifecycle and role-based access for auditors, admins and viewers.",
@@ -485,14 +494,14 @@ export const EDUCATION: ExpRow[] = [
     org: "IIIT Sri City",
     period: "Aug 2025 — Present",
     desc: "dual-degree programme — building products in parallel with coursework.",
-    icon: "grad",
+    icon: "googlescholar",
   },
   {
     title: "Dual Degree (CS)",
     org: "IIT Patna",
     period: "Aug 2025 — Present",
     desc: "the second half of the dual degree with iiit sri city.",
-    icon: "grad",
+    icon: "leetcode",
   },
 ];
 

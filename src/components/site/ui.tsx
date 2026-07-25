@@ -69,13 +69,18 @@ export function SectionHeading({
   );
 }
 
-// svg files that actually exist in /public/logos — anything else renders as text
+// Simple Icons SVGs in /public/logos (synced via scripts/sync-simple-icons.mjs).
+// Keys without a file still render as text-only pills.
 export const LOGO_KEYS = new Set([
-  "aws", "bash", "claude", "copilot", "cpp", "css3", "cursor", "dart", "docker",
-  "electron", "express", "fastapi", "firebase", "gcp", "gemini", "git", "github",
-  "githubactions", "html5", "javascript", "kubernetes", "linux", "mongodb", "nextjs",
-  "nginx", "nodejs", "numpy", "openai", "opencv", "pandas", "postgresql", "python",
-  "pytorch", "react", "redis", "rust", "supabase", "tailwindcss", "typescript", "vercel",
+  "anthropic", "aws", "bash", "claude", "copilot", "cpp", "csharp", "css3", "cursor",
+  "dart", "deepgram", "digitalocean", "docker", "electron", "elevenlabs", "express",
+  "fastapi", "ffmpeg", "firebase", "flutter", "gcp", "gemini", "git", "github",
+  "githubactions", "google", "googlescholar", "html5", "huggingface", "javascript",
+  "kimi", "kubernetes", "langgraph", "leetcode", "linux", "mongodb", "nextjs", "nginx",
+  "nodejs", "numpy", "openai", "opencode", "opencv", "openrouter", "pandas",
+  "postgresql", "python", "pytorch", "react", "redis", "rust", "sap", "socketio",
+  "streamlit", "supabase", "tailwindcss", "twilio", "typescript", "unity", "vercel",
+  "vite", "wxt", "ycombinator",
 ]);
 
 // pretty display names for tech keys (logo or text)
@@ -87,30 +92,108 @@ const NAMES: Record<string, string> = {
   css3: "CSS3",
   tailwindcss: "Tailwind",
   githubactions: "Actions",
-  postgresql: "SQL",
+  postgresql: "PostgreSQL",
   opencv: "OpenCV",
   pytorch: "PyTorch",
   cpp: "C++",
+  csharp: "C#",
   javascript: "JavaScript",
   typescript: "TypeScript",
   aws: "AWS",
   gcp: "GCP",
-  // text-only (no logo file) —
-  adk: "Google ADK",
-  deepgram: "Deepgram",
   socketio: "Socket.io",
   ffmpeg: "FFmpeg",
   streamlit: "Streamlit",
-  unity: "Unity",
-  csharp: "C#",
   flutter: "Flutter",
   langgraph: "LangGraph",
-  bedrock: "Bedrock",
+  elevenlabs: "ElevenLabs",
+  openrouter: "OpenRouter",
+  deepgram: "Deepgram",
+  huggingface: "Hugging Face",
+  opencode: "OpenCode",
+  kimi: "Kimi",
   vite: "Vite",
+  wxt: "WXT",
+  anthropic: "Anthropic",
+  unity: "Unity",
+  sap: "SAP",
+  ycombinator: "Y Combinator",
+  googlescholar: "Google Scholar",
+  leetcode: "LeetCode",
+  digitalocean: "DigitalOcean",
+  google: "Google",
+  // text-only (no Simple Icon / logo file) —
+  adk: "Google ADK",
+  bedrock: "Bedrock",
   zustand: "Zustand",
 };
 
 export const prettyTech = (k: string) => NAMES[k] ?? k.charAt(0).toUpperCase() + k.slice(1);
+
+/** Logos whose fill is near-black — invert so they read on BrandTile. */
+const DARK_LOGOS = new Set([
+  "unity", "github", "nextjs", "vercel", "kimi", "opencode", "express", "socketio",
+  "cursor", "copilot", "elevenlabs", "anthropic", "linux",
+]);
+
+/** Brand logo on a black tile — used for experience rows and other portfolio marks. */
+export function BrandTile({
+  k,
+  size = 36,
+  label,
+}: {
+  k: string;
+  size?: number;
+  label?: string;
+}) {
+  const icon = Math.round(size * 0.55);
+  const invert = DARK_LOGOS.has(k);
+  return (
+    <span
+      title={label ?? prettyTech(k)}
+      className="flex shrink-0 items-center justify-center rounded-md border border-white/12 bg-black shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)]"
+      style={{ width: size, height: size }}
+    >
+      <img
+        src={`/logos/${k}.svg`}
+        alt={label ?? prettyTech(k)}
+        className="object-contain"
+        style={{
+          width: icon,
+          height: icon,
+          filter: invert ? "brightness(0) invert(1)" : undefined,
+        }}
+      />
+    </span>
+  );
+}
+
+/** Portfolio row mark: Simple Icon on black, emoji, or outline glyph. */
+export function RowMark({ name, size = 36 }: { name: string; size?: number }) {
+  if (LOGO_KEYS.has(name)) {
+    return <BrandTile k={name} size={size} />;
+  }
+  // emoji / short unicode marks (achievements without a brand logo)
+  if (name.length <= 3 || /[^\x00-\x7F]/.test(name)) {
+    return (
+      <span
+        className="flex shrink-0 items-center justify-center rounded-md border border-white/12 bg-black text-base leading-none"
+        style={{ width: size, height: size }}
+        aria-hidden
+      >
+        {name}
+      </span>
+    );
+  }
+  return (
+    <span
+      className="flex shrink-0 items-center justify-center rounded-md border border-portfolio-border bg-portfolio-card text-portfolio-muted"
+      style={{ width: size, height: size }}
+    >
+      <ExpIcon name={name} />
+    </span>
+  );
+}
 
 // brand logo on a light tile so both dark and colored logos stay visible
 export function LogoChip({ k, size = 24, label }: { k: string; size?: number; label?: string }) {
