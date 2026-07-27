@@ -347,7 +347,7 @@ export type Achievement = {
   title: string;
   event: string;
   result: "1st" | "2nd" | "Winner" | "Golden" | "Participant" | "Selected";
-  /** Simple Icons key or emoji fallback */
+  /** Emoji mark for the list row */
   icon: string;
   date: string;
   note: string; // one line, Hari's voice
@@ -362,7 +362,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: "YC Startup School India '26",
     event: "Y Combinator · Bangalore",
     result: "Selected",
-    icon: "ycombinator",
+    icon: "🚀",
     date: "Apr 2026",
     note: "yc founder education for india — serious startup intent, not just hackathon projects.",
     project: "CoFound",
@@ -399,7 +399,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: "Global Game Jam '26 — 2nd place",
     event: "GGJ26 · IIIT Sri City (theme: Mask)",
     result: "2nd",
-    icon: "unity",
+    icon: "🥈",
     date: "Feb 2026",
     note: "a 16-bit platformer where host switching is the mask mechanic.",
     project: "Visage",
@@ -409,7 +409,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: "GDG TechSprint — 2nd place",
     event: "Google Developer Groups",
     result: "2nd",
-    icon: "google",
+    icon: "🥈",
     date: "Feb 2026",
     note: "snap a photo of a broken light, gemini routes it to the right department.",
     project: "LensFix",
@@ -437,7 +437,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: "Hacktoberfest 2025 — Golden Contributor",
     event: "DigitalOcean × GitHub",
     result: "Golden",
-    icon: "digitalocean",
+    icon: "🎖️",
     date: "Oct 2025",
     note: "highest tier — 4+ meaningful prs merged across open-source repos in october.",
   },
@@ -462,25 +462,29 @@ export type ExpRow = {
   org: string;
   period: string;
   desc: string;
-  /** Simple Icons key (black BrandTile) or ExpIcon glyph name */
+  /** Quiet ExpIcon glyph fallback */
   icon: string;
+  /** Optional real logo path under /public (e.g. /logos/rinexis.png) */
+  logo?: string;
   bullets?: string[];
 };
 
 export const WORK: ExpRow[] = [
   {
-    title: "AI / Full-Stack Builder",
-    org: "Independent",
-    period: "2025 — Present",
-    desc: "shipping ai agents, civic tech and developer tools — 22+ projects, most of them deployed and in front of real users.",
-    icon: "huggingface",
+    title: "Founding Engineer",
+    org: "Stealth Startup",
+    period: "2026 — Present",
+    desc: "building a yc-funded stealth startup — shipping the product in quiet mode for now.",
+    icon: "laptop",
+    logo: "/logos/ycombinator.svg",
   },
   {
     title: "SAP Security Intern",
     org: "Rinexis",
-    period: "May 2026 — Present",
-    desc: "building a multi-tenant sap security saas from the inside.",
-    icon: "bash",
+    period: "May 2026 — Aug 2026",
+    desc: "built a multi-tenant sap security saas from the inside.",
+    icon: "brief",
+    logo: "/logos/rinexis.png",
     bullets: [
       "SOD analyzer — segregation-of-duties conflict detection across sap role assignments, generating auditor remediation reports.",
       "ITGC audit tool — it general controls for sox / soc 2, with finding lifecycle and role-based access for auditors, admins and viewers.",
@@ -494,14 +498,14 @@ export const EDUCATION: ExpRow[] = [
     org: "IIIT Sri City",
     period: "Aug 2025 — Present",
     desc: "dual-degree programme — building products in parallel with coursework.",
-    icon: "googlescholar",
+    icon: "grad",
   },
   {
     title: "Dual Degree (CS)",
     org: "IIT Patna",
     period: "Aug 2025 — Present",
     desc: "the second half of the dual degree with iiit sri city.",
-    icon: "leetcode",
+    icon: "grad",
   },
 ];
 
@@ -536,6 +540,13 @@ export const JOURNEY_KIND_META: Record<JourneyKind, { color: string; label: stri
 };
 
 export const JOURNEY: JourneyEntry[] = [
+  {
+    date: "2026 — Present",
+    title: "YC-funded stealth startup",
+    desc: "founding engineer — building the product in quiet mode, backed by y combinator.",
+    kind: "work",
+    icon: "🚀",
+  },
   {
     date: "Jul 2026",
     title: "Scout + Slopmark shipped",
@@ -628,9 +639,9 @@ export const JOURNEY: JourneyEntry[] = [
     icon: "🎓",
   },
   {
-    date: "May 2026 — Present",
+    date: "May 2026 — Aug 2026",
     title: "SAP Security Intern @ Rinexis",
-    desc: "building a multi-tenant sap security saas — segregation-of-duties analysis and itgc audit tooling.",
+    desc: "built a multi-tenant sap security saas — segregation-of-duties analysis and itgc audit tooling.",
     kind: "work",
     icon: "💼",
   },

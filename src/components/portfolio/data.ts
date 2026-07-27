@@ -207,12 +207,12 @@ export const TIMELINE: TimelineItem[] = [
   {
     current: true,
     period: "PRESENT",
-    title: "AI / Full-Stack Builder",
-    desc: "Shipping AI agents & products solving real problems.",
+    title: "Founding Engineer · Stealth (YC)",
+    desc: "Building a YC-funded stealth startup.",
     icon: "laptop",
   },
   {
-    period: "2025 — 2026",
+    period: "May — Aug 2026",
     title: "SAP Security Intern · Rinexis",
     desc: "Built an SOD analyzer & ITGC audit tooling for SAP.",
     icon: "brain",
@@ -395,8 +395,8 @@ export const BACK_SUMMARY: Record<
   experience: {
     tagline: "the journey so far",
     lines: [
-      "AI / Full-Stack Builder — present",
-      "SAP Security Intern · Rinexis",
+      "Founding Engineer · YC-funded stealth",
+      "SAP Security Intern · Rinexis (ended Aug '26)",
       "Dual-degree CS · IIIT × IIT Patna",
     ],
     stat: "5 ROLES · BUILDING SINCE 2025",
@@ -438,8 +438,8 @@ export const BACK_PROJECTS = [
 export const BACK_EXPERIENCE = [
   { year: "AUG 2025", title: "B.Tech CS — IIIT SriCity", sub: "Dual degree begins", icon: "grad", tag: "EDUCATION", color: "#4a76c9", url: "https://www.linkedin.com/in/nmhariharan/" },
   { year: "AUG 2025", title: "BS — IIT Patna", sub: "Dual-degree programme", icon: "grad", tag: "EDUCATION", color: "#4a76c9", url: "https://www.linkedin.com/in/nmhariharan/" },
-  { year: "MAY 2026 — NOW", title: "SAP Security Intern — Rinexis", sub: "SOD analyzer & ITGC audit tooling", icon: "brief", tag: "INTERNSHIP", color: "#3f9b46", url: "https://www.linkedin.com/in/nmhariharan/" },
-  { year: "2026 — NOW", title: "Stealth Startup", sub: "Building a cloud-infrastructure product", icon: "cloud", tag: "STARTUP", color: "#9b6cc4", url: "https://www.linkedin.com/in/nmhariharan/" },
+  { year: "MAY — AUG 2026", title: "SAP Security Intern — Rinexis", sub: "SOD analyzer & ITGC audit tooling", icon: "brief", tag: "INTERNSHIP", color: "#3f9b46", url: "https://www.linkedin.com/in/nmhariharan/" },
+  { year: "2026 — NOW", title: "Stealth Startup (YC)", sub: "Founding engineer — cloud-infrastructure product", icon: "cloud", tag: "STARTUP", color: "#fb651e", url: "https://www.linkedin.com/in/nmhariharan/" },
 ];
 
 // honors list

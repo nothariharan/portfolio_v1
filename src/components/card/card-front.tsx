@@ -192,20 +192,6 @@ const EXP_LINES = [
 /*  CURRENTLY — what i'm up to right now                              */
 /* ================================================================== */
 
-// little pixel marks for each line
-function SapMini() {
-  return (
-    <svg viewBox="0 0 20 20" className="w-[16px] h-[16px]" aria-hidden>
-      <rect x="2" y="4" width="16" height="13" fill="#0f766e" />
-      <rect x="2" y="4" width="16" height="3" fill="#14b8a6" />
-      <rect x="5" y="9" width="4" height="3" fill="#ccfbf1" />
-      <rect x="11" y="9" width="4" height="3" fill="#ccfbf1" />
-      <rect x="8" y="13" width="4" height="4" fill="#99f6e4" />
-      <rect x="1" y="17" width="18" height="2" fill="#115e59" />
-    </svg>
-  );
-}
-
 function StealthMini() {
   return (
     <svg viewBox="0 0 20 20" className="w-[16px] h-[16px]" aria-hidden>
@@ -233,8 +219,7 @@ function GrindMini() {
 }
 
 const CURRENT = [
-  { icon: <SapMini />, label: "SAP Software Integration @ Rinexis", accent: "#5fe0c8" },
-  { icon: <StealthMini />, label: "SWE @ stealth startup", accent: "#49a6ff" },
+  { icon: <StealthMini />, label: "Founding Eng @ YC-funded stealth", accent: "#fb651e" },
   { icon: <GrindMini />, label: "Scout · Hack-Nation #6 (results Jul 25)", accent: "#f0c84a" },
 ];
 

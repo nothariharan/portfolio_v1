@@ -1,6 +1,6 @@
 "use client";
 
-import { Section, Reveal, SectionHeading, ArrowIcon, RowMark } from "./ui";
+import { Section, Reveal, SectionHeading, ArrowIcon } from "./ui";
 import { FEATURED_ACHIEVEMENTS, ACHIEVEMENTS } from "./portfolio-data";
 import { useTransition } from "@/hooks/use-transition";
 
@@ -25,8 +25,8 @@ export function Achievements() {
         {FEATURED_ACHIEVEMENTS.map((a, i) => (
           <Reveal key={a.title} delay={i * 0.05}>
             <li className="group flex items-start gap-4 border-t border-portfolio-border/70 py-4 first:border-t-0">
-              <span className="mt-0.5 shrink-0">
-                <RowMark name={a.icon} size={36} />
+              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-portfolio-border bg-portfolio-card text-base">
+                {a.icon}
               </span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline justify-between gap-3">
