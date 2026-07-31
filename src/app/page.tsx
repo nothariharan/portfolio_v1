@@ -16,7 +16,7 @@ const BG_THEMES = [
 
 export default function Home() {
   const { startTransition } = useTransition();
-  const [scale, setScale] = useState(1.0);
+  const [scale, setScale] = useState(1.3);
   const [bgIdx, setBgIdx] = useState(0);
 
   // scale handlers with bounds 0.7 to 1.45
@@ -62,7 +62,7 @@ export default function Home() {
 
       {/* trainer card with retro spring zoom scale animation */}
       <motion.div
-        className="w-full max-w-[720px] flex items-center justify-center z-10"
+        className="w-full max-w-[900px] flex items-center justify-center z-10"
         animate={{ scale: scale }}
         transition={{
           type: "spring",
