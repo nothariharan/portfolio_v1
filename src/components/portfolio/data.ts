@@ -206,13 +206,20 @@ export type TimelineItem = {
 export const TIMELINE: TimelineItem[] = [
   {
     current: true,
-    period: "PRESENT",
-    title: "Founding Engineer · Stealth (YC)",
-    desc: "Building a YC-funded stealth startup.",
+    period: "Jun 2026 — Present",
+    title: "Founding Engineer · Stealth Startup VC backed",
+    desc: "Building a VC-backed stealth startup.",
     icon: "laptop",
   },
   {
-    period: "May — Aug 2026",
+    current: true,
+    period: "Jan 2026 — Present",
+    title: "Freelancing",
+    desc: "Client work and side products — shipping what needs to go live.",
+    icon: "code",
+  },
+  {
+    period: "May — Jul 2026",
     title: "SAP Security Intern · Rinexis",
     desc: "Built an SOD analyzer & ITGC audit tooling for SAP.",
     icon: "brain",
@@ -395,9 +402,9 @@ export const BACK_SUMMARY: Record<
   experience: {
     tagline: "the journey so far",
     lines: [
-      "Founding Engineer · YC-funded stealth",
-      "SAP Security Intern · Rinexis (ended Aug '26)",
-      "Dual-degree CS · IIIT × IIT Patna",
+      "Stealth Startup VC backed · Jun — Present",
+      "Freelancing · Jan — Present",
+      "Rinexis Internship · May — Aug '26",
     ],
     stat: "5 ROLES · BUILDING SINCE 2025",
     link: { label: "LINKEDIN", url: "https://www.linkedin.com/in/nmhariharan/" },
@@ -434,19 +441,180 @@ export const BACK_PROJECTS = [
   { name: "Certamen", icon: "certamen", desc: "Open arena where AI models battle & the crowd bets.", tag: "AI ARENA", color: "#d4524a", live: "https://web-theta-khaki-90.vercel.app", repo: "https://github.com/nothariharan/certamen" },
 ];
 
-// experience highlights — chronological, oldest first
-export const BACK_EXPERIENCE = [
-  { year: "AUG 2025", title: "B.Tech CS — IIIT SriCity", sub: "Dual degree begins", icon: "grad", tag: "EDUCATION", color: "#4a76c9", url: "https://www.linkedin.com/in/nmhariharan/" },
-  { year: "AUG 2025", title: "BS — IIT Patna", sub: "Dual-degree programme", icon: "grad", tag: "EDUCATION", color: "#4a76c9", url: "https://www.linkedin.com/in/nmhariharan/" },
-  { year: "MAY — AUG 2026", title: "SAP Security Intern — Rinexis", sub: "SOD analyzer & ITGC audit tooling", icon: "brief", tag: "INTERNSHIP", color: "#3f9b46", url: "https://www.linkedin.com/in/nmhariharan/" },
-  { year: "2026 — NOW", title: "Stealth Startup (YC)", sub: "Founding engineer — cloud-infrastructure product", icon: "cloud", tag: "STARTUP", color: "#fb651e", url: "https://www.linkedin.com/in/nmhariharan/" },
+// experience highlights — chronological, oldest first (Pokédex record cards)
+export type BackExperienceStatus = "COMPLETED" | "ACTIVE" | "IN PROGRESS";
+export type BackExperienceBadge = "trophy" | "star" | "bolt" | "rocket";
+
+export type BackExperience = {
+  year: string;
+  title: string;
+  sub: string;
+  icon: string;
+  tag: string;
+  color: string;
+  status: BackExperienceStatus;
+  badge: BackExperienceBadge;
+  url: string;
+  github?: string;
+};
+
+export const BACK_EXPERIENCE: BackExperience[] = [
+  {
+    year: "AUG 2025",
+    title: "B.Tech CS — IIIT SriCity",
+    sub: "Dual degree begins",
+    icon: "grad",
+    tag: "EDUCATION",
+    color: "#4a76c9",
+    status: "COMPLETED",
+    badge: "trophy",
+    url: "https://www.linkedin.com/in/nmhariharan/",
+    github: "https://github.com/nothariharan",
+  },
+  {
+    year: "AUG 2025",
+    title: "BS — IIT Patna",
+    sub: "Dual-degree programme",
+    icon: "grad",
+    tag: "EDUCATION",
+    color: "#4a76c9",
+    status: "COMPLETED",
+    badge: "star",
+    url: "https://www.linkedin.com/in/nmhariharan/",
+    github: "https://github.com/nothariharan",
+  },
+  {
+    year: "MAY — AUG 2026",
+    title: "SAP Security Intern — Rinexis",
+    sub: "SOD analyzer & ITGC audit tooling",
+    icon: "brief",
+    tag: "INTERNSHIP",
+    color: "#3f9b46",
+    status: "ACTIVE",
+    badge: "bolt",
+    url: "https://www.linkedin.com/in/nmhariharan/",
+    github: "https://github.com/nothariharan",
+  },
+  {
+    year: "2026 — NOW",
+    title: "Stealth Startup VC backed",
+    sub: "Founding engineer — cloud-infrastructure product",
+    icon: "cloud",
+    tag: "STARTUP",
+    color: "#e8913a",
+    status: "IN PROGRESS",
+    badge: "rocket",
+    url: "https://www.linkedin.com/in/nmhariharan/",
+    github: "https://github.com/nothariharan",
+  },
 ];
 
-// honors list
-export const BACK_HONORS = [
-  { title: "Hacktoberfest Golden '25", sub: "Top-tier open-source contributor", icon: "code", tag: "OPEN SOURCE", color: "#3f9b46", url: "https://github.com/nothariharan" },
-  { title: "YC Startup School '26", sub: "Y Combinator — India cohort", icon: "star", tag: "Y COMBINATOR", color: "#fb651e", url: "https://www.startupschool.org/" },
-  { title: "10+ Hackathons · multiple wins", sub: "VahanLive, AMUHACKS, Cosmix & more", icon: "trophy", tag: "HACKATHONS", color: "#d99a2c", url: "https://www.linkedin.com/in/nmhariharan/" },
+// honors — carousel cards + rich detail panel (unique metrics per honor type)
+export type BackHonorMetric = {
+  icon: "calendar" | "people" | "gift" | "trophy" | "build" | "credit" | "track" | "star";
+  label: string;
+  value: string;
+};
+
+export type BackHonor = {
+  title: string;
+  /** Short line under the title in the detail panel */
+  sub: string;
+  /** Compact label shown on the carousel tile */
+  cardTitle: string;
+  icon: string;
+  tag: string;
+  color: string;
+  url: string;
+  rank: string;
+  category: string;
+  organizedBy: string;
+  verified: boolean;
+  metrics: BackHonorMetric[];
+  description: string;
+};
+
+export const BACK_HONORS: BackHonor[] = [
+  {
+    title: "Hacktoberfest Golden '25",
+    cardTitle: "Hacktoberfest Golden '25",
+    sub: "Top-tier open-source contributor",
+    icon: "code",
+    tag: "OPEN SOURCE",
+    color: "#3f9b46",
+    url: "https://github.com/nothariharan",
+    rank: "GOLDEN TIER",
+    category: "Open Source",
+    organizedBy: "DigitalOcean × GitHub",
+    verified: true,
+    metrics: [
+      { icon: "calendar", label: "ACHIEVED ON", value: "Oct 2025" },
+      { icon: "build", label: "MERGED", value: "4+ PRs · 10+ repos" },
+      { icon: "gift", label: "REWARDED", value: "Golden Contributor" },
+    ],
+    description:
+      "Highest Hacktoberfest tier — earned by shipping meaningful pull requests across open-source repos through October 2025.",
+  },
+  {
+    title: "YC Startup School India '26",
+    cardTitle: "YC Startup School '26",
+    sub: "Y Combinator — India cohort · Bangalore",
+    icon: "star",
+    tag: "Y COMBINATOR",
+    color: "#fb651e",
+    url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7451484147975356416/",
+    rank: "SELECTED",
+    category: "Founder Education",
+    organizedBy: "Y Combinator",
+    verified: true,
+    metrics: [
+      { icon: "calendar", label: "ACHIEVED ON", value: "Apr 2026" },
+      { icon: "people", label: "APPLICANTS", value: "100,000+" },
+      { icon: "credit", label: "UNLOCKED", value: "$25k AI credits" },
+    ],
+    description:
+      "YC founder education for India — idea validation, building fast, fundraising and growth. Top builder among 100k+ applicants; unlocked $25k in AI stack credits.",
+  },
+  {
+    title: "9 Hackathon Wins",
+    cardTitle: "9 Hackathon Wins",
+    sub: "VahanLive, AMUHACKS, Cosmix & more",
+    icon: "trophy",
+    tag: "HACKATHONS",
+    color: "#d99a2c",
+    url: "https://www.linkedin.com/in/nmhariharan/",
+    rank: "9 WINS",
+    category: "Hackathons",
+    organizedBy: "Multiple organizers",
+    verified: true,
+    metrics: [
+      { icon: "trophy", label: "PLACED", value: "9 wins total" },
+      { icon: "track", label: "SWEEP", value: "4 tracks · 1 day" },
+      { icon: "star", label: "FIRSTS", value: "AMUHACKS · Cosmix" },
+    ],
+    description:
+      "Nine placed finishes across AI, web, games and civic tech — including AMUHACKS 5.0 1st, Cosmix 1st, and four Abhisarga tracks in a single day.",
+  },
+  {
+    title: "Abhisarga '26 · 4-in-1-day",
+    cardTitle: "Abhisarga · 4-in-1-day",
+    sub: "Cosmix 1st · Replicate · Ideaverse · Agentica",
+    icon: "diamond",
+    tag: "SWEEP",
+    color: "#4a76c9",
+    url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7446399595548516352/",
+    rank: "4 TRACKS",
+    category: "Multi-track Fest",
+    organizedBy: "Abhisarga '26",
+    verified: true,
+    metrics: [
+      { icon: "calendar", label: "ACHIEVED ON", value: "Apr 2026" },
+      { icon: "track", label: "TRACKS", value: "4 wins · one day" },
+      { icon: "build", label: "BUILT", value: "ML · SAR · agents" },
+    ],
+    description:
+      "Four tracks in one day — landslide ML (Team Rocket), OptoSAR twin Bepop (Cosmix 1st), travel concierge Yui, and browser agent Veda.",
+  },
 ];
 
 // skills grouped by type

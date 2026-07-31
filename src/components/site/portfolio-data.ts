@@ -472,16 +472,22 @@ export type ExpRow = {
 export const WORK: ExpRow[] = [
   {
     title: "Founding Engineer",
-    org: "Stealth Startup",
-    period: "2026 — Present",
-    desc: "building a yc-funded stealth startup — shipping the product in quiet mode for now.",
+    org: "Stealth Startup VC backed",
+    period: "Jun 2026 — Present",
+    desc: "building a vc-backed stealth startup — shipping the product in quiet mode for now.",
     icon: "laptop",
-    logo: "/logos/ycombinator.svg",
+  },
+  {
+    title: "Freelancing",
+    org: "Independent",
+    period: "Jan 2026 — Present",
+    desc: "shipping client work and side products — agents, full-stack apps, and whatever needs to go live.",
+    icon: "code",
   },
   {
     title: "SAP Security Intern",
     org: "Rinexis",
-    period: "May 2026 — Aug 2026",
+    period: "May 2026 — Jul 2026",
     desc: "built a multi-tenant sap security saas from the inside.",
     icon: "brief",
     logo: "/logos/rinexis.png",
@@ -541,11 +547,18 @@ export const JOURNEY_KIND_META: Record<JourneyKind, { color: string; label: stri
 
 export const JOURNEY: JourneyEntry[] = [
   {
-    date: "2026 — Present",
-    title: "YC-funded stealth startup",
-    desc: "founding engineer — building the product in quiet mode, backed by y combinator.",
+    date: "Jun 2026 — Present",
+    title: "Founding Eng @ Stealth Startup VC backed",
+    desc: "building the product in quiet mode — vc-backed stealth.",
     kind: "work",
     icon: "🚀",
+  },
+  {
+    date: "Jan 2026 — Present",
+    title: "Freelancing",
+    desc: "client work and side products — shipping agents and full-stack apps.",
+    kind: "work",
+    icon: "💻",
   },
   {
     date: "Jul 2026",
@@ -639,7 +652,7 @@ export const JOURNEY: JourneyEntry[] = [
     icon: "🎓",
   },
   {
-    date: "May 2026 — Aug 2026",
+    date: "May 2026 — Jul 2026",
     title: "SAP Security Intern @ Rinexis",
     desc: "built a multi-tenant sap security saas — segregation-of-duties analysis and itgc audit tooling.",
     kind: "work",
