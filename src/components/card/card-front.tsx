@@ -115,7 +115,7 @@ function StackTile({ name, logo, more }: { name: string; logo?: string; more?: b
   return (
     <div className="group relative shrink-0">
       <div
-        className="w-[34px] h-[34px] bg-white rounded-[5px] flex items-center justify-center transition-all duration-150 shadow-[inset_0_0_0_2px_#33406b,0_2px_0_rgba(0,0,0,0.22)] group-hover:-translate-y-0.5 group-hover:shadow-[inset_0_0_0_2px_#4a76c9,0_4px_0_rgba(0,0,0,0.22)]"
+        className="w-[34px] h-[34px] bg-white rounded-[5px] flex items-center justify-center transition-all duration-150 shadow-[inset_0_0_0_1.5px_#c5c8d0,0_1px_0_rgba(0,0,0,0.08)] group-hover:-translate-y-0.5 group-hover:shadow-[inset_0_0_0_1.5px_#4a76c9,0_3px_0_rgba(0,0,0,0.12)]"
       >
         {more ? (
           <span className="font-pixel text-[8px] leading-none text-[#9aa0a6] group-hover:text-[#1f9fb8]">MORE</span>
@@ -192,19 +192,6 @@ const EXP_LINES = [
 /*  CURRENTLY — what i'm up to right now                              */
 /* ================================================================== */
 
-function StealthMini() {
-  return (
-    <svg viewBox="0 0 20 20" className="w-[16px] h-[16px]" aria-hidden>
-      <rect x="3" y="8" width="14" height="8" fill="#334155" />
-      <rect x="5" y="4" width="10" height="5" fill="#1e293b" />
-      <rect x="7" y="11" width="2" height="2" fill="#38bdf8" />
-      <rect x="11" y="11" width="2" height="2" fill="#38bdf8" />
-      <rect x="8" y="14" width="4" height="2" fill="#64748b" />
-      <rect x="9" y="2" width="2" height="2" fill="#fbbf24" />
-    </svg>
-  );
-}
-
 function GrindMini() {
   return (
     <svg viewBox="0 0 20 20" className="w-[16px] h-[16px]" aria-hidden>
@@ -219,8 +206,9 @@ function GrindMini() {
 }
 
 const CURRENT = [
-  { icon: <StealthMini />, label: "Founding Eng @ YC-funded stealth", accent: "#fb651e" },
-  { icon: <GrindMini />, label: "Scout · Hack-Nation #6 (results Jul 25)", accent: "#f0c84a" },
+  { icon: <BuildMini />, label: "Freelancing (2 ongoing)", accent: "#5a9bd6" },
+  { icon: <GrindMini />, label: "Hackathonmaxxing", accent: "#f0c84a" },
+  { icon: <LearnMini />, label: "Sem 3 @ IIIT", accent: "#8a5bc4" },
 ];
 
 /* ================================================================== */
@@ -373,15 +361,7 @@ export function CardFront() {
 
       {/* ===================== MAIN ===================== */}
       <div className="relative px-4 pt-2 pb-1.5 flex flex-col" style={{ height: "calc(100% - 50px - 40px)" }}>
-        {/* faded watermark rings behind the avatar */}
-        <svg viewBox="0 0 100 100" className="absolute right-[-58px] top-[14px] w-[320px] h-[320px] pointer-events-none" aria-hidden>
-          <circle cx="50" cy="50" r="48" fill="#e9d795" opacity="0.7" />
-          <circle cx="50" cy="50" r="34" fill="#f6ecc6" />
-          <circle cx="50" cy="50" r="21" fill="#e9d795" opacity="0.7" />
-          <circle cx="50" cy="50" r="9" fill="#f6ecc6" />
-        </svg>
-
-        {/* avatar on the right over the rings — animation only */}
+        {/* avatar on the right */}
         <CardAvatar />
 
         {/* ---------- left info column (NAME / FOCUS / STACK) ---------- */}
@@ -527,14 +507,14 @@ export function CardFront() {
         <div className="relative z-10 h-full px-3 pt-2.5 pb-3.5 flex flex-col">
           <div className="flex items-center gap-1.5 mb-2.5">
             <Bullet size={14} />
-            <span className="font-pixel text-[10px] leading-none text-white">CURRENTLY:</span>
+            <span className="font-pixel text-[11px] leading-none text-white">CURRENTLY:</span>
             <span className="w-[9px] h-[9px] rounded-full bg-[#46c463] ml-1 shadow-[0_0_6px_#46c463]" />
           </div>
           <div className="flex flex-col gap-2.5">
             {CURRENT.map((c, i) => (
               <div key={i} className="flex items-center gap-2.5 min-w-0">
                 <span
-                  className="w-[24px] h-[24px] shrink-0 flex items-center justify-center rounded-[3px]"
+                  className="w-[26px] h-[26px] shrink-0 flex items-center justify-center rounded-[3px]"
                   style={{
                     background: "rgba(255,255,255,0.08)",
                     boxShadow: `inset 0 0 0 1.5px ${c.accent}66`,
@@ -542,7 +522,7 @@ export function CardFront() {
                 >
                   {c.icon}
                 </span>
-                <span className="font-card text-[15px] leading-snug text-white">
+                <span className="font-card text-[18px] leading-snug text-white">
                   {c.label}
                 </span>
               </div>
