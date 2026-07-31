@@ -1,12 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   PANELS,
   BACK_PROJECTS,
   BACK_EXPERIENCE,
   BACK_HONORS,
   BACK_SKILLS,
+  type BackExperienceBadge,
+  type BackExperienceStatus,
+  type BackHonor,
+  type BackHonorMetric,
   type TabKey,
 } from "../portfolio/data";
 
@@ -63,6 +67,105 @@ function SvgIcon({ name, color = "#5d6b7a" }: { name: string; color?: string }) 
           <rect x="8" y="18" width="8" height="3" rx="1" />
         </svg>
       );
+    case "bolt":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="#e0a52c">
+          <path d="M13 2 4 14h7l-1 8 10-14h-7z" />
+        </svg>
+      );
+    case "rocket":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="#e8913a">
+          <path d="M12 2c2.8 2.2 4.5 5.4 4.8 9.2l2.2 1.4-2.4 2.4-1.4-1.1C14.4 17.3 12.8 19 11 20.2l-1.6-2.6C7.2 16.4 5.4 14 4.6 11.2L7 9.8C7.5 6 9.2 3.5 12 2z" />
+          <circle cx="13.2" cy="9.2" r="1.4" fill="#fff" />
+          <path d="M7.2 14.8 4 20l5.2-1.6z" fill="#c23a33" />
+        </svg>
+      );
+    case "lock":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[16px] h-[16px]" fill="#9aa0a8">
+          <rect x="5" y="11" width="14" height="10" rx="2" />
+          <path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="#9aa0a8" strokeWidth="2.2" />
+          <circle cx="12" cy="16" r="1.6" fill="#fff" />
+        </svg>
+      );
+    case "question":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[20px] h-[20px]" fill="#9aa0a8">
+          <path d="M10 16h4v4h-4zm.4-11.5c2.8-.9 5.6.4 6.1 3 .4 2.1-.6 3.3-1.8 4.2-.9.7-1.5 1.2-1.5 2.3h-3.2c0-2 .9-2.8 2-3.6 1-.8 1.4-1.2 1.2-2.1-.2-.8-1-1.3-1.9-1.1-.7.2-1.1.7-1.2 1.4H7.2c.2-2.4 2-3.7 3.2-4.1z" />
+        </svg>
+      );
+    case "play":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[10px] h-[10px]" fill="currentColor">
+          <path d="M8 5v14l12-7z" />
+        </svg>
+      );
+    case "medal":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="#9b6cc4">
+          <circle cx="12" cy="10" r="6" />
+          <circle cx="12" cy="10" r="3" fill="#fff" opacity="0.45" />
+          <path d="M8 15.5 6 22l6-3 6 3-2-6.5" fill="#c9a0e8" />
+        </svg>
+      );
+    case "diamond":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="#4a76c9">
+          <path d="M12 2 3 9l9 13 9-13z" />
+          <path d="M3 9h18" stroke="#fff" strokeWidth="1.4" opacity="0.5" />
+          <path d="M12 2 8 9h8z" fill="#7aa0e0" />
+        </svg>
+      );
+    case "calendar":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[14px] h-[14px]" fill="none" stroke="currentColor" strokeWidth="2">
+          <rect x="3" y="5" width="18" height="16" rx="2" />
+          <path d="M3 10h18M8 3v4M16 3v4" />
+        </svg>
+      );
+    case "people":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[14px] h-[14px]" fill="currentColor">
+          <circle cx="9" cy="8" r="3" />
+          <circle cx="16" cy="9" r="2.4" />
+          <path d="M2 19c0-3 3-5 7-5s7 2 7 5M13 19c.4-2 2.2-3.4 4.8-3.4 2 0 3.7.9 4.2 2.4" />
+        </svg>
+      );
+    case "gift":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[14px] h-[14px]" fill="currentColor">
+          <rect x="3" y="10" width="18" height="11" rx="1" />
+          <rect x="2" y="7" width="20" height="4" rx="1" />
+          <path d="M12 7V21M12 7c-2-3-5-3-5 0M12 7c2-3 5-3 5 0" fill="none" stroke="#fff" strokeWidth="1.4" />
+        </svg>
+      );
+    case "credit":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[14px] h-[14px]" fill="none" stroke="currentColor" strokeWidth="2">
+          <rect x="2" y="5" width="20" height="14" rx="2" />
+          <path d="M2 10h20" />
+          <path d="M6 15h4" />
+        </svg>
+      );
+    case "track":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[14px] h-[14px]" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+          <path d="M4 18V8M10 18V5M16 18v-7M20 18V9" />
+        </svg>
+      );
+    case "build":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[14px] h-[14px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4z" />
+        </svg>
+      );
+    case "check":
+      return (
+        <svg viewBox="0 0 24 24" className="w-[14px] h-[14px]" fill="none" stroke="#3f9b46" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="4 12 10 18 20 6" />
+        </svg>
+      );
     case "linkedin":
       return (
         <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="#0a66c2">
@@ -89,6 +192,109 @@ function SvgIcon({ name, color = "#5d6b7a" }: { name: string; color?: string }) 
   }
 }
 
+function MetricIcon({ name, color }: { name: BackHonorMetric["icon"]; color: string }) {
+  return (
+    <span className="flex items-center justify-center shrink-0" style={{ color }}>
+      <SvgIcon name={name} />
+    </span>
+  );
+}
+
+function HonorBadge({ honor }: { honor: BackHonor }) {
+  return (
+    <div
+      className="rounded-[7px] border-2 flex flex-col items-center justify-center gap-2 p-2 shrink-0 w-[88px]"
+      style={{
+        background: `${honor.color}14`,
+        borderColor: honor.color,
+      }}
+    >
+      <IconTile color={honor.color} size={40}>
+        <SvgIcon name={honor.icon} color={honor.color} />
+      </IconTile>
+      <span className="font-pixel text-[7px] leading-none text-center" style={{ color: honor.color }}>
+        {honor.rank}
+      </span>
+    </div>
+  );
+}
+
+const STATUS_META: Record<BackExperienceStatus, { color: string }> = {
+  COMPLETED: { color: "#8a919c" },
+  ACTIVE: { color: "#3f9b46" },
+  "IN PROGRESS": { color: "#e8913a" },
+};
+
+function StatusDot({ status }: { status: BackExperienceStatus }) {
+  const { color } = STATUS_META[status];
+  return (
+    <span className="inline-flex items-center gap-1 shrink-0">
+      <span className="w-[6px] h-[6px] rounded-full" style={{ background: color, boxShadow: `0 0 0 1.5px ${color}44` }} />
+      <span className="font-pixel text-[6px] leading-none tracking-wide" style={{ color }}>
+        {status}
+      </span>
+    </span>
+  );
+}
+
+function CornerBadge({ badge }: { badge: BackExperienceBadge }) {
+  return (
+    <span
+      className="absolute top-1.5 right-1.5 w-[22px] h-[22px] rounded-[5px] bg-white flex items-center justify-center z-10 overflow-hidden"
+      style={{ boxShadow: "inset 0 0 0 1.5px #d9cba0" }}
+      aria-hidden
+    >
+      <span className="scale-[0.7] flex">
+        <SvgIcon name={badge} />
+      </span>
+    </span>
+  );
+}
+
+function OpenRecordBtn({ href }: { href: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Open record"
+      onClick={(e) => e.stopPropagation()}
+      className="inline-flex items-center gap-1 font-pixel text-[7px] leading-none text-[#3d5380] px-1.5 py-[5px] rounded-[4px] bg-white shrink-0 cursor-pointer transition-all duration-150 hover:-translate-y-0.5 active:scale-95"
+      style={{ boxShadow: "inset 0 0 0 1.5px #d9cba0" }}
+    >
+      OPEN RECORD
+      <SvgIcon name="play" />
+    </a>
+  );
+}
+
+/** Keeps wheel/touch scroll inside the panel */
+function PanelScroll({
+  children,
+  className = "",
+  axis = "y",
+}: {
+  children: React.ReactNode;
+  className?: string;
+  axis?: "y" | "x";
+}) {
+  return (
+    <div
+      className={`gba-scroll ${className}`}
+      style={{
+        overscrollBehavior: "contain",
+        touchAction: axis === "y" ? "pan-y" : "pan-x",
+        WebkitOverflowScrolling: "touch",
+      }}
+      onWheel={(e) => e.stopPropagation()}
+      onTouchMove={(e) => e.stopPropagation()}
+      onPointerDown={(e) => e.stopPropagation()}
+    >
+      {children}
+    </div>
+  );
+}
+
 // white tile holding a technology logo that lifts on hover
 function LogoChip({ k, size = 30 }: { k: string; size?: number }) {
   return (
@@ -108,7 +314,17 @@ function LogoChip({ k, size = 30 }: { k: string; size?: number }) {
 }
 
 // link button with a hover lift and click feedback
-function LinkBtn({ href, title, children }: { href: string; title: string; children: React.ReactNode }) {
+function LinkBtn({
+  href,
+  title,
+  children,
+  size = 30,
+}: {
+  href: string;
+  title: string;
+  children: React.ReactNode;
+  size?: number;
+}) {
   return (
     <a
       href={href}
@@ -116,7 +332,8 @@ function LinkBtn({ href, title, children }: { href: string; title: string; child
       rel="noopener noreferrer"
       title={title}
       onClick={(e) => e.stopPropagation()}
-      className="w-[30px] h-[30px] rounded-[6px] bg-white flex items-center justify-center shrink-0 cursor-pointer transition-all duration-150 ease-out will-change-transform hover:-translate-y-[3px] hover:scale-[1.12] hover:shadow-[0_5px_10px_rgba(0,0,0,0.2)] active:translate-y-0 active:scale-95 shadow-[inset_0_0_0_1.5px_#d9cba0]"
+      className="rounded-[6px] bg-white flex items-center justify-center shrink-0 cursor-pointer transition-all duration-150 ease-out will-change-transform hover:-translate-y-[3px] hover:scale-[1.12] hover:shadow-[0_5px_10px_rgba(0,0,0,0.2)] active:translate-y-0 active:scale-95 shadow-[inset_0_0_0_1.5px_#d9cba0]"
+      style={{ width: size, height: size }}
     >
       {children}
     </a>
@@ -197,7 +414,26 @@ interface CardBackProps {
 
 export function CardBack({ onEnterPortfolio }: CardBackProps) {
   const [sel, setSel] = useState(0);
+  const [honorSel, setHonorSel] = useState(0);
   const active = PANELS[sel];
+  const activeHonor = BACK_HONORS[honorSel] ?? BACK_HONORS[0];
+
+  useEffect(() => {
+    if (active.tab !== "honors") return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        e.stopPropagation();
+        setHonorSel((i) => (i - 1 + BACK_HONORS.length) % BACK_HONORS.length);
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        e.stopPropagation();
+        setHonorSel((i) => (i + 1) % BACK_HONORS.length);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [active.tab]);
 
   return (
     <div className="relative w-full h-full overflow-hidden text-slate-800 select-none flex flex-col" style={{ background: CREAM }}>
@@ -269,8 +505,14 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
         id={`panel-${active.tab}`}
         aria-labelledby={`tab-${active.tab}`}
       >
-        {/* main details — key forces a clean swap when the topic changes */}
-        <div key={active.tab} className="flex-1 min-h-0 overflow-y-auto p-[3px] pr-1 animate-[fadeIn_120ms_ease-out]">
+        {/* main details — contained scroll so wheel/swipe stays in-panel */}
+        <PanelScroll
+          key={active.tab}
+          className={`flex-1 min-h-0 p-[3px] pr-1 animate-[fadeIn_120ms_ease-out] ${
+            active.tab === "honors" ? "overflow-hidden" : "overflow-y-auto"
+          }`}
+          axis="y"
+        >
           {/* projects — No. + name + one line + link, nothing else */}
           {active.tab === "projects" && (
             <div className="flex flex-col gap-2">
@@ -310,87 +552,219 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
             </div>
           )}
 
-          {/* experience timeline */}
+          {/* experience timeline — bigger type, popped cards, swipeable scroll */}
           {active.tab === "experience" && (
-            <div className="relative pl-6">
-              {/* timeline guide line */}
-              <div className="absolute left-[8px] top-3 bottom-5 w-[2px]" style={{ background: "#d4c491" }} />
+            <div className="relative pl-6 pr-0.5">
+              <div
+                className="absolute left-[8px] top-5 bottom-10 w-0"
+                style={{ borderLeft: "2px dashed #c9bc8a" }}
+              />
               {BACK_EXPERIENCE.map((e, i) => (
-                <div key={i} className="relative mb-2">
-                  <span className="absolute left-[-21px] top-[16px] w-[12px] h-[12px] rounded-full bg-white z-10" style={{ boxShadow: `inset 0 0 0 3px ${e.color}` }} />
-                  <a
-                    href={e.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(ev) => ev.stopPropagation()}
-                    className="group flex items-center gap-2 rounded-[6px] p-2 pl-3 cursor-pointer transition-transform hover:translate-x-0.5"
+                <div key={i} className="relative mb-3">
+                  <span
+                    className="absolute left-[-20px] top-[26px] w-[14px] h-[14px] rounded-full bg-white z-10"
+                    style={{ boxShadow: `inset 0 0 0 3.5px ${e.color}` }}
+                  />
+                  <div
+                    className="group relative rounded-[8px] p-2.5 pl-3 pr-2"
                     style={rowStyle(e.color)}
                   >
-                    <RedCursor />
-                    <IconTile color={e.color} size={32}>
-                      <SvgIcon name={e.icon} color={e.color} />
-                    </IconTile>
-                    <span className="min-w-0 flex-1">
-                      <span className="flex items-center gap-1.5 mb-1">
-                        <span className="font-pixel text-[8px] leading-none" style={{ color: e.color }}>{e.year}</span>
-                        <TypePill label={e.tag} color={e.color} />
-                      </span>
-                      <span className="block font-pixel text-[11px] leading-none mb-1 text-[#2b2b2b]">{e.title}</span>
-                      <span className="block font-card text-[13px] leading-snug text-[#5a6068]">{e.sub}</span>
-                    </span>
-                    <span className="w-[28px] h-[28px] rounded-[6px] bg-white flex items-center justify-center shrink-0" style={{ boxShadow: "inset 0 0 0 1.5px #d9cba0" }}>
-                      <SvgIcon name="linkedin" />
-                    </span>
-                  </a>
+                    <CornerBadge badge={e.badge} />
+                    <div className="flex items-start gap-2.5 pr-6">
+                      <RedCursor />
+                      <IconTile color={e.color} size={42}>
+                        <SvgIcon name={e.icon} color={e.color} />
+                      </IconTile>
+                      <div className="min-w-0 flex-1 pr-1">
+                        <div className="flex items-center gap-1.5 flex-wrap mb-1.5">
+                          <span className="font-pixel text-[9px] leading-none" style={{ color: e.color }}>
+                            {e.year}
+                          </span>
+                          <TypePill label={e.tag} color={e.color} />
+                          <StatusDot status={e.status} />
+                        </div>
+                        <span className="block font-pixel text-[12px] leading-snug mb-1 text-[#1f2430]">{e.title}</span>
+                        <span className="block font-card text-[15px] leading-snug text-[#4a515c]">{e.sub}</span>
+                      </div>
+                      <div className="flex flex-col items-end gap-2 shrink-0 mt-5">
+                        <OpenRecordBtn href={e.url} />
+                        <span className="flex items-center gap-1.5">
+                          {e.github && (
+                            <LinkBtn href={e.github} title="GitHub" size={28}>
+                              <span className="scale-[0.9] flex">
+                                <SvgIcon name="github" />
+                              </span>
+                            </LinkBtn>
+                          )}
+                          <LinkBtn href={e.url} title="LinkedIn" size={28}>
+                            <span className="scale-[0.9] flex">
+                              <SvgIcon name="linkedin" />
+                            </span>
+                          </LinkBtn>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ))}
-              <div className="relative pl-1">
-                <span className="absolute left-[-19px] top-[2px] w-[10px] h-[10px] rounded-full" style={{ background: PANEL_CREAM, boxShadow: "inset 0 0 0 2px #d4c491" }} />
-                <span className="font-card text-[13px] text-slate-400 italic">⋯ more to come in the future</span>
+
+              <div className="relative">
+                <span
+                  className="absolute left-[-19px] top-[20px] w-[12px] h-[12px] rounded-full z-10"
+                  style={{ background: PANEL_CREAM, boxShadow: "inset 0 0 0 2px #c9bc8a" }}
+                />
+                <div
+                  className="flex items-center gap-2.5 rounded-[10px] p-3 pl-3.5"
+                  style={{
+                    background: "rgba(255,251,233,0.65)",
+                    boxShadow: `0 0 0 2px ${NAVY_SOFT}, 0 4px 0 rgba(0,0,0,0.06)`,
+                    border: "2px dashed #c9bc8a",
+                  }}
+                >
+                  <IconTile color="#9aa0a8" size={38}>
+                    <SvgIcon name="question" />
+                  </IconTile>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-pixel text-[11px] leading-none mb-1.5 text-[#5b6470]">MORE TO COME...</span>
+                    <span className="block font-card text-[14px] leading-snug text-[#7a828c]">Future adventures loading</span>
+                  </span>
+                  <span className="flex flex-col items-center gap-1 shrink-0 max-w-[84px] text-center">
+                    <span
+                      className="w-[30px] h-[30px] rounded-[6px] bg-white flex items-center justify-center"
+                      style={{ boxShadow: "inset 0 0 0 1.5px #d9cba0" }}
+                    >
+                      <SvgIcon name="lock" />
+                    </span>
+                    <span className="font-pixel text-[7px] leading-tight text-[#9aa0a8]">LOCKED</span>
+                    <span className="font-card text-[11px] leading-tight text-[#a0a6ae]">Keep leveling up to unlock.</span>
+                  </span>
+                </div>
               </div>
             </div>
           )}
 
-          {/* honors sublist */}
+          {/* honors — equal top tiles + detail */}
           {active.tab === "honors" && (
-            <div className="flex flex-col gap-2">
-              {BACK_HONORS.map((r) => (
-                <a
-                  key={r.title}
-                  href={r.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="group flex items-center gap-2.5 rounded-[6px] p-2.5 pl-3 cursor-pointer transition-transform hover:translate-x-0.5"
-                  style={rowStyle(r.color)}
-                >
-                  <RedCursor />
-                  <IconTile color={r.color} size={34}>
-                    <SvgIcon name={r.icon} />
-                  </IconTile>
-                  <span className="min-w-0 flex-1">
-                    <span className="flex items-center gap-1.5 mb-1.5">
-                      <span className="font-pixel text-[11px] leading-none text-[#2b2b2b]">{r.title}</span>
-                      <TypePill label={r.tag} color={r.color} />
-                    </span>
-                    <span className="block font-card text-[14px] leading-snug text-[#5a6068]">{r.sub}</span>
-                  </span>
-                  <span className="w-[28px] h-[28px] rounded-[6px] bg-white flex items-center justify-center shrink-0" style={{ boxShadow: "inset 0 0 0 1.5px #d9cba0" }}>
-                    <SvgIcon name="linkedin" />
-                  </span>
-                </a>
-              ))}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEnterPortfolio("honors");
-                }}
-                className="group font-pixel text-[9px] text-[#3d5380] py-2.5 rounded-[6px] cursor-pointer flex items-center justify-center gap-1.5 transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-[0.98] active:translate-y-0 active:scale-[0.98]"
-                style={{ background: "#fdf6dd", boxShadow: `0 0 0 2px ${NAVY}, inset 0 -2px 0 rgba(0,0,0,0.1)` }}
+            <div className="flex flex-col gap-2.5 h-full min-h-0 overflow-hidden">
+              <div
+                className="grid grid-cols-4 gap-1.5 shrink-0"
+                onPointerDown={(e) => e.stopPropagation()}
               >
-                <span className="text-[#c23a33] opacity-0 group-hover:opacity-100 transition-opacity">▶</span>
-                MORE ELABORATED ACHIEVEMENTS…
-              </button>
+                {BACK_HONORS.map((h, i) => {
+                  const on = i === honorSel;
+                  return (
+                    <button
+                      key={h.title}
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setHonorSel(i);
+                      }}
+                      className="min-w-0 flex flex-col items-center gap-1.5 rounded-[6px] px-1.5 py-2 cursor-pointer border-2 transition-colors"
+                      style={{
+                        background: on ? "#fffbe9" : "#fdf6dd",
+                        borderColor: on ? h.color : NAVY,
+                      }}
+                    >
+                      <IconTile color={h.color} size={20}>
+                        <span className="scale-[0.75] flex">
+                          <SvgIcon name={h.icon} color={h.color} />
+                        </span>
+                      </IconTile>
+                      <span className="block w-full font-pixel text-[8px] leading-snug text-center text-[#2b2b2b] line-clamp-2">
+                        {h.cardTitle}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div
+                key={activeHonor.title}
+                className="flex-1 min-h-0 flex gap-2 rounded-[8px] border-2 p-2 overflow-hidden"
+                style={{
+                  background: ROW_CREAM,
+                  borderColor: NAVY,
+                  borderLeftWidth: 4,
+                  borderLeftColor: activeHonor.color,
+                }}
+              >
+                <HonorBadge honor={activeHonor} />
+
+                <div className="min-w-0 flex-1 flex flex-col gap-1.5 overflow-hidden">
+                  <div className="flex items-center gap-1.5 flex-wrap shrink-0">
+                    <span className="font-pixel text-[10px] leading-snug text-[#2b2b2b]">{activeHonor.title}</span>
+                    <TypePill label={activeHonor.tag} color={activeHonor.color} />
+                  </div>
+                  <span className="font-card text-[13px] leading-snug text-[#5a6068] shrink-0">{activeHonor.sub}</span>
+
+                  <div className="grid grid-cols-3 gap-1.5 shrink-0">
+                    {activeHonor.metrics.map((m) => (
+                      <div
+                        key={m.label}
+                        className="rounded-[5px] border px-1.5 py-1 flex flex-col gap-0.5 min-w-0"
+                        style={{ background: "#fff9e8", borderColor: "#e0d3a4" }}
+                      >
+                        <span className="flex items-center gap-1 min-w-0" style={{ color: activeHonor.color }}>
+                          <MetricIcon name={m.icon} color={activeHonor.color} />
+                          <span className="font-pixel text-[5px] leading-none truncate opacity-80">{m.label}</span>
+                        </span>
+                        <span className="font-pixel text-[7px] leading-tight text-[#2b2b2b]">{m.value}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <p
+                    className="gba-scroll font-card text-[12px] leading-snug text-[#4a5058] rounded-[5px] border px-2 py-1.5 flex-1 min-h-0 overflow-y-auto"
+                    style={{ background: "#f3ebc8", borderColor: "#e0d3a4", overscrollBehavior: "contain" }}
+                    onWheel={(e) => e.stopPropagation()}
+                  >
+                    {activeHonor.description}
+                  </p>
+                </div>
+
+                <div
+                  className="w-[100px] shrink-0 rounded-[6px] border p-2 flex flex-col gap-1.5 overflow-hidden"
+                  style={{ background: "#f7efd0", borderColor: "#e0d3a4" }}
+                >
+                  <span className="font-pixel text-[7px] leading-none shrink-0" style={{ color: LABEL_BLUE }}>
+                    DETAILS
+                  </span>
+                  <div className="flex flex-col gap-1.5 flex-1 min-h-0 overflow-y-auto">
+                    <div>
+                      <span className="block font-pixel text-[5px] text-[#8a7c56] mb-0.5">CATEGORY</span>
+                      <span className="block font-card text-[12px] leading-tight text-[#2b2b2b]">{activeHonor.category}</span>
+                    </div>
+                    <div>
+                      <span className="block font-pixel text-[5px] text-[#8a7c56] mb-0.5">ORGANIZED BY</span>
+                      <span className="block font-card text-[12px] leading-tight text-[#2b2b2b]">{activeHonor.organizedBy}</span>
+                    </div>
+                    <div>
+                      <span className="block font-pixel text-[5px] text-[#8a7c56] mb-0.5">VERIFICATION</span>
+                      <span className="flex items-center gap-1 font-card text-[12px] leading-tight text-[#2b2b2b]">
+                        {activeHonor.verified ? (
+                          <>
+                            <SvgIcon name="check" />
+                            Verified
+                          </>
+                        ) : (
+                          "Pending"
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                  <a
+                    href={activeHonor.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="shrink-0 font-pixel text-[6px] text-center py-1.5 rounded-[4px] text-white cursor-pointer hover:brightness-110 border-2"
+                    style={{ background: activeHonor.color, borderColor: NAVY }}
+                  >
+                    OPEN PROOF ↗
+                  </a>
+                </div>
+              </div>
             </div>
           )}
 
@@ -414,11 +788,17 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
               ))}
             </div>
           )}
-        </div>
+        </PanelScroll>
 
         {/* bottom footer hint and button */}
         <div className="flex items-center justify-between border-t pt-2 mt-2 gap-2 shrink-0" style={{ borderColor: "#e0d3a4" }}>
-          <span className="font-card text-[16px] text-[#8a7c56] leading-none">tap an icon to open ↗</span>
+          <span className="font-card text-[16px] text-[#8a7c56] leading-none">
+            {active.tab === "honors"
+              ? "use ← → or swipe to browse"
+              : active.tab === "experience"
+                ? "scroll / swipe the records"
+                : "tap an icon to open ↗"}
+          </span>
           <button
             onClick={(e) => {
               e.stopPropagation();
