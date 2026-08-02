@@ -1,6 +1,17 @@
 "use client";
 
-import { useState } from "react";
+/**
+ * Landing — the trainer card is the whole first impression.
+ *
+ * zoom goes up to 210% becoz the DATA FILE (esp honors) needs room to breathe.
+ * mobile starts smaller (0.82) so the card fits; desktop opens closer (1.3).
+ * bg color cycle + zoom sit in the corners so they dont fight the card.
+ *
+ * mobile note: this page is still basically a desktop card experience —
+ * proper phone layout is still cooking (see chat / later pass).
+ */
+
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { TrainerCard } from "@/components/card/trainer-card";
 import { useTransition } from "@/hooks/use-transition";
@@ -14,21 +25,34 @@ const BG_THEMES = [
   { id: "dusk", label: "DUSK", color: "#b8c4d4" },
 ] as const;
 
+function defaultScale() {
+  if (typeof window === "undefined") return 1.15;
+  return window.matchMedia("(max-width: 720px)").matches ? 0.82 : 1.3;
+}
+
 export default function Home() {
   const { startTransition } = useTransition();
-  const [scale, setScale] = useState(1.3);
+  const [scale, setScale] = useState(1.15);
   const [bgIdx, setBgIdx] = useState(0);
 
-  // scale handlers with bounds 0.7 to 1.45
-  const increaseSize = () => setScale((prev) => Math.min(prev + 0.15, 1.45));
-  const decreaseSize = () => setScale((prev) => Math.max(prev - 0.15, 0.7));
+  useEffect(() => {
+    setScale(defaultScale());
+  }, []);
+
+  // scale handlers — roomy zoom so the Data File stays readable
+  const ZOOM_MIN = 0.7;
+  const ZOOM_MAX = 2.1;
+  const ZOOM_STEP = 0.15;
+  const increaseSize = () => setScale((prev) => Math.min(prev + ZOOM_STEP, ZOOM_MAX));
+  const decreaseSize = () => setScale((prev) => Math.max(prev - ZOOM_STEP, ZOOM_MIN));
   const cycleBg = () => setBgIdx((i) => (i + 1) % BG_THEMES.length);
 
   const bg = BG_THEMES[bgIdx];
-
+  const atMinZoom = scale <= ZOOM_MIN + 0.001;
+  const atMaxZoom = scale >= ZOOM_MAX - 0.001;
   return (
     <main
-      className="flex-1 flex flex-col items-center justify-center p-4 min-h-screen relative overflow-hidden transition-colors duration-300"
+      className="flex-1 flex flex-col items-center justify-center p-4 min-h-screen relative overflow-x-hidden overflow-y-auto transition-colors duration-300"
       style={{ background: bg.color }}
     >
       {/* scanlines overlay */}
@@ -56,13 +80,13 @@ export default function Home() {
       {/* floating helper instruction text */}
       <div className="mb-4 text-center select-none z-10">
         <p className="text-[8px] font-pixel text-slate-500 animate-pulse">
-          click card to flip · hover to tilt
+          click or press A to flip · hover to tilt
         </p>
       </div>
 
       {/* trainer card with retro spring zoom scale animation */}
       <motion.div
-        className="w-full max-w-[900px] flex items-center justify-center z-10"
+        className="w-full max-w-[900px] flex items-center justify-center z-10 py-16"
         animate={{ scale: scale }}
         transition={{
           type: "spring",
@@ -100,14 +124,16 @@ export default function Home() {
         <div className="flex gap-1.5">
           <button
             onClick={decreaseSize}
-            className="w-6 h-6 bg-slate-100 hover:bg-slate-200 border border-slate-600 text-gba-text-dark font-pixel text-[8px] flex items-center justify-center cursor-pointer shadow active:scale-90 transition-transform select-none rounded"
+            disabled={atMinZoom}
+            className="w-6 h-6 bg-slate-100 hover:bg-slate-200 border border-slate-600 text-gba-text-dark font-pixel text-[8px] flex items-center justify-center cursor-pointer shadow active:scale-90 transition-transform select-none rounded disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
             title="decrease size"
           >
             -
           </button>
           <button
             onClick={increaseSize}
-            className="w-6 h-6 bg-slate-100 hover:bg-slate-200 border border-slate-600 text-gba-text-dark font-pixel text-[8px] flex items-center justify-center cursor-pointer shadow active:scale-90 transition-transform select-none rounded"
+            disabled={atMaxZoom}
+            className="w-6 h-6 bg-slate-100 hover:bg-slate-200 border border-slate-600 text-gba-text-dark font-pixel text-[8px] flex items-center justify-center cursor-pointer shadow active:scale-90 transition-transform select-none rounded disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
             title="increase size"
           >
             +

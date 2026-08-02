@@ -47,8 +47,9 @@ const pokemonDS = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Trainer Card & Portfolio",
-  description: "pokemon gba-style trainer card and personal developer portfolio",
+  title: "Hariharan — Trainer Card & Portfolio",
+  description:
+    "N. Hariharan — full-stack + AI builder. Pokémon GBA trainer card and developer portfolio: 22+ projects, 9 hackathon wins, YC Startup School.",
 };
 
 export default function RootLayout({
