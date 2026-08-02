@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * Trainer card FRONT — identity side.
+ *
+ * layout is tight on purpose: FOCUS labels only (no subtitles — they were
+ * crowding the badges), CURRENTLY overlay kept shorter so it doesnt eat the
+ * avatar / footer badges. YC slot copy is Startup School not Starter School.
+ */
+
 import { TRAINER_ID } from "../portfolio/data";
 
 /* ================================================================== */
@@ -384,7 +392,7 @@ export function CardFront() {
 
           {/* FOCUS — attached slanted illustrated cards */}
           <div>
-            <div className="flex items-center gap-2.5 mb-1.5">
+            <div className="flex items-center gap-2.5 mb-1">
               <Bullet />
               <span className="font-pixel text-[12px] leading-none text-[#56618c]">FOCUS:</span>
             </div>
@@ -410,18 +418,15 @@ export function CardFront() {
                       draggable={false}
                     />
                   </div>
-                  <div className="flex flex-col items-center gap-1 mt-1.5 pt-0.5 w-full">
+                  <div className="flex flex-col items-center mt-1 pt-0.5 w-full">
                     <span className="font-pixel text-[9px] leading-none tracking-tight text-center" style={{ color: f.labelColor }}>
                       {f.label}
-                    </span>
-                    <span className="font-card text-[10px] leading-[1.2] text-center text-[#8a8f96] px-0.5">
-                      {f.sub}
                     </span>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="h-px mt-2" style={{ background: PINK_DIVIDER }} />
+            <div className="h-px mt-1" style={{ background: PINK_DIVIDER }} />
           </div>
 
           {/* STACK */}
@@ -488,7 +493,7 @@ export function CardFront() {
 
       {/* CURRENTLY — top overlay, sits above footer / avatar / everything */}
       <div
-        className="absolute right-3 bottom-[30px] z-50 w-[62%] max-w-[420px] h-[138px] rounded-[8px] overflow-hidden pointer-events-none"
+        className="absolute right-3 bottom-[30px] z-50 w-[62%] max-w-[420px] h-[120px] rounded-[8px] overflow-hidden pointer-events-none"
         style={{
           boxShadow:
             "inset 0 0 0 2px #33406b, 0 0 0 2px rgba(255,255,255,0.35), 0 8px 18px rgba(0,0,0,0.35)",
@@ -504,17 +509,17 @@ export function CardFront() {
           className="absolute inset-0"
           style={{ background: "linear-gradient(90deg, rgba(9,15,26,0.96) 38%, rgba(9,15,26,0.6) 62%, rgba(9,15,26,0) 82%)" }}
         />
-        <div className="relative z-10 h-full px-3 pt-2.5 pb-3.5 flex flex-col">
-          <div className="flex items-center gap-1.5 mb-2.5">
+        <div className="relative z-10 h-full px-3 pt-2 pb-2.5 flex flex-col">
+          <div className="flex items-center gap-1.5 mb-1.5">
             <Bullet size={14} />
             <span className="font-pixel text-[11px] leading-none text-white">CURRENTLY:</span>
             <span className="w-[9px] h-[9px] rounded-full bg-[#46c463] ml-1 shadow-[0_0_6px_#46c463]" />
           </div>
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-1.5">
             {CURRENT.map((c, i) => (
-              <div key={i} className="flex items-center gap-2.5 min-w-0">
+              <div key={i} className="flex items-center gap-2 min-w-0">
                 <span
-                  className="w-[26px] h-[26px] shrink-0 flex items-center justify-center rounded-[3px]"
+                  className="w-[23px] h-[23px] shrink-0 flex items-center justify-center rounded-[3px]"
                   style={{
                     background: "rgba(255,255,255,0.08)",
                     boxShadow: `inset 0 0 0 1.5px ${c.accent}66`,
@@ -522,7 +527,7 @@ export function CardFront() {
                 >
                   {c.icon}
                 </span>
-                <span className="font-card text-[18px] leading-snug text-white">
+                <span className="font-card text-[16px] leading-none text-white">
                   {c.label}
                 </span>
               </div>
@@ -539,8 +544,8 @@ export function CardFront() {
           boxShadow: "inset 0 2px 0 #33406b, inset 0 -1px 0 rgba(0,0,0,0.08)",
         }}
       >
-        {/* earned: Y Combinator — Starter School */}
-        <SlantedSlot title="Y Combinator · Starter School" earned attachIndex={0}>
+        {/* earned: Y Combinator — Startup School */}
+        <SlantedSlot title="Y Combinator · Startup School" earned attachIndex={0}>
           <YcBadge />
         </SlantedSlot>
         {/* empty placeholder wells — attached to the earned badge */}

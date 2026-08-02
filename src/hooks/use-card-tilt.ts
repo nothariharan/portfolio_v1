@@ -7,9 +7,9 @@ export function useCardTilt() {
   const x = useMotionValue(0.5);
   const y = useMotionValue(0.5);
 
-  // map values to rotation degrees, kept gentle so buttons are stable
-  const rotateX = useTransform(y, [0, 1], [6, -6]);
-  const rotateY = useTransform(x, [0, 1], [-6, 6]);
+  // gentle tilt — steeper rotateX foreshortens the top edge until the frame looks gone
+  const rotateX = useTransform(y, [0, 1], [4, -4]);
+  const rotateY = useTransform(x, [0, 1], [-5, 5]);
 
   // spring physics for smooth tracking
   const springConfig = { damping: 25, stiffness: 150 };
