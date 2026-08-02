@@ -46,6 +46,9 @@ export function Footer({ onBack }: { onBack: () => void }) {
               <button onClick={() => startTransition("/portfolio/projects")} className="transition-colors hover:text-portfolio-text cursor-pointer">
                 projects
               </button>
+              <button onClick={() => startTransition("/portfolio/skills")} className="transition-colors hover:text-portfolio-text cursor-pointer">
+                skills
+              </button>
               <button onClick={() => startTransition("/portfolio/achievements")} className="transition-colors hover:text-portfolio-text cursor-pointer">
                 achievements
               </button>

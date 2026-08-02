@@ -554,6 +554,13 @@ export const JOURNEY: JourneyEntry[] = [
     icon: "🚀",
   },
   {
+    date: "May 2026 — Jul 2026",
+    title: "SAP Security Intern @ Rinexis",
+    desc: "built a multi-tenant sap security saas — segregation-of-duties analysis and itgc audit tooling.",
+    kind: "work",
+    icon: "💼",
+  },
+  {
     date: "Jan 2026 — Present",
     title: "Freelancing",
     desc: "client work and side products — shipping agents and full-stack apps.",
@@ -650,12 +657,5 @@ export const JOURNEY: JourneyEntry[] = [
     desc: "iiit sri city × iit patna — building in parallel with coursework from day one.",
     kind: "education",
     icon: "🎓",
-  },
-  {
-    date: "May 2026 — Jul 2026",
-    title: "SAP Security Intern @ Rinexis",
-    desc: "built a multi-tenant sap security saas — segregation-of-duties analysis and itgc audit tooling.",
-    kind: "work",
-    icon: "💼",
   },
 ];
