@@ -2,7 +2,26 @@
 
 .pixelated {
   image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+/*
+ * honor sticker tiles — keep Press Start 2P hard-edged even under html.antialiased
+ * (browser font smoothing turns pixel type mushy on the world cards)
+ */
+.honor-sticker,
+.honor-sticker-text {
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+  text-rendering: geometricPrecision;
+}
+
+.honor-sticker-text {
+  font-family: var(--font-pixel), monospace;
+  letter-spacing: -0.02em;
 }
 
 /* scanlines repeating stripe pattern */

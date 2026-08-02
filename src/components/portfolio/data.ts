@@ -1,4 +1,14 @@
-// real portfolio content for n. hariharan (hari)
+/**
+ * real portfolio content for n. hariharan (hari)
+ *
+ * this file is basically the whole brain of the trainer card + the short lists
+ * that live on the DATA FILE back face. if u change copy / ranks / card art
+ * paths, change it here — the UI just renders whatever BACK_* exports.
+ *
+ * honors note: each honor is a "world" (forest / garage / arena / furnace) with
+ * its own sticker cardArt + diorama + a layout key that morphs the detail panel.
+ * art lives under /public/honors. dont regenerate just to fix fit — fix CSS.
+ */
 
 export const TRAINER_ID = "67420";
 
@@ -259,8 +269,8 @@ export const CURRENT_ROLE = {
 };
 
 export const KEY_ACHIEVEMENTS = [
-  "Shipped 20+ projects across AI & web",
-  "Won 3 hackathons (VahanLive, AMUHACKS, Cosmix)",
+  "Shipped 22+ projects across AI & web",
+  "Won 9 hackathons (AMUHACKS, Cosmix, Abhisarga & more)",
   "Hacktoberfest Golden Contributor '25",
   "YC Startup School India '26 participant",
 ];
@@ -281,9 +291,9 @@ export const EDUCATION = "B.Tech CS · IIIT SriCity × IIT Patna (dual degree, s
 
 export const HONOR_STATS = [
   { value: "8", label: "ACHIEVEMENTS", icon: "trophy" },
-  { value: "5", label: "HACKATHONS", icon: "medal" },
-  { value: "3", label: "WINS", icon: "ribbon" },
-  { value: "3", label: "FEATURED", icon: "star" },
+  { value: "10+", label: "HACKATHONS", icon: "medal" },
+  { value: "9", label: "WINS", icon: "ribbon" },
+  { value: "4", label: "FEATURED", icon: "star" },
 ];
 
 export type Honor = {
@@ -322,8 +332,8 @@ export const FEATURED_HONOR = {
 export const SKILL_STATS = [
   { value: "30+", label: "TECHNOLOGIES", icon: "code" },
   { value: "6", label: "DOMAINS", icon: "tools" },
-  { value: "20+", label: "PROJECTS", icon: "book" },
-  { value: "3", label: "HACK WINS", icon: "bolt" },
+  { value: "22+", label: "PROJECTS", icon: "book" },
+  { value: "9", label: "HACK WINS", icon: "bolt" },
 ];
 
 export const SKILL_CATEGORIES = [
@@ -370,8 +380,8 @@ export const SKILL_RADAR = [
 
 export const SKILL_STATS_FOOTER = [
   { label: "LeetCode Rating", value: "1700+", icon: "trophy" },
-  { label: "Hackathon Wins", value: "3", icon: "lines" },
-  { label: "Projects Built", value: "20+", icon: "code" },
+  { label: "Hackathon Wins", value: "9", icon: "lines" },
+  { label: "Projects Built", value: "22+", icon: "code" },
   { label: "Public Repos", value: "13+", icon: "github" },
 ];
 
@@ -396,7 +406,7 @@ export const BACK_SUMMARY: Record<
       "VahanLive — realtime transit (winner)",
       "Visor — visual OS for codebases",
     ],
-    stat: "20+ BUILT · 3 HACKATHON WINS",
+    stat: "22+ BUILT · 9 HACKATHON WINS",
     link: { label: "LIVE DEMO", url: "https://cofounder-alpha.vercel.app" },
   },
   experience: {
@@ -404,7 +414,7 @@ export const BACK_SUMMARY: Record<
     lines: [
       "Stealth Startup VC backed · Jun — Present",
       "Freelancing · Jan — Present",
-      "Rinexis Internship · May — Aug '26",
+      "Rinexis Internship · May — Jul '26",
     ],
     stat: "5 ROLES · BUILDING SINCE 2025",
     link: { label: "LINKEDIN", url: "https://www.linkedin.com/in/nmhariharan/" },
@@ -412,7 +422,7 @@ export const BACK_SUMMARY: Record<
   honors: {
     tagline: "milestones earned",
     lines: [
-      "3 hackathon wins — Vahan, AMUHACKS, Cosmix",
+      "9 hackathon wins — AMUHACKS, Cosmix, Abhisarga & more",
       "Hacktoberfest Golden Contributor '25",
       "YC Startup School India '26",
     ],
@@ -460,37 +470,49 @@ export type BackExperience = {
 
 export const BACK_EXPERIENCE: BackExperience[] = [
   {
-    year: "AUG 2025",
+    year: "AUG 2025 — NOW",
     title: "B.Tech CS — IIIT SriCity",
     sub: "Dual degree begins",
     icon: "grad",
     tag: "EDUCATION",
     color: "#4a76c9",
-    status: "COMPLETED",
+    status: "IN PROGRESS",
     badge: "trophy",
     url: "https://www.linkedin.com/in/nmhariharan/",
     github: "https://github.com/nothariharan",
   },
   {
-    year: "AUG 2025",
+    year: "AUG 2025 — NOW",
     title: "BS — IIT Patna",
     sub: "Dual-degree programme",
     icon: "grad",
     tag: "EDUCATION",
     color: "#4a76c9",
-    status: "COMPLETED",
+    status: "IN PROGRESS",
     badge: "star",
     url: "https://www.linkedin.com/in/nmhariharan/",
     github: "https://github.com/nothariharan",
   },
   {
-    year: "MAY — AUG 2026",
+    year: "JAN 2026 — NOW",
+    title: "Freelancing",
+    sub: "Client work & side products",
+    icon: "code",
+    tag: "WORK",
+    color: "#5a9bd6",
+    status: "ACTIVE",
+    badge: "bolt",
+    url: "https://www.linkedin.com/in/nmhariharan/",
+    github: "https://github.com/nothariharan",
+  },
+  {
+    year: "MAY — JUL 2026",
     title: "SAP Security Intern — Rinexis",
     sub: "SOD analyzer & ITGC audit tooling",
     icon: "brief",
     tag: "INTERNSHIP",
     color: "#3f9b46",
-    status: "ACTIVE",
+    status: "COMPLETED",
     badge: "bolt",
     url: "https://www.linkedin.com/in/nmhariharan/",
     github: "https://github.com/nothariharan",
@@ -509,111 +531,201 @@ export const BACK_EXPERIENCE: BackExperience[] = [
   },
 ];
 
-// honors — carousel cards + rich detail panel (unique metrics per honor type)
+/**
+ * HONORS — world-themed sticker cards + morphing detail panels
+ *
+ * roster (4 slots, no abhisarga):
+ *   forest  → Hacktoberfest   layout: contrib
+ *   garage  → YC Startup School layout: journey
+ *   arena   → 15+ hackathon wins layout: tournament
+ *   furnace → 1B+ tokens / week  layout: tokens  (joke flex, real production AI)
+ *
+ * cardArt  = the slot sticker (clean rect art, CSS draws the border)
+ * diorama  = little scene thumb in the detail panel
+ * layout   = which HonorLayoutBody branch card-back.tsx renders
+ */
+export type BackHonorWorld = "forest" | "garage" | "arena" | "furnace";
+export type BackHonorLayout = "contrib" | "journey" | "tournament" | "tokens";
+
 export type BackHonorMetric = {
   icon: "calendar" | "people" | "gift" | "trophy" | "build" | "credit" | "track" | "star";
   label: string;
   value: string;
 };
 
+export type BackHonorHighlight = {
+  icon: "build" | "star" | "trophy" | "gift" | "people" | "credit" | "track";
+  title: string;
+  text: string;
+};
+
 export type BackHonor = {
   title: string;
-  /** Short line under the title in the detail panel */
   sub: string;
-  /** Compact label shown on the carousel tile */
+  /** Short name painted on / used for the sticker aria label */
   cardTitle: string;
   icon: string;
   tag: string;
+  /** Detail-panel accent (world theme) */
   color: string;
+  /** Soft panel tint behind detail chrome */
+  tint: string;
   url: string;
   rank: string;
   category: string;
   organizedBy: string;
   verified: boolean;
+  world: BackHonorWorld;
+  layout: BackHonorLayout;
+  /** /honors/* sticker path — keep aspect ~480×200, object-contain in the slot */
+  cardArt: string;
+  /** /honors/* scene thumb for the detail side */
+  diorama: string;
+  quote: string;
+  highlight: string;
   metrics: BackHonorMetric[];
+  /** Founder path steps — journey layout only */
+  journey?: string[];
+  highlights: BackHonorHighlight[];
   description: string;
 };
 
 export const BACK_HONORS: BackHonor[] = [
   {
     title: "Hacktoberfest Golden '25",
-    cardTitle: "Hacktoberfest Golden '25",
+    cardTitle: "Hack-t-Oberfest",
     sub: "Top-tier open-source contributor",
     icon: "code",
     tag: "OPEN SOURCE",
     color: "#3f9b46",
+    tint: "#e8f5e9",
     url: "https://github.com/nothariharan",
     rank: "GOLDEN TIER",
     category: "Open Source",
     organizedBy: "DigitalOcean × GitHub",
     verified: true,
+    world: "forest",
+    layout: "contrib",
+    cardArt: "/honors/hacktoberfest-card.png",
+    diorama: "/honors/hacktoberfest-diorama.png",
+    quote: "Code. Contribute. Build in the open.",
+    highlight:
+      "Recognized among top contributors in Hacktoberfest 2025 for consistent, high-quality open source contributions.",
     metrics: [
-      { icon: "calendar", label: "ACHIEVED ON", value: "Oct 2025" },
-      { icon: "build", label: "MERGED", value: "4+ PRs · 10+ repos" },
-      { icon: "gift", label: "REWARDED", value: "Golden Contributor" },
+      { icon: "build", label: "RECENT PR", value: "Merged" },
+      { icon: "star", label: "RANK", value: "Top Contributor" },
+      { icon: "people", label: "IMPACT", value: "Community" },
+      { icon: "gift", label: "FOCUS", value: "Projects" },
+    ],
+    highlights: [
+      { icon: "build", title: "Impactful Contributions", text: "Resolved issues, improved docs & developer tools." },
+      { icon: "star", title: "Consistent Quality", text: "Followed best practices & maintained high standards." },
+      { icon: "people", title: "Community Impact", text: "Helped thousands of developers worldwide." },
     ],
     description:
-      "Highest Hacktoberfest tier — earned by shipping meaningful pull requests across open-source repos through October 2025.",
+      "Highest Hacktoberfest tier — shipping meaningful pull requests across open-source repos through October 2025.",
   },
   {
     title: "YC Startup School India '26",
-    cardTitle: "YC Startup School '26",
+    cardTitle: "Startup School",
     sub: "Y Combinator — India cohort · Bangalore",
     icon: "star",
     tag: "Y COMBINATOR",
     color: "#fb651e",
+    tint: "#fff0e6",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7451484147975356416/",
     rank: "SELECTED",
     category: "Founder Education",
     organizedBy: "Y Combinator",
     verified: true,
+    world: "garage",
+    layout: "journey",
+    cardArt: "/honors/yc-garage-card.png",
+    diorama: "/honors/yc-garage-diorama.png",
+    quote: "Build. Launch. Iterate.",
+    highlight: "Founder education for India — idea validation, building fast, fundraising and growth among 100k+ applicants.",
     metrics: [
-      { icon: "calendar", label: "ACHIEVED ON", value: "Apr 2026" },
-      { icon: "people", label: "APPLICANTS", value: "100,000+" },
-      { icon: "credit", label: "UNLOCKED", value: "$25k AI credits" },
+      { icon: "star", label: "IDEA", value: "Scoped" },
+      { icon: "people", label: "VALIDATION", value: "Users" },
+      { icon: "build", label: "ITERATION", value: "Weekly" },
+      { icon: "gift", label: "MVP", value: "Shipped" },
+      { icon: "credit", label: "MENTORSHIP", value: "YC" },
+    ],
+    journey: ["Applied", "Accepted", "Weekly Builds", "Completed"],
+    highlights: [
+      { icon: "star", title: "Idea → MVP", text: "Turned a vague pitch into a weekly build habit." },
+      { icon: "credit", title: "AI Credits", text: "Unlocked $25k in AI stack credits to ship faster." },
+      { icon: "people", title: "Cohort Pressure", text: "Built alongside founders who refuse to stall." },
     ],
     description:
-      "YC founder education for India — idea validation, building fast, fundraising and growth. Top builder among 100k+ applicants; unlocked $25k in AI stack credits.",
+      "YC founder education for India — idea validation, building fast, fundraising and growth. Top builder among 100k+ applicants.",
   },
   {
-    title: "9 Hackathon Wins",
-    cardTitle: "9 Hackathon Wins",
+    title: "15+ Hackathon Wins",
+    cardTitle: "15+ Wins",
     sub: "VahanLive, AMUHACKS, Cosmix & more",
     icon: "trophy",
     tag: "HACKATHONS",
     color: "#d99a2c",
+    tint: "#fff8e1",
     url: "https://www.linkedin.com/in/nmhariharan/",
-    rank: "9 WINS",
+    rank: "15+ WINS",
     category: "Hackathons",
     organizedBy: "Multiple organizers",
     verified: true,
+    world: "arena",
+    layout: "tournament",
+    cardArt: "/honors/hackathon-arena-card.png",
+    diorama: "/honors/hackathon-arena-diorama.png",
+    quote: "Ship under pressure. Win on stage.",
+    highlight: "Placed finishes across AI, web, games and civic tech — from firsts to multi-track sweeps.",
     metrics: [
-      { icon: "trophy", label: "PLACED", value: "9 wins total" },
-      { icon: "track", label: "SWEEP", value: "4 tracks · 1 day" },
-      { icon: "star", label: "FIRSTS", value: "AMUHACKS · Cosmix" },
+      { icon: "trophy", label: "BEST RESULT", value: "1st · Runner-up" },
+      { icon: "calendar", label: "EVENTS", value: "9+" },
+      { icon: "track", label: "TRACKS", value: "15+" },
+      { icon: "star", label: "HOURS", value: "30–48" },
+    ],
+    highlights: [
+      { icon: "trophy", title: "Podium Runs", text: "AMUHACKS 5.0 1st, Cosmix 1st, and more." },
+      { icon: "track", title: "Multi-track", text: "Swept fest tracks without dropping quality." },
+      { icon: "build", title: "Speed Builds", text: "MVPs that demo clean under a countdown." },
     ],
     description:
-      "Nine placed finishes across AI, web, games and civic tech — including AMUHACKS 5.0 1st, Cosmix 1st, and four Abhisarga tracks in a single day.",
+      "Fifteen-plus placed finishes across AI, web, games and civic tech — including AMUHACKS 5.0 1st and Cosmix 1st.",
   },
   {
-    title: "Abhisarga '26 · 4-in-1-day",
-    cardTitle: "Abhisarga · 4-in-1-day",
-    sub: "Cosmix 1st · Replicate · Ideaverse · Agentica",
-    icon: "diamond",
-    tag: "SWEEP",
-    color: "#4a76c9",
-    url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7446399595548516352/",
-    rank: "4 TRACKS",
-    category: "Multi-track Fest",
-    organizedBy: "Abhisarga '26",
+    title: "1B+ Tokens Burnt / Week",
+    cardTitle: "1B+ Tokens",
+    sub: "Production AI — not recreational burn",
+    icon: "star",
+    tag: "AI VELOCITY",
+    color: "#e23b2e",
+    tint: "#fdecea",
+    url: "https://github.com/nothariharan",
+    rank: "1B+ / WK",
+    category: "Build Velocity",
+    organizedBy: "Self · Production workflows",
     verified: true,
+    world: "furnace",
+    layout: "tokens",
+    cardArt: "/honors/tokens-furnace-card.png",
+    diorama: "/honors/tokens-furnace-diorama.png",
+    quote: "Burn tokens. Ship production.",
+    highlight:
+      "Joke metric, serious output — a billion-plus tokens a week powering real products, not playground prompts.",
     metrics: [
-      { icon: "calendar", label: "ACHIEVED ON", value: "Apr 2026" },
-      { icon: "track", label: "TRACKS", value: "4 wins · one day" },
-      { icon: "build", label: "BUILT", value: "ML · SAR · agents" },
+      { icon: "star", label: "WEEKLY TOKENS", value: "1B+" },
+      { icon: "build", label: "OUTPUT", value: "Production code" },
+      { icon: "track", label: "VELOCITY", value: "Ship daily" },
+      { icon: "gift", label: "MODE", value: "AI-assisted" },
+    ],
+    highlights: [
+      { icon: "build", title: "Production First", text: "Tokens go into shipping systems, not demos." },
+      { icon: "star", title: "Agent Loops", text: "High-volume AI coding that still passes review." },
+      { icon: "credit", title: "Cost → Value", text: "Burn budget only when it moves the product." },
     ],
     description:
-      "Four tracks in one day — landslide ML (Team Rocket), OptoSAR twin Bepop (Cosmix 1st), travel concierge Yui, and browser agent Veda.",
+      "A playful flex with a real point: extreme AI token throughput aimed at production-grade code, not burning compute for show.",
   },
 ];
 
