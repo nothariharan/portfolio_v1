@@ -48,9 +48,12 @@ Thumbs.db
 # wakatime
 .wakatime-project
 
-# local preview screenshots
+# local preview screenshots (agent / browser captures — not app assets)
 .card-preview.png
 *.preview.png
+.back.png
+.front.png
+.tilt-honors-check.png
 
 # local working files & design references (not part of the app)
 /plan/
@@ -58,5 +61,20 @@ Thumbs.db
 /card1.jpg
 /card2.webp
 /card3.png
+
+# scratch sprite dumps + honor art intermediates (only ship final /honors/*-card + *-diorama)
+/public/hari1.png
+/public/hari2sprite.png
+/public/hario1.png
+/public/harisit1.png
+/public/harisprite.png
+/public/harisit/
+/public/haristand/
+/public/honors/slot-*.png
+/public/honors/honor-card-*.png
+
+# one-off local art / chatgpt cdp helpers — not needed to run the site
+/scripts/dismiss-chatgpt-modal.mjs
+/scripts/make-hacktoberfest-card.mjs
 
 .vercel
