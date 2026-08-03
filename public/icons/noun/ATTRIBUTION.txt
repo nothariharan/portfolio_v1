@@ -1,0 +1,18 @@
+Icons from The Noun Project — used as local pixel PNG masks in this portfolio.
+
+Pixel / 8-bit style (thumbnail PNGs, tinted via CSS mask):
+- star #2651785 — star pixel by tulpahn
+- trophy #2651783 — trophy pixel by tulpahn
+- shield #2651786 — shield pixel by tulpahn
+- bolt #7155382 — 8 bit lightning
+- rocket #7155384 — 8 bit rocket
+- branch #8046516 — Git Branch
+- check #7576151 — check pixel
+- users #7576155 — Avatar Pixel
+- token #6967468 — dollar coin pixel
+- calendar #4435446 — Calendar
+- flame #6239832 — Flame
+- code #509811 — brackets
+
+Public-domain SVG copies may also exist alongside for fallback.
+Also see per-icon *.json / *.pixel.json sidecars when present.
