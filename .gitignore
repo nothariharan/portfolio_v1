@@ -77,4 +77,8 @@ Thumbs.db
 /scripts/dismiss-chatgpt-modal.mjs
 /scripts/make-hacktoberfest-card.mjs
 
+# noun project keys must never land in the repo (use env when running fetch scripts)
+.env.noun
+.env.local
+
 .vercel
