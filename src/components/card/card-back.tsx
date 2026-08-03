@@ -4,8 +4,9 @@
  * DATA FILE — back face of the trainer card
  *
  * four tabs (projects / experience / honors / skills). honors is the spicy one:
- * four world sticker tiles on top, morphing detail panel under. selection is
- * click or ← → — do NOT scale the tile on select or the grid jumps around.
+ * four world sticker tiles on top, one simple detail card under (icon + title +
+ * short highlight + 3 metrics). selection is click or ← → — do NOT scale the
+ * tile on select or the grid jumps around.
  *
  * scroll / wheel / touch get stopped inside PanelScroll so the 3D card tilt
  * doesnt steal the gesture. proof links stopPropagation so a click doesnt flip.
@@ -23,9 +24,9 @@ import {
   type BackExperienceBadge,
   type BackExperienceStatus,
   type BackHonor,
-  type BackHonorMetric,
   type TabKey,
 } from "../portfolio/data";
+import { NounIcon } from "../ui/noun-icon";
 
 // pokemon menu palette shared across the back face
 const NAVY = "#33406b";
@@ -205,14 +206,6 @@ function SvgIcon({ name, color = "#5d6b7a" }: { name: string; color?: string }) 
   }
 }
 
-function MetricIcon({ name, color }: { name: BackHonorMetric["icon"]; color: string }) {
-  return (
-    <span className="flex items-center justify-center shrink-0" style={{ color }}>
-      <SvgIcon name={name} />
-    </span>
-  );
-}
-
 /**
  * One sticker slot in the 4-up honors grid.
  * CSS owns the hard border — PNGs are flat rect art so we dont fight letterboxing.
@@ -268,271 +261,120 @@ function HonorWorldCard({
   );
 }
 
-function HonorMetricChip({
-  metric,
-  color,
-  compact,
-}: {
-  metric: BackHonorMetric;
-  color: string;
-  compact?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-[5px] border px-1.5 py-1 flex flex-col gap-0.5 min-w-0 ${compact ? "" : ""}`}
-      style={{ background: "#fff9e8", borderColor: `${color}55` }}
-    >
-      <span className="flex items-center gap-1 min-w-0" style={{ color }}>
-        <MetricIcon name={metric.icon} color={color} />
-        <span className="font-pixel text-[5px] leading-none truncate opacity-80">{metric.label}</span>
-      </span>
-      <span className="font-pixel text-[7px] leading-tight text-[#2b2b2b]">{metric.value}</span>
-    </div>
-  );
-}
-
 /**
- * Morphing middle of the honor detail — layout key picks the chrome.
- * contrib = highlight + metric grid
- * journey = path steps + metrics (YC)
- * tournament = sharper borders + full metrics (hackathons)
- * tokens = big 1B+ callout (the furnace joke)
- */
-function HonorLayoutBody({ honor }: { honor: BackHonor }) {
-  if (honor.layout === "journey") {
-    return (
-      <div className="flex flex-col gap-1.5 min-h-0">
-        <div
-          className="rounded-[5px] border px-2 py-1 flex items-start gap-1.5 shrink-0"
-          style={{ background: honor.tint, borderColor: `${honor.color}66` }}
-        >
-          <span className="shrink-0 mt-0.5">
-            <SvgIcon name="star" color={honor.color} />
-          </span>
-          <span className="font-card text-[11px] leading-snug text-[#3a4048]">{honor.highlight}</span>
-        </div>
-        <div className="flex gap-1.5 min-h-0">
-          <div
-            className="w-[78px] shrink-0 flex flex-col gap-0.5 rounded-[5px] border px-1.5 py-1"
-            style={{ background: "#fff9e8", borderColor: `${honor.color}55` }}
-          >
-            <span className="font-pixel text-[5px] leading-none mb-0.5" style={{ color: honor.color }}>
-              JOURNEY
-            </span>
-            {(honor.journey ?? []).map((step, i, arr) => (
-              <div key={step} className="flex flex-col items-center">
-                <span
-                  className="font-pixel text-[6px] leading-tight text-center px-1 py-0.5 rounded-[3px] text-white w-full"
-                  style={{ background: honor.color }}
-                >
-                  {step}
-                </span>
-                {i < arr.length - 1 && (
-                  <span className="font-pixel text-[6px] leading-none text-[#8a7c56] py-px">↓</span>
-                )}
-              </div>
-            ))}
-          </div>
-          <div className="min-w-0 flex-1 grid grid-cols-2 gap-1 content-start">
-            {honor.metrics.slice(0, 4).map((m) => (
-              <HonorMetricChip key={m.label} metric={m} color={honor.color} />
-            ))}
-          </div>
-        </div>
-        <p className="font-card text-[11px] leading-snug text-[#5a6068] line-clamp-2 shrink-0">
-          &ldquo;{honor.quote}&rdquo;
-        </p>
-      </div>
-    );
-  }
-
-  if (honor.layout === "tournament") {
-    return (
-      <div className="flex flex-col gap-1.5 min-h-0 flex-1 overflow-hidden">
-        <div
-          className="rounded-[4px] border-2 px-2 py-1 shrink-0"
-          style={{
-            background: honor.tint,
-            borderColor: honor.color,
-            boxShadow: `inset 0 0 0 1px #fff8`,
-          }}
-        >
-          <span className="font-card text-[11px] leading-snug text-[#3a4048]">{honor.highlight}</span>
-        </div>
-        <div className="grid grid-cols-2 gap-1 shrink-0">
-          {honor.metrics.map((m) => (
-            <HonorMetricChip key={m.label} metric={m} color={honor.color} />
-          ))}
-        </div>
-        <p className="font-card text-[11px] leading-snug text-[#5a6068] line-clamp-2 shrink-0">
-          &ldquo;{honor.quote}&rdquo;
-        </p>
-      </div>
-    );
-  }
-
-  if (honor.layout === "tokens") {
-    return (
-      <div className="flex flex-col gap-1.5 min-h-0 flex-1 overflow-hidden">
-        <div
-          className="rounded-[6px] border-2 px-2 py-1.5 flex items-center gap-2 shrink-0"
-          style={{ background: honor.tint, borderColor: honor.color }}
-        >
-          <span className="font-pixel text-[16px] leading-none text-[#2b2b2b]">1B+</span>
-          <span className="min-w-0">
-            <span className="block font-pixel text-[6px] leading-none mb-0.5" style={{ color: honor.color }}>
-              TOKENS / WEEK
-            </span>
-            <span className="block font-card text-[11px] leading-snug text-[#3a4048]">{honor.highlight}</span>
-          </span>
-        </div>
-        <div className="grid grid-cols-2 gap-1 shrink-0">
-          {honor.metrics.map((m) => (
-            <HonorMetricChip key={m.label} metric={m} color={honor.color} />
-          ))}
-        </div>
-        <p className="font-card text-[11px] leading-snug text-[#5a6068] line-clamp-2 shrink-0">
-          &ldquo;{honor.quote}&rdquo;
-        </p>
-      </div>
-    );
-  }
-
-  // contrib (forest)
-  return (
-    <div className="flex flex-col gap-1.5 min-h-0 flex-1 overflow-hidden">
-      <div
-        className="rounded-[5px] border px-2 py-1 flex items-start gap-1.5 shrink-0"
-        style={{ background: honor.tint, borderColor: `${honor.color}66` }}
-      >
-        <span className="shrink-0 mt-0.5">
-          <SvgIcon name="star" color={honor.color} />
-        </span>
-        <span className="font-card text-[11px] leading-snug text-[#3a4048]">{honor.highlight}</span>
-      </div>
-      <div className="grid grid-cols-2 gap-1 shrink-0 sm:grid-cols-4">
-        {honor.metrics.map((m) => (
-          <HonorMetricChip key={m.label} metric={m} color={honor.color} />
-        ))}
-      </div>
-      <p className="font-card text-[11px] leading-snug text-[#5a6068] line-clamp-2 shrink-0">
-        &ldquo;{honor.quote}&rdquo;
-      </p>
-    </div>
-  );
-}
-
-/**
- * Full honor detail under the sticker row: diorama + layout body + side meta +
- * three highlight chips. arena keeps sharper corners so it feels like a bracket.
+ * Simple honor detail — mock layout:
+ * left art tile + rank · title/tag/sub · bigger bold highlight · 3 metrics.
+ * OPEN PROOF sits as a top-right button box (not a underline link under the text).
  */
 function HonorWorldDetail({ honor }: { honor: BackHonor }) {
-  const sharp = honor.world === "arena";
+  const accent = honor.color;
   return (
     <div
-      className={`flex-1 min-h-0 flex flex-col gap-1.5 border-2 p-2 overflow-hidden ${
-        sharp ? "rounded-[4px]" : "rounded-[8px]"
-      }`}
-      style={{
-        background: ROW_CREAM,
-        borderColor: NAVY,
-        borderLeftWidth: 4,
-        borderLeftColor: honor.color,
-        boxShadow: sharp ? `inset 0 0 0 1px ${honor.color}44` : undefined,
-      }}
+      className="relative flex-1 min-h-0 flex flex-col rounded-[10px] border-2 overflow-hidden bg-white"
+      style={{ borderColor: accent }}
     >
-      <div className="flex gap-2 min-h-0 flex-1 overflow-hidden">
-        <div
-          className="shrink-0 w-[78px] sm:w-[92px] rounded-[7px] border-2 overflow-hidden flex flex-col"
-          style={{ background: honor.tint, borderColor: honor.color }}
+      {/* OPEN PROOF — top-right clickable box */}
+      {!honor.placeholder && (
+        <a
+          href={honor.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="absolute top-2 right-2 z-10 font-pixel text-[6px] leading-none px-2 py-1.5 rounded-[4px] text-white border-2 cursor-pointer hover:brightness-110 active:scale-[0.97] transition-all"
+          style={{ background: accent, borderColor: NAVY, boxShadow: "0 2px 0 rgba(0,0,0,0.2)" }}
         >
-          <img
-            src={honor.diorama}
-            alt=""
-            className="w-full h-[64px] sm:h-[76px] object-cover pixelated"
-            style={{ imageRendering: "pixelated" }}
-            draggable={false}
-          />
+          OPEN PROOF ↗
+        </a>
+      )}
+
+      <div className="flex gap-2.5 p-2.5 min-h-0 flex-1 overflow-hidden">
+        {/* left sub-card — pixel scene + rank strip */}
+        <div
+          className="shrink-0 w-[96px] rounded-[8px] border overflow-hidden flex flex-col"
+          style={{ borderColor: accent, background: honor.tint }}
+        >
+          <div className="relative flex-1 min-h-[84px] bg-[#3d6eb8]">
+            <img
+              src={`${honor.artTile}?v=3`}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover pixelated"
+              style={{ imageRendering: "pixelated" }}
+              draggable={false}
+            />
+          </div>
           <span
-            className="font-pixel text-[6px] leading-none text-center py-1 px-1 text-white"
-            style={{ background: honor.color }}
+            className="flex items-center justify-center gap-1 font-pixel text-[6px] leading-none text-center py-1.5 px-1 text-white"
+            style={{ background: accent }}
           >
+            <NounIcon name="trophy" color="#ffffff" size={9} />
             {honor.rank}
           </span>
         </div>
 
-        <div className="min-w-0 flex-1 flex flex-col gap-1 overflow-hidden">
+        <div className="min-w-0 flex-1 flex flex-col gap-1.5 overflow-hidden pr-16">
           <div className="flex items-center gap-1.5 flex-wrap shrink-0">
-            <span className="font-pixel text-[10px] leading-snug text-[#2b2b2b]">{honor.title}</span>
-            <TypePill label={honor.tag} color={honor.color} />
+            <span className="font-pixel text-[11px] leading-none" style={{ color: accent }}>
+              {honor.title}
+            </span>
+            <span
+              className="inline-flex items-center gap-1 font-pixel text-[6px] leading-none px-1.5 py-[3px] rounded-[4px] text-white shrink-0"
+              style={{ background: accent }}
+            >
+              <NounIcon name={honor.tagIcon} color="#ffffff" size={10} />
+              {honor.tag}
+            </span>
           </div>
-          <span className="font-card text-[12px] leading-snug text-[#5a6068] shrink-0">{honor.sub}</span>
-          <div
-            className="gba-scroll min-h-0 flex-1 overflow-y-auto pr-0.5"
-            style={{ overscrollBehavior: "contain" }}
-            onWheel={(e) => e.stopPropagation()}
-          >
-            <HonorLayoutBody honor={honor} />
-          </div>
-        </div>
-
-        <div
-          className="w-[78px] sm:w-[90px] shrink-0 rounded-[6px] border p-1 flex flex-col gap-1 overflow-hidden"
-          style={{ background: honor.tint, borderColor: `${honor.color}55` }}
-        >
-          <span className="font-pixel text-[7px] leading-none shrink-0" style={{ color: LABEL_BLUE }}>
-            DETAILS
+          <span className="font-card text-[13px] font-semibold leading-snug shrink-0" style={{ color: accent }}>
+            {honor.sub}
           </span>
-          <div className="flex flex-col gap-1 flex-1 min-h-0 overflow-y-auto">
-            <div>
-              <span className="block font-pixel text-[5px] text-[#8a7c56] mb-0.5">CATEGORY</span>
-              <span className="block font-card text-[11px] leading-tight text-[#2b2b2b]">{honor.category}</span>
-            </div>
-            <div>
-              <span className="block font-pixel text-[5px] text-[#8a7c56] mb-0.5">ORGANIZED BY</span>
-              <span className="block font-card text-[11px] leading-tight text-[#2b2b2b]">{honor.organizedBy}</span>
-            </div>
-            <div>
-              <span className="block font-pixel text-[5px] text-[#8a7c56] mb-0.5">VERIFICATION</span>
-              <span className="flex items-center gap-1 font-card text-[11px] leading-tight text-[#2b2b2b]">
-                {honor.verified ? (
-                  <>
-                    <SvgIcon name="check" />
-                    Verified
-                  </>
-                ) : (
-                  "Pending"
-                )}
-              </span>
-            </div>
-          </div>
-          <a
-            href={honor.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="shrink-0 font-pixel text-[6px] text-center py-1.5 rounded-[4px] text-white cursor-pointer hover:brightness-110 border-2"
-            style={{ background: honor.color, borderColor: NAVY }}
+
+          {/* highlight box — star + big left-aligned copy, vertically centered */}
+          <div
+            className="rounded-[10px] border px-3.5 py-3 flex items-center gap-3 min-h-0 flex-1"
+            style={{ background: honor.tint, borderColor: accent }}
           >
-            OPEN PROOF ↗
-          </a>
+            <NounIcon name="star" color={accent} size={22} className="shrink-0" />
+            <span
+              className="min-w-0 font-card text-[15px] font-semibold leading-[1.35] line-clamp-4 text-left"
+              style={{ color: "#1f2a44" }}
+            >
+              {honor.highlight}
+            </span>
+          </div>
         </div>
       </div>
 
-      <div
-        className="shrink-0 grid grid-cols-3 gap-1 rounded-[5px] border px-1.5 py-1"
-        style={{ background: honor.tint, borderColor: `${honor.color}44` }}
-      >
-        {honor.highlights.slice(0, 3).map((h) => (
-          <div key={h.title} className="min-w-0 flex gap-1 items-start">
-            <span className="shrink-0 mt-0.5 scale-75 origin-top-left">
-              <SvgIcon name={h.icon} color={honor.color} />
-            </span>
+      <div className="shrink-0 grid grid-cols-3 border-t" style={{ borderColor: `${accent}44` }}>
+        {honor.metrics.map((m, i) => (
+          <div
+            key={m.label}
+            className={`flex items-center gap-1.5 px-2 py-2 min-w-0 ${i > 0 ? "border-l border-dashed" : ""}`}
+            style={{ borderColor: `${accent}55` }}
+          >
+            <NounIcon name={m.icon} color={accent} size={m.sub ? 18 : 15} />
             <span className="min-w-0">
-              <span className="block font-pixel text-[5px] leading-none mb-0.5" style={{ color: honor.color }}>
-                {h.title}
-              </span>
-              <span className="block font-card text-[10px] leading-tight text-[#4a5058] line-clamp-2">{h.text}</span>
+              {m.sub ? (
+                <>
+                  <span className="block font-pixel text-[5px] leading-none mb-0.5 truncate" style={{ color: accent }}>
+                    {m.label}
+                  </span>
+                  <span className="block font-card text-[12px] font-bold leading-tight text-[#1a1a1a] line-clamp-2">
+                    {m.value}
+                  </span>
+                  <span className="block font-card text-[10px] leading-tight text-[#5a6478] truncate mt-0.5">
+                    {m.sub}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="block font-pixel text-[9px] leading-none truncate" style={{ color: accent }}>
+                    {m.value}
+                  </span>
+                  <span className="block font-pixel text-[5px] leading-none mt-1 text-[#7a8290] truncate">
+                    {m.label}
+                  </span>
+                </>
+              )}
             </span>
           </div>
         ))}
