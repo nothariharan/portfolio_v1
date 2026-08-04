@@ -313,70 +313,56 @@ function TokensHonorDetail({ honor }: { honor: BackHonor }) {
           )}
         </div>
 
-        {/* stage — copy left, full furnace + conveyor right (no wash) */}
-        <div className="min-h-0 flex-1 flex gap-2.5 overflow-hidden">
-          <div className="w-[34%] min-w-0 shrink-0 flex flex-col justify-center gap-2 py-0.5">
-            <p className="font-card text-[11px] font-semibold leading-[1.35] text-[#1f2a44]">
-              {honor.highlight}
-            </p>
+        {/* stage — blast takes the whole middle; logos drop under the conveyor (no wash, no second band) */}
+        <div
+          className="relative min-h-0 flex-1 rounded-[8px] overflow-hidden flex flex-col"
+          style={{ background: "#f4eee4" }}
+        >
+          <div className="relative min-h-0 flex-1 flex items-center justify-center px-1 pt-1">
+            <img
+              src={`${honor.heroArt ?? honor.artTile}?v=7`}
+              alt=""
+              className="h-full w-full object-cover object-[50%_48%] pixelated"
+              style={{ imageRendering: "pixelated" }}
+              draggable={false}
+            />
             <span
-              className="inline-flex items-center gap-1 font-pixel text-[5px] leading-none px-1.5 py-1 rounded-[4px] text-white self-start"
+              className="absolute left-2 top-2 inline-flex items-center gap-1 font-pixel text-[5px] leading-none px-1.5 py-1 rounded-[4px] text-white"
               style={{ background: accent }}
             >
               <NounIcon name="flame" color="#ffffff" size={8} />
               {honor.rank}
             </span>
           </div>
-          <div
-            className="relative min-w-0 flex-1 rounded-[8px] overflow-hidden flex items-center justify-center"
-            style={{ background: "#f4eee4" }}
-          >
-            <img
-              src={`${honor.heroArt ?? honor.artTile}?v=5`}
-              alt=""
-              className="h-full w-full object-contain pixelated"
-              style={{ imageRendering: "pixelated" }}
-              draggable={false}
-            />
-          </div>
-        </div>
-
-        {/* open Simple Icons — logos only, no boxed cards / no blurbs (space is tight) */}
-        <div className="shrink-0 flex flex-col gap-1 pb-0.5">
-          <div className="flex items-center gap-2">
-            <div className="flex-1 border-t border-dashed" style={{ borderColor: `${accent}77` }} />
+          <div className="shrink-0 flex items-center gap-2 px-2 pb-1.5 pt-0.5">
             <span
-              className="font-pixel text-[5px] leading-none px-2 py-1 rounded-[4px] text-white shrink-0"
+              className="font-pixel text-[5px] leading-none px-1.5 py-1 rounded-[3px] text-white shrink-0"
               style={{ background: "#1f2a44" }}
             >
               HOW IT FLOWS
             </span>
-            <div className="flex-1 border-t border-dashed" style={{ borderColor: `${accent}77` }} />
-          </div>
-          <div
-            className="grid gap-1 px-0.5"
-            style={{ gridTemplateColumns: `repeat(${agents.length}, minmax(0, 1fr))` }}
-          >
-            {agents.map((agent) => (
-              <div
-                key={agent.label}
-                className="min-w-0 flex flex-col items-center gap-0.5"
-                title={agent.blurb}
-              >
-                <img
-                  src={`/logos/${agent.logo}.svg`}
-                  alt={agent.label}
-                  className="h-[22px] w-[22px] object-contain"
-                  draggable={false}
-                />
-                <span
-                  className="font-pixel text-[5px] leading-none text-center truncate w-full"
-                  style={{ color: accent }}
+            <div className="min-w-0 flex-1 flex items-center justify-between gap-1">
+              {agents.map((agent) => (
+                <div
+                  key={agent.label}
+                  className="min-w-0 flex flex-col items-center gap-0.5"
+                  title={`${agent.label} — ${agent.blurb}`}
                 >
-                  {agent.label}
-                </span>
-              </div>
-            ))}
+                  <img
+                    src={`/logos/${agent.logo}.svg`}
+                    alt={agent.label}
+                    className="h-[18px] w-[18px] object-contain"
+                    draggable={false}
+                  />
+                  <span
+                    className="font-pixel text-[4px] leading-none text-center truncate w-full max-w-[56px]"
+                    style={{ color: accent }}
+                  >
+                    {agent.label}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
