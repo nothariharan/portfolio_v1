@@ -534,11 +534,12 @@ export const BACK_EXPERIENCE: BackExperience[] = [
 /**
  * HONORS — sticker row + one simple detail card (mock-style)
  *
- * Hacktoberfest is the finished reference layout. YC / hackathons / tokens
- * keep the same chrome with placeholder left tiles + short copy for now.
+ * Hacktoberfest / YC / hackathons / tokens share the same chrome.
+ * hackathons → win-shot strip · tokens → furnace hero + real /logos brand marks.
  *
  * left tile art: /public/honors/*-tile.png
  * pixel icons:   /public/icons/noun/*.png  (Noun Project, CSS-mask tinted)
+ * brand logos:   /public/logos/*.svg       (Simple Icons)
  */
 export type BackHonorWorld = "forest" | "garage" | "arena" | "furnace";
 
@@ -570,6 +571,23 @@ export type BackHonorMetric = {
   sub?: string;
 };
 
+/** Win strip thumbs — real /shots from /portfolio projects */
+export type BackHonorWin = {
+  label: string;
+  result: string;
+  shot: string;
+  /** deep link into main portfolio (project anchor or achievements) */
+  href: string;
+};
+
+/** Token-burn flow — real brand logos under /public/logos */
+export type BackHonorAgent = {
+  label: string;
+  blurb: string;
+  /** filename key for /logos/<logo>.svg */
+  logo: string;
+};
+
 export type BackHonor = {
   title: string;
   sub: string;
@@ -588,6 +606,12 @@ export type BackHonor = {
   world: BackHonorWorld;
   cardArt: string;
   highlight: string;
+  /** if set, highlight box becomes a screenshot strip (hackathon layout) */
+  wins?: BackHonorWin[];
+  moreWins?: { label: string; href: string };
+  /** tokens layout — furnace hero + brand logo flow */
+  heroArt?: string;
+  agents?: BackHonorAgent[];
   metrics: [BackHonorMetric, BackHonorMetric, BackHonorMetric];
 };
 
@@ -628,39 +652,60 @@ export const BACK_HONORS: BackHonor[] = [
     verified: true,
     world: "garage",
     cardArt: "/honors/yc-garage-card.png",
-    highlight: "i was shortlisted among 50k+ applications",
+    highlight:
+      "Shortlisted from 100k+ applications into YC Startup School India '26 — founder education track in Bangalore, not the equity batch. Unlocked $25k in AI credits and spent the cohort around builders actually starting companies.",
     metrics: [
-      { icon: "rocket", label: "PROGRAM", value: "YC Startup School", sub: "Global founder program" },
-      { icon: "globe", label: "COHORT", value: "India", sub: "YC SS '26" },
-      { icon: "users", label: "PEOPLE", value: "Met lots of sick people", sub: "Founders & operators" },
+      { icon: "users", label: "Applicants", value: "100k+" },
+      { icon: "globe", label: "Cohort", value: "India '26" },
+      { icon: "bolt", label: "AI Credits", value: "$25k" },
     ],
   },
   {
     title: "15+ Hackathon Wins",
     cardTitle: "15+ Wins",
-    sub: "AMUHACKS, Cosmix, VahanLive & more",
+    sub: "Across 2+ international and 12+ national hackathons.",
     tag: "HACKATHONS",
     tagIcon: "trophy",
     artTile: "/honors/hackathon-tile.png",
     color: "#d99a2c",
     tint: "#fff8e1",
-    url: "https://www.linkedin.com/in/nmhariharan/",
-    rank: "15+ WINS",
+    url: "/portfolio/achievements",
+    rank: "HACKATHON CHAMPION",
     verified: true,
-    placeholder: true,
     world: "arena",
     cardArt: "/honors/hackathon-arena-card.png",
-    highlight: "Placeholder for now — podium stats + tile art coming soon.",
+    highlight: "Wins across 2+ international and 12+ national hackathons.",
+    wins: [
+      {
+        label: "AMUHacks",
+        result: "Winner",
+        shot: "/shots/justask.png",
+        href: "/portfolio/projects#justask",
+      },
+      {
+        label: "Ideaverse",
+        result: "Winner",
+        shot: "/shots/yui.png",
+        href: "/portfolio/projects#yui",
+      },
+      {
+        label: "VahanLive",
+        result: "Winner",
+        shot: "/shots/vahanlive.png",
+        href: "/portfolio/projects#vahanlive",
+      },
+    ],
+    moreWins: { label: "+12 More Wins", href: "/portfolio/achievements" },
     metrics: [
-      { icon: "trophy", label: "Wins", value: "15+" },
-      { icon: "calendar", label: "Events", value: "9+" },
-      { icon: "shield", label: "Status", value: "Soon" },
+      { icon: "trophy", label: "Total Wins", value: "15+" },
+      { icon: "globe", label: "International", value: "2+" },
+      { icon: "calendar", label: "National", value: "12+" },
     ],
   },
   {
     title: "1B+ Tokens / Week",
     cardTitle: "1B+ Tokens",
-    sub: "Production AI — not recreational burn",
+    sub: "Production AI — not recreational burn.",
     tag: "AI VELOCITY",
     tagIcon: "bolt",
     artTile: "/honors/tokens-tile.png",
@@ -669,14 +714,21 @@ export const BACK_HONORS: BackHonor[] = [
     url: "https://github.com/nothariharan",
     rank: "1B+ / WK",
     verified: true,
-    placeholder: true,
     world: "furnace",
     cardArt: "/honors/tokens-furnace-card.png",
-    highlight: "Placeholder for now — furnace tile + metrics polish coming soon.",
+    highlight: "Burning tokens, shipping real stuff — production AI, not recreational burn.",
+    heroArt: "/honors/tokens-blast.png",
+    agents: [
+      { label: "Claude Code", blurb: "Deep reasoning & coding", logo: "claude" },
+      { label: "Codex", blurb: "Agentic coding at scale", logo: "openai" },
+      { label: "OpenCode", blurb: "Terminal agent loop", logo: "opencode" },
+      { label: "Custom Agents", blurb: "DeepSeek + automations", logo: "deepseek" },
+      { label: "Perplexity", blurb: "Smart search & research", logo: "perplexity" },
+    ],
     metrics: [
       { icon: "token", label: "Tokens / wk", value: "1B+" },
       { icon: "bolt", label: "Mode", value: "Ship" },
-      { icon: "shield", label: "Status", value: "Soon" },
+      { icon: "code", label: "Stack", value: "5 tools" },
     ],
   },
 ];

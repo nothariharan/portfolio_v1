@@ -261,13 +261,183 @@ function HonorWorldCard({
   );
 }
 
+/** Logos that read as near-black on cream — invert for the tokens flow tiles. */
+const DARK_AGENT_LOGOS = new Set(["opencode", "openai", "anthropic"]);
+
+/**
+ * Tokens zone — unique from other honors (no left tile / no boxed tool cards).
+ * header with breathing room · furnace strip · open Simple Icons flow · metrics.
+ */
+function TokensHonorDetail({ honor }: { honor: BackHonor }) {
+  const accent = honor.color;
+  const agents = honor.agents ?? [];
+  const proofExternal = /^https?:\/\//.test(honor.url);
+  return (
+    <div
+      className="relative flex-1 min-h-0 flex flex-col rounded-[10px] border-2 overflow-hidden"
+      style={{
+        borderColor: accent,
+        background: "linear-gradient(180deg, #fff7f0 0%, #fffaf4 55%, #ffffff 100%)",
+      }}
+    >
+      <div className="min-h-0 flex-1 flex flex-col px-3 pt-3 gap-1.5 overflow-hidden">
+        {/* header — in-flow proof btn so nothing gets clipped */}
+        <div className="shrink-0 flex items-start justify-between gap-2">
+          <div className="min-w-0 flex flex-col gap-1">
+            <div className="flex items-end gap-1.5 flex-wrap">
+              <span className="font-pixel text-[12px] leading-none" style={{ color: accent }}>
+                1B+ TOKENS
+              </span>
+              <span className="font-pixel text-[8px] leading-none text-[#1f2a44]">
+                🔥 PER WEEK 🔥
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span
+                className="inline-flex items-center gap-1 font-pixel text-[5px] leading-none px-1.5 py-[3px] rounded-full text-white"
+                style={{ background: accent }}
+              >
+                <NounIcon name="bolt" color="#ffffff" size={8} />
+                AI VELOCITY MODE
+              </span>
+              <span className="font-card text-[11px] font-semibold leading-snug" style={{ color: accent }}>
+                {honor.sub}
+              </span>
+            </div>
+          </div>
+          {!honor.placeholder && (
+            <a
+              href={honor.url}
+              {...(proofExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              onClick={(e) => e.stopPropagation()}
+              className="shrink-0 font-pixel text-[6px] leading-none px-2 py-1.5 rounded-[4px] text-white border-2 cursor-pointer hover:brightness-110 active:scale-[0.97] transition-all"
+              style={{ background: accent, borderColor: NAVY, boxShadow: "0 2px 0 rgba(0,0,0,0.2)" }}
+            >
+              OPEN PROOF {proofExternal ? "↗" : "→"}
+            </a>
+          )}
+        </div>
+
+        {/* furnace strip — fixed floor so the blast art never collapses */}
+        <div className="relative shrink-0 h-[100px] rounded-[8px] overflow-hidden">
+          <img
+            src={`${honor.heroArt ?? honor.artTile}?v=4`}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover object-[70%_45%] pixelated"
+            style={{ imageRendering: "pixelated" }}
+            draggable={false}
+          />
+          <div
+            className="absolute inset-y-0 left-0 w-[44%] pointer-events-none"
+            style={{
+              background: "linear-gradient(90deg, rgba(255,247,240,0.97) 0%, rgba(255,247,240,0.88) 50%, transparent 100%)",
+            }}
+          />
+          <div className="absolute left-2.5 top-1/2 -translate-y-1/2 max-w-[40%] flex flex-col gap-1.5">
+            <p className="font-card text-[11px] font-semibold leading-[1.3] text-[#1f2a44] line-clamp-3">
+              {honor.highlight}
+            </p>
+            <span
+              className="inline-flex items-center gap-1 font-pixel text-[5px] leading-none px-1.5 py-1 rounded-[4px] text-white self-start"
+              style={{ background: accent }}
+            >
+              <NounIcon name="flame" color="#ffffff" size={8} />
+              {honor.rank}
+            </span>
+          </div>
+        </div>
+
+        {/* open icon flow — no bordered cards, just logos dropping from the furnace */}
+        <div className="shrink-0 flex flex-col gap-1 pb-0.5">
+          <div className="flex items-center gap-2">
+            <div className="flex-1 border-t border-dashed" style={{ borderColor: `${accent}77` }} />
+            <span
+              className="font-pixel text-[5px] leading-none px-2 py-1 rounded-[4px] text-white shrink-0"
+              style={{ background: "#1f2a44" }}
+            >
+              HOW IT FLOWS
+            </span>
+            <div className="flex-1 border-t border-dashed" style={{ borderColor: `${accent}77` }} />
+          </div>
+          <div
+            className="grid gap-1 px-0.5"
+            style={{ gridTemplateColumns: `repeat(${agents.length}, minmax(0, 1fr))` }}
+          >
+            {agents.map((agent) => {
+              const invert = DARK_AGENT_LOGOS.has(agent.logo);
+              return (
+                <div
+                  key={agent.label}
+                  className="min-w-0 flex flex-col items-center gap-1 py-0.5"
+                  title={agent.blurb}
+                >
+                  <span
+                    className="font-pixel text-[5px] leading-none text-center truncate w-full"
+                    style={{ color: accent }}
+                  >
+                    {agent.label}
+                  </span>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-[6px] bg-[#111] shrink-0 shadow-[0_2px_0_rgba(0,0,0,0.18)]">
+                    <img
+                      src={`/logos/${agent.logo}.svg`}
+                      alt={agent.label}
+                      className="h-[18px] w-[18px] object-contain"
+                      style={{ filter: invert ? "brightness(0) invert(1)" : undefined }}
+                      draggable={false}
+                    />
+                  </span>
+                  <span className="font-card text-[8px] leading-tight text-center text-[#5a6478] line-clamp-2">
+                    {agent.blurb}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="shrink-0 grid grid-cols-3 border-t h-[54px] bg-white/90"
+        style={{ borderColor: `${accent}44` }}
+      >
+        {honor.metrics.map((m, i) => (
+          <div
+            key={m.label}
+            className={`flex items-center gap-2 px-2.5 min-w-0 h-full ${i > 0 ? "border-l border-dashed" : ""}`}
+            style={{ borderColor: `${accent}55` }}
+          >
+            <NounIcon name={m.icon} color={accent} size={17} className="shrink-0" />
+            <span className="min-w-0">
+              <span className="block font-pixel text-[10px] leading-none truncate" style={{ color: accent }}>
+                {m.value}
+              </span>
+              <span className="block font-pixel text-[6px] leading-none mt-1.5 text-[#7a8290] truncate">
+                {m.label}
+              </span>
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /**
  * Simple honor detail — mock layout:
- * left art tile + rank · title/tag/sub · bigger bold highlight · 3 metrics.
+ * left art tile + rank · title/tag/sub · highlight (text / win-shots) · 3 metrics.
+ * Tokens honor uses TokensHonorDetail instead.
  * OPEN PROOF sits as a top-right button box (not a underline link under the text).
  */
 function HonorWorldDetail({ honor }: { honor: BackHonor }) {
   const accent = honor.color;
+  const hasWins = Boolean(honor.wins?.length);
+  const hasAgents = Boolean(honor.agents?.length);
+  const proofExternal = /^https?:\/\//.test(honor.url);
+
+  if (hasAgents) {
+    return <TokensHonorDetail honor={honor} />;
+  }
+
   return (
     <div
       className="relative flex-1 min-h-0 flex flex-col rounded-[10px] border-2 overflow-hidden bg-white"
@@ -277,13 +447,14 @@ function HonorWorldDetail({ honor }: { honor: BackHonor }) {
       {!honor.placeholder && (
         <a
           href={honor.url}
-          target="_blank"
-          rel="noopener noreferrer"
+          {...(proofExternal
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
           onClick={(e) => e.stopPropagation()}
           className="absolute top-2 right-2 z-10 font-pixel text-[6px] leading-none px-2 py-1.5 rounded-[4px] text-white border-2 cursor-pointer hover:brightness-110 active:scale-[0.97] transition-all"
           style={{ background: accent, borderColor: NAVY, boxShadow: "0 2px 0 rgba(0,0,0,0.2)" }}
         >
-          OPEN PROOF ↗
+          OPEN PROOF {proofExternal ? "↗" : "→"}
         </a>
       )}
 
@@ -293,9 +464,9 @@ function HonorWorldDetail({ honor }: { honor: BackHonor }) {
           className="shrink-0 w-[96px] rounded-[8px] border overflow-hidden flex flex-col"
           style={{ borderColor: accent, background: honor.tint }}
         >
-          <div className="relative flex-1 min-h-[84px] bg-[#3d6eb8]">
+          <div className="relative flex-1 min-h-[84px] bg-[#fff3c4]">
             <img
-              src={`${honor.artTile}?v=3`}
+              src={`${honor.artTile}?v=5`}
               alt=""
               className="absolute inset-0 h-full w-full object-cover pixelated"
               style={{ imageRendering: "pixelated" }}
@@ -303,7 +474,7 @@ function HonorWorldDetail({ honor }: { honor: BackHonor }) {
             />
           </div>
           <span
-            className="flex items-center justify-center gap-1 font-pixel text-[6px] leading-none text-center py-1.5 px-1 text-white"
+            className="flex items-center justify-center gap-1 font-pixel text-[5px] leading-none text-center py-1.5 px-1 text-white"
             style={{ background: accent }}
           >
             <NounIcon name="trophy" color="#ffffff" size={9} />
@@ -328,53 +499,92 @@ function HonorWorldDetail({ honor }: { honor: BackHonor }) {
             {honor.sub}
           </span>
 
-          {/* highlight box — star + big left-aligned copy, vertically centered */}
-          <div
-            className="rounded-[10px] border px-3.5 py-3 flex items-center gap-3 min-h-0 flex-1"
-            style={{ background: honor.tint, borderColor: accent }}
-          >
-            <NounIcon name="star" color={accent} size={22} className="shrink-0" />
-            <span
-              className="min-w-0 font-card text-[15px] font-semibold leading-[1.35] line-clamp-4 text-left"
-              style={{ color: "#1f2a44" }}
+          {hasWins ? (
+            <div className="min-h-0 flex-1 flex flex-col gap-1 overflow-hidden">
+              <div className="flex items-center gap-1 shrink-0">
+                <NounIcon name="star" color={accent} size={11} />
+                <span className="font-pixel text-[6px] leading-none" style={{ color: accent }}>
+                  Highlights
+                </span>
+              </div>
+              <div className="min-h-0 flex-1 grid grid-cols-4 gap-1.5">
+                {honor.wins!.map((win) => (
+                  <a
+                    key={win.label}
+                    href={win.href}
+                    onClick={(e) => e.stopPropagation()}
+                    className="min-h-0 flex flex-col rounded-[6px] border overflow-hidden bg-white hover:brightness-[1.02] active:scale-[0.98] transition-all"
+                    style={{ borderColor: `${accent}88` }}
+                  >
+                    <div className="relative min-h-0 flex-1 bg-[#efe6c8]">
+                      <img
+                        src={win.shot}
+                        alt=""
+                        className="absolute inset-0 h-full w-full object-cover object-top"
+                        draggable={false}
+                      />
+                    </div>
+                    <span
+                      className="shrink-0 px-1 pt-1 font-pixel text-[5px] leading-none truncate"
+                      style={{ color: accent }}
+                    >
+                      {win.label}
+                    </span>
+                    <span className="shrink-0 px-1 pb-1 font-card text-[9px] font-semibold leading-none text-[#1f2a44] truncate">
+                      🏆 {win.result}
+                    </span>
+                  </a>
+                ))}
+                {honor.moreWins && (
+                  <a
+                    href={honor.moreWins.href}
+                    onClick={(e) => e.stopPropagation()}
+                    className="min-h-0 flex items-center justify-center rounded-[6px] border border-dashed px-1 text-center hover:bg-[#fff8e1] active:scale-[0.98] transition-all"
+                    style={{ borderColor: accent, color: accent }}
+                  >
+                    <span className="font-pixel text-[6px] leading-tight">
+                      {honor.moreWins.label}
+                    </span>
+                  </a>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div
+              className="rounded-[10px] border px-3 py-2.5 flex items-start gap-2.5 min-h-0 flex-1 overflow-hidden"
+              style={{ background: honor.tint, borderColor: accent }}
             >
-              {honor.highlight}
-            </span>
-          </div>
+              <NounIcon name="star" color={accent} size={18} className="shrink-0 mt-0.5" />
+              <span
+                className="min-w-0 font-card text-[12px] font-semibold leading-[1.35] line-clamp-5 text-left"
+                style={{ color: "#1f2a44" }}
+              >
+                {honor.highlight}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="shrink-0 grid grid-cols-3 border-t" style={{ borderColor: `${accent}44` }}>
+      {/* metrics footer — fixed height so every honor card matches Hacktoberfest chrome */}
+      <div
+        className="shrink-0 grid grid-cols-3 border-t h-[54px]"
+        style={{ borderColor: `${accent}44` }}
+      >
         {honor.metrics.map((m, i) => (
           <div
             key={m.label}
-            className={`flex items-center gap-1.5 px-2 py-2 min-w-0 ${i > 0 ? "border-l border-dashed" : ""}`}
+            className={`flex items-center gap-2 px-2.5 min-w-0 h-full ${i > 0 ? "border-l border-dashed" : ""}`}
             style={{ borderColor: `${accent}55` }}
           >
-            <NounIcon name={m.icon} color={accent} size={m.sub ? 18 : 15} />
+            <NounIcon name={m.icon} color={accent} size={17} className="shrink-0" />
             <span className="min-w-0">
-              {m.sub ? (
-                <>
-                  <span className="block font-pixel text-[5px] leading-none mb-0.5 truncate" style={{ color: accent }}>
-                    {m.label}
-                  </span>
-                  <span className="block font-card text-[12px] font-bold leading-tight text-[#1a1a1a] line-clamp-2">
-                    {m.value}
-                  </span>
-                  <span className="block font-card text-[10px] leading-tight text-[#5a6478] truncate mt-0.5">
-                    {m.sub}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <span className="block font-pixel text-[9px] leading-none truncate" style={{ color: accent }}>
-                    {m.value}
-                  </span>
-                  <span className="block font-pixel text-[5px] leading-none mt-1 text-[#7a8290] truncate">
-                    {m.label}
-                  </span>
-                </>
-              )}
+              <span className="block font-pixel text-[10px] leading-none truncate" style={{ color: accent }}>
+                {m.value}
+              </span>
+              <span className="block font-pixel text-[6px] leading-none mt-1.5 text-[#7a8290] truncate">
+                {m.label}
+              </span>
             </span>
           </div>
         ))}

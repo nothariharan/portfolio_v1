@@ -61,7 +61,10 @@ function Cover({ project }: { project: SiteProject }) {
 export function ProjectCard({ project }: { project: SiteProject }) {
   const extra = project.tech.length - MAX_TECH;
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-portfolio-border bg-portfolio-card transition-all duration-200 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-[0_10px_40px_rgba(0,0,0,0.45)]">
+    <article
+      id={project.slug}
+      className="group flex h-full flex-col overflow-hidden rounded-xl border border-portfolio-border bg-portfolio-card transition-all duration-200 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-[0_10px_40px_rgba(0,0,0,0.45)] scroll-mt-24"
+    >
       <Cover project={project} />
 
       <div className="flex flex-1 flex-col p-4">

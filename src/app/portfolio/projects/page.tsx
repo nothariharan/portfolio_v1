@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Container, Reveal } from "@/components/site/ui";
 import { ProjectCard } from "@/components/site/project-card";
 import { PROJECTS, CATEGORIES, type Category } from "@/components/site/portfolio-data";
@@ -15,6 +15,14 @@ export default function ProjectsDirectory() {
     () => (filter === "All" ? PROJECTS : PROJECTS.filter((p) => p.category === filter)),
     [filter],
   );
+
+  // honor win strip deep-links land on /portfolio/projects#slug
+  useEffect(() => {
+    const id = window.location.hash.replace(/^#/, "");
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [shown]);
 
   return (
     <main className="pt-10 pb-16">

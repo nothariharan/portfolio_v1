@@ -73,6 +73,8 @@ const SLUGS = {
   leetcode: "leetcode",
   digitalocean: "digitalocean",
   google: "google",
+  deepseek: "deepseek",
+  perplexity: "perplexity",
 };
 
 /** Brands removed from modern simple-icons — fetch from an older release. */

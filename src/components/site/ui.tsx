@@ -78,9 +78,9 @@ export const LOGO_KEYS = new Set([
   "githubactions", "google", "googlescholar", "html5", "huggingface", "javascript",
   "kimi", "kubernetes", "langgraph", "leetcode", "linux", "mongodb", "nextjs", "nginx",
   "nodejs", "numpy", "openai", "opencode", "opencv", "openrouter", "pandas",
-  "postgresql", "python", "pytorch", "react", "redis", "rust", "sap", "socketio",
-  "streamlit", "supabase", "tailwindcss", "twilio", "typescript", "unity", "vercel",
-  "vite", "wxt", "ycombinator",
+  "perplexity", "deepseek", "postgresql", "python", "pytorch", "react", "redis",
+  "rust", "sap", "socketio", "streamlit", "supabase", "tailwindcss", "twilio",
+  "typescript", "unity", "vercel", "vite", "wxt", "ycombinator",
 ]);
 
 // pretty display names for tech keys (logo or text)
@@ -122,6 +122,8 @@ const NAMES: Record<string, string> = {
   leetcode: "LeetCode",
   digitalocean: "DigitalOcean",
   google: "Google",
+  deepseek: "DeepSeek",
+  perplexity: "Perplexity",
   // text-only (no Simple Icon / logo file) —
   adk: "Google ADK",
   bedrock: "Bedrock",
