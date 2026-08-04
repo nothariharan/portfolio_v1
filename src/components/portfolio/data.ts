@@ -583,6 +583,8 @@ export type BackHonorWin = {
 /** Token-burn flow — real brand logos under /public/logos */
 export type BackHonorAgent = {
   label: string;
+  /** optional short label for the tight HOW IT FLOWS strip */
+  short?: string;
   blurb: string;
   /** filename key for /logos/<logo>.svg */
   logo: string;
@@ -719,16 +721,16 @@ export const BACK_HONORS: BackHonor[] = [
     highlight: "Burning tokens, shipping real stuff — production AI, not recreational burn.",
     heroArt: "/honors/tokens-blast.png",
     agents: [
-      { label: "Claude Code", blurb: "Deep reasoning & coding", logo: "claude" },
-      { label: "Codex", blurb: "Agentic coding at scale", logo: "openai" },
-      { label: "OpenCode", blurb: "Terminal agent loop", logo: "opencode" },
-      { label: "Custom Agents", blurb: "DeepSeek + automations", logo: "deepseek" },
-      { label: "Perplexity", blurb: "Smart search & research", logo: "perplexity" },
+      { label: "Claude Code", short: "Claude", blurb: "Deep reasoning & coding", logo: "claude" },
+      { label: "Codex", short: "Codex", blurb: "Agentic coding at scale", logo: "openai" },
+      { label: "OpenCode", short: "OpenCode", blurb: "Terminal agent loop", logo: "opencode" },
+      { label: "Custom Agents", short: "DeepSeek", blurb: "DeepSeek + automations", logo: "deepseek" },
+      { label: "Perplexity", short: "Perplexity", blurb: "Smart search & research", logo: "perplexity" },
     ],
     metrics: [
       { icon: "token", label: "Tokens / wk", value: "1B+" },
       { icon: "bolt", label: "Mode", value: "Ship" },
-      { icon: "code", label: "Stack", value: "5 tools" },
+      { icon: "code", label: "Tools", value: "5" },
     ],
   },
 ];

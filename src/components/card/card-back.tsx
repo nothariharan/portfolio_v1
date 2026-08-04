@@ -263,8 +263,8 @@ function HonorWorldCard({
 
 /**
  * Tokens zone — unique from other honors (no left tile).
- * header · copy + full blast furnace/conveyor · open Simple Icons flow · metrics.
- * No cream wash overlays — the blast art has to read whole.
+ * Wide-short stacks turn the blast into a postage stamp, so this is a side stage:
+ * furnace+conveyor on the left (full height), HOW IT FLOWS logos on the right.
  */
 function TokensHonorDetail({ honor }: { honor: BackHonor }) {
   const accent = honor.color;
@@ -275,94 +275,77 @@ function TokensHonorDetail({ honor }: { honor: BackHonor }) {
       className="relative flex-1 min-h-0 flex flex-col rounded-[10px] border-2 overflow-hidden bg-white"
       style={{ borderColor: accent }}
     >
-      <div className="min-h-0 flex-1 flex flex-col px-3 pt-2.5 gap-1.5 overflow-hidden">
-        {/* header */}
-        <div className="shrink-0 flex items-start justify-between gap-2">
-          <div className="min-w-0 flex flex-col gap-1">
-            <div className="flex items-end gap-1.5 flex-wrap">
-              <span className="font-pixel text-[12px] leading-none" style={{ color: accent }}>
-                1B+ TOKENS
-              </span>
-              <span className="font-pixel text-[8px] leading-none text-[#1f2a44]">
-                🔥 PER WEEK 🔥
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span
-                className="inline-flex items-center gap-1 font-pixel text-[5px] leading-none px-1.5 py-[3px] rounded-full text-white"
-                style={{ background: accent }}
-              >
-                <NounIcon name="bolt" color="#ffffff" size={8} />
-                AI VELOCITY MODE
-              </span>
-              <span className="font-card text-[11px] font-semibold leading-snug" style={{ color: accent }}>
-                {honor.sub}
-              </span>
-            </div>
-          </div>
-          {!honor.placeholder && (
-            <a
-              href={honor.url}
-              {...(proofExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              onClick={(e) => e.stopPropagation()}
-              className="shrink-0 font-pixel text-[6px] leading-none px-2 py-1.5 rounded-[4px] text-white border-2 cursor-pointer hover:brightness-110 active:scale-[0.97] transition-all"
-              style={{ background: accent, borderColor: NAVY, boxShadow: "0 2px 0 rgba(0,0,0,0.2)" }}
-            >
-              OPEN PROOF {proofExternal ? "↗" : "→"}
-            </a>
-          )}
+      <div className="shrink-0 flex items-center justify-between gap-2 px-3 pt-2 pb-1.5">
+        <div className="min-w-0 flex items-center gap-2 flex-wrap">
+          <span className="font-pixel text-[11px] leading-none" style={{ color: accent }}>
+            1B+ TOKENS
+          </span>
+          <span className="font-pixel text-[7px] leading-none text-[#1f2a44]">🔥 / WK</span>
+          <span
+            className="inline-flex items-center gap-1 font-pixel text-[5px] leading-none px-1.5 py-[3px] rounded-full text-white"
+            style={{ background: accent }}
+          >
+            <NounIcon name="bolt" color="#ffffff" size={8} />
+            AI VELOCITY
+          </span>
         </div>
+        {!honor.placeholder && (
+          <a
+            href={honor.url}
+            {...(proofExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            onClick={(e) => e.stopPropagation()}
+            className="shrink-0 font-pixel text-[6px] leading-none px-2 py-1.5 rounded-[4px] text-white border-2 cursor-pointer hover:brightness-110 active:scale-[0.97] transition-all"
+            style={{ background: accent, borderColor: NAVY, boxShadow: "0 2px 0 rgba(0,0,0,0.2)" }}
+          >
+            OPEN PROOF {proofExternal ? "↗" : "→"}
+          </a>
+        )}
+      </div>
 
-        {/* stage — blast takes the whole middle; logos drop under the conveyor (no wash, no second band) */}
+      <div className="min-h-0 flex-1 flex gap-2 px-3 pb-1.5 overflow-hidden">
+        {/* blast — gets the height budget so furnace + conveyor actually read */}
         <div
-          className="relative min-h-0 flex-1 rounded-[8px] overflow-hidden flex flex-col"
+          className="relative min-w-0 flex-[1.35] rounded-[8px] overflow-hidden"
           style={{ background: "#f4eee4" }}
         >
-          <div className="relative min-h-0 flex-1 flex items-center justify-center px-1 pt-1">
-            <img
-              src={`${honor.heroArt ?? honor.artTile}?v=7`}
-              alt=""
-              className="h-full w-full object-cover object-[50%_48%] pixelated"
-              style={{ imageRendering: "pixelated" }}
-              draggable={false}
-            />
-            <span
-              className="absolute left-2 top-2 inline-flex items-center gap-1 font-pixel text-[5px] leading-none px-1.5 py-1 rounded-[4px] text-white"
-              style={{ background: accent }}
-            >
-              <NounIcon name="flame" color="#ffffff" size={8} />
-              {honor.rank}
-            </span>
-          </div>
-          <div className="shrink-0 flex items-center gap-2 px-2 pb-1.5 pt-0.5">
-            <span
-              className="font-pixel text-[5px] leading-none px-1.5 py-1 rounded-[3px] text-white shrink-0"
-              style={{ background: "#1f2a44" }}
-            >
-              HOW IT FLOWS
-            </span>
-            <div className="min-w-0 flex-1 flex items-center justify-between gap-1">
-              {agents.map((agent) => (
-                <div
-                  key={agent.label}
-                  className="min-w-0 flex flex-col items-center gap-0.5"
-                  title={`${agent.label} — ${agent.blurb}`}
-                >
-                  <img
-                    src={`/logos/${agent.logo}.svg`}
-                    alt={agent.label}
-                    className="h-[18px] w-[18px] object-contain"
-                    draggable={false}
-                  />
-                  <span
-                    className="font-pixel text-[4px] leading-none text-center truncate w-full max-w-[56px]"
-                    style={{ color: accent }}
-                  >
-                    {agent.label}
-                  </span>
-                </div>
-              ))}
-            </div>
+          <img
+            src={`${honor.heroArt ?? honor.artTile}?v=11`}
+            alt=""
+            className="absolute inset-0 h-full w-full object-contain pixelated"
+            style={{ imageRendering: "pixelated" }}
+            draggable={false}
+          />
+        </div>
+
+        {/* flow column — separate from art so nothing overlaps / clips */}
+        <div
+          className="w-[132px] shrink-0 min-h-0 flex flex-col rounded-[8px] border px-1.5 py-1.5 overflow-hidden"
+          style={{ borderColor: `${accent}33`, background: "#fffaf6" }}
+        >
+          <span
+            className="shrink-0 self-center font-pixel text-[5px] leading-none px-1.5 py-[3px] rounded-[3px] text-white mb-1"
+            style={{ background: "#1f2a44" }}
+          >
+            HOW IT FLOWS
+          </span>
+          <div className="min-h-0 flex-1 flex flex-col justify-center gap-1.5 py-0.5">
+            {agents.map((agent) => (
+              <div
+                key={agent.label}
+                className="flex items-center gap-1.5 min-w-0"
+                title={`${agent.label} — ${agent.blurb}`}
+              >
+                <img
+                  src={`/logos/${agent.logo}.svg`}
+                  alt=""
+                  className="h-[14px] w-[14px] object-contain shrink-0"
+                  draggable={false}
+                />
+                <span className="font-pixel text-[5px] leading-none truncate" style={{ color: accent }}>
+                  {agent.short ?? agent.label}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -378,11 +361,14 @@ function TokensHonorDetail({ honor }: { honor: BackHonor }) {
             style={{ borderColor: `${accent}55` }}
           >
             <NounIcon name={m.icon} color={accent} size={17} className="shrink-0" />
-            <span className="min-w-0">
-              <span className="block font-pixel text-[10px] leading-none truncate" style={{ color: accent }}>
+            <span className="min-w-0 overflow-hidden">
+              <span
+                className="block font-pixel text-[10px] leading-none whitespace-nowrap truncate"
+                style={{ color: accent }}
+              >
                 {m.value}
               </span>
-              <span className="block font-pixel text-[6px] leading-none mt-1.5 text-[#7a8290] truncate">
+              <span className="block font-pixel text-[6px] leading-none mt-1.5 text-[#7a8290] whitespace-nowrap truncate">
                 {m.label}
               </span>
             </span>
@@ -521,13 +507,14 @@ function HonorWorldDetail({ honor }: { honor: BackHonor }) {
               </div>
             </div>
           ) : (
+            /* highlight box — center the star + copy so it doesnt float top-left in empty tint space */
             <div
-              className="rounded-[10px] border px-3 py-2.5 flex items-start gap-2.5 min-h-0 flex-1 overflow-hidden"
+              className="rounded-[10px] border px-3.5 py-3 flex items-center justify-center gap-3 min-h-0 flex-1 overflow-hidden"
               style={{ background: honor.tint, borderColor: accent }}
             >
-              <NounIcon name="star" color={accent} size={18} className="shrink-0 mt-0.5" />
+              <NounIcon name="star" color={accent} size={26} className="shrink-0" />
               <span
-                className="min-w-0 font-card text-[12px] font-semibold leading-[1.35] line-clamp-5 text-left"
+                className="min-w-0 max-w-[28ch] font-card text-[15px] font-semibold leading-[1.35] line-clamp-4 text-left"
                 style={{ color: "#1f2a44" }}
               >
                 {honor.highlight}
