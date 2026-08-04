@@ -261,12 +261,10 @@ function HonorWorldCard({
   );
 }
 
-/** Logos that read as near-black on cream — invert for the tokens flow tiles. */
-const DARK_AGENT_LOGOS = new Set(["opencode", "openai", "anthropic"]);
-
 /**
- * Tokens zone — unique from other honors (no left tile / no boxed tool cards).
- * header with breathing room · furnace strip · open Simple Icons flow · metrics.
+ * Tokens zone — unique from other honors (no left tile).
+ * header · copy + full blast furnace/conveyor · open Simple Icons flow · metrics.
+ * No cream wash overlays — the blast art has to read whole.
  */
 function TokensHonorDetail({ honor }: { honor: BackHonor }) {
   const accent = honor.color;
@@ -274,14 +272,11 @@ function TokensHonorDetail({ honor }: { honor: BackHonor }) {
   const proofExternal = /^https?:\/\//.test(honor.url);
   return (
     <div
-      className="relative flex-1 min-h-0 flex flex-col rounded-[10px] border-2 overflow-hidden"
-      style={{
-        borderColor: accent,
-        background: "linear-gradient(180deg, #fff7f0 0%, #fffaf4 55%, #ffffff 100%)",
-      }}
+      className="relative flex-1 min-h-0 flex flex-col rounded-[10px] border-2 overflow-hidden bg-white"
+      style={{ borderColor: accent }}
     >
-      <div className="min-h-0 flex-1 flex flex-col px-3 pt-3 gap-1.5 overflow-hidden">
-        {/* header — in-flow proof btn so nothing gets clipped */}
+      <div className="min-h-0 flex-1 flex flex-col px-3 pt-2.5 gap-1.5 overflow-hidden">
+        {/* header */}
         <div className="shrink-0 flex items-start justify-between gap-2">
           <div className="min-w-0 flex flex-col gap-1">
             <div className="flex items-end gap-1.5 flex-wrap">
@@ -318,23 +313,10 @@ function TokensHonorDetail({ honor }: { honor: BackHonor }) {
           )}
         </div>
 
-        {/* furnace strip — fixed floor so the blast art never collapses */}
-        <div className="relative shrink-0 h-[100px] rounded-[8px] overflow-hidden">
-          <img
-            src={`${honor.heroArt ?? honor.artTile}?v=4`}
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover object-[70%_45%] pixelated"
-            style={{ imageRendering: "pixelated" }}
-            draggable={false}
-          />
-          <div
-            className="absolute inset-y-0 left-0 w-[44%] pointer-events-none"
-            style={{
-              background: "linear-gradient(90deg, rgba(255,247,240,0.97) 0%, rgba(255,247,240,0.88) 50%, transparent 100%)",
-            }}
-          />
-          <div className="absolute left-2.5 top-1/2 -translate-y-1/2 max-w-[40%] flex flex-col gap-1.5">
-            <p className="font-card text-[11px] font-semibold leading-[1.3] text-[#1f2a44] line-clamp-3">
+        {/* stage — copy left, full furnace + conveyor right (no wash) */}
+        <div className="min-h-0 flex-1 flex gap-2.5 overflow-hidden">
+          <div className="w-[34%] min-w-0 shrink-0 flex flex-col justify-center gap-2 py-0.5">
+            <p className="font-card text-[11px] font-semibold leading-[1.35] text-[#1f2a44]">
               {honor.highlight}
             </p>
             <span
@@ -345,9 +327,21 @@ function TokensHonorDetail({ honor }: { honor: BackHonor }) {
               {honor.rank}
             </span>
           </div>
+          <div
+            className="relative min-w-0 flex-1 rounded-[8px] overflow-hidden flex items-center justify-center"
+            style={{ background: "#f4eee4" }}
+          >
+            <img
+              src={`${honor.heroArt ?? honor.artTile}?v=5`}
+              alt=""
+              className="h-full w-full object-contain pixelated"
+              style={{ imageRendering: "pixelated" }}
+              draggable={false}
+            />
+          </div>
         </div>
 
-        {/* open icon flow — no bordered cards, just logos dropping from the furnace */}
+        {/* open Simple Icons — logos only, no boxed cards / no blurbs (space is tight) */}
         <div className="shrink-0 flex flex-col gap-1 pb-0.5">
           <div className="flex items-center gap-2">
             <div className="flex-1 border-t border-dashed" style={{ borderColor: `${accent}77` }} />
@@ -363,41 +357,32 @@ function TokensHonorDetail({ honor }: { honor: BackHonor }) {
             className="grid gap-1 px-0.5"
             style={{ gridTemplateColumns: `repeat(${agents.length}, minmax(0, 1fr))` }}
           >
-            {agents.map((agent) => {
-              const invert = DARK_AGENT_LOGOS.has(agent.logo);
-              return (
-                <div
-                  key={agent.label}
-                  className="min-w-0 flex flex-col items-center gap-1 py-0.5"
-                  title={agent.blurb}
+            {agents.map((agent) => (
+              <div
+                key={agent.label}
+                className="min-w-0 flex flex-col items-center gap-0.5"
+                title={agent.blurb}
+              >
+                <img
+                  src={`/logos/${agent.logo}.svg`}
+                  alt={agent.label}
+                  className="h-[22px] w-[22px] object-contain"
+                  draggable={false}
+                />
+                <span
+                  className="font-pixel text-[5px] leading-none text-center truncate w-full"
+                  style={{ color: accent }}
                 >
-                  <span
-                    className="font-pixel text-[5px] leading-none text-center truncate w-full"
-                    style={{ color: accent }}
-                  >
-                    {agent.label}
-                  </span>
-                  <span className="flex h-8 w-8 items-center justify-center rounded-[6px] bg-[#111] shrink-0 shadow-[0_2px_0_rgba(0,0,0,0.18)]">
-                    <img
-                      src={`/logos/${agent.logo}.svg`}
-                      alt={agent.label}
-                      className="h-[18px] w-[18px] object-contain"
-                      style={{ filter: invert ? "brightness(0) invert(1)" : undefined }}
-                      draggable={false}
-                    />
-                  </span>
-                  <span className="font-card text-[8px] leading-tight text-center text-[#5a6478] line-clamp-2">
-                    {agent.blurb}
-                  </span>
-                </div>
-              );
-            })}
+                  {agent.label}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       <div
-        className="shrink-0 grid grid-cols-3 border-t h-[54px] bg-white/90"
+        className="shrink-0 grid grid-cols-3 border-t h-[54px] bg-white"
         style={{ borderColor: `${accent}44` }}
       >
         {honor.metrics.map((m, i) => (
