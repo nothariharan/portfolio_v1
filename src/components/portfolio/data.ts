@@ -633,7 +633,7 @@ export const BACK_HONORS: BackHonor[] = [
     world: "forest",
     cardArt: "/honors/hacktoberfest-card.png",
     highlight:
-      "Recognized among top contributors in Hacktoberfest 2025 for consistent, high-quality open source contributions.",
+      "Top-tier Hacktoberfest '25 — 32 PRs merged, golden tier, basically living in open source for a month.",
     metrics: [
       { icon: "branch", label: "PRs Merged", value: "32" },
       { icon: "trophy", label: "Rank", value: "Top 1%" },
@@ -655,7 +655,7 @@ export const BACK_HONORS: BackHonor[] = [
     world: "garage",
     cardArt: "/honors/yc-garage-card.png",
     highlight:
-      "Shortlisted from 100k+ applications into YC Startup School India '26 — founder education track in Bangalore, not the equity batch. Unlocked $25k in AI credits and spent the cohort around builders actually starting companies.",
+      "Beat 100k+ apps into YC Startup School India '26 — founder track, not the equity batch. $25k AI credits and a cohort of builders actually shipping companies.",
     metrics: [
       { icon: "users", label: "Applicants", value: "100k+" },
       { icon: "globe", label: "Cohort", value: "India '26" },

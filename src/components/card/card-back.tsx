@@ -400,21 +400,6 @@ function HonorWorldDetail({ honor }: { honor: BackHonor }) {
       className="relative flex-1 min-h-0 flex flex-col rounded-[10px] border-2 overflow-hidden bg-white"
       style={{ borderColor: accent }}
     >
-      {/* OPEN PROOF — top-right clickable box */}
-      {!honor.placeholder && (
-        <a
-          href={honor.url}
-          {...(proofExternal
-            ? { target: "_blank", rel: "noopener noreferrer" }
-            : {})}
-          onClick={(e) => e.stopPropagation()}
-          className="absolute top-2 right-2 z-10 font-pixel text-[6px] leading-none px-2 py-1.5 rounded-[4px] text-white border-2 cursor-pointer hover:brightness-110 active:scale-[0.97] transition-all"
-          style={{ background: accent, borderColor: NAVY, boxShadow: "0 2px 0 rgba(0,0,0,0.2)" }}
-        >
-          OPEN PROOF {proofExternal ? "↗" : "→"}
-        </a>
-      )}
-
       <div className="flex gap-2.5 p-2.5 min-h-0 flex-1 overflow-hidden">
         {/* left sub-card — pixel scene + rank strip */}
         <div
@@ -439,22 +424,40 @@ function HonorWorldDetail({ honor }: { honor: BackHonor }) {
           </span>
         </div>
 
-        <div className="min-w-0 flex-1 flex flex-col gap-1.5 overflow-hidden pr-16">
-          <div className="flex items-center gap-1.5 flex-wrap shrink-0">
-            <span className="font-pixel text-[11px] leading-none" style={{ color: accent }}>
-              {honor.title}
-            </span>
-            <span
-              className="inline-flex items-center gap-1 font-pixel text-[6px] leading-none px-1.5 py-[3px] rounded-[4px] text-white shrink-0"
-              style={{ background: accent }}
-            >
-              <NounIcon name={honor.tagIcon} color="#ffffff" size={10} />
-              {honor.tag}
-            </span>
+        {/* no pr-16 gutter — OPEN PROOF sits in the title row so highlight can use full width */}
+        <div className="min-w-0 flex-1 flex flex-col gap-1.5 overflow-hidden">
+          <div className="flex items-start justify-between gap-2 shrink-0">
+            <div className="min-w-0 flex flex-col gap-1">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="font-pixel text-[11px] leading-none" style={{ color: accent }}>
+                  {honor.title}
+                </span>
+                <span
+                  className="inline-flex items-center gap-1 font-pixel text-[6px] leading-none px-1.5 py-[3px] rounded-[4px] text-white shrink-0"
+                  style={{ background: accent }}
+                >
+                  <NounIcon name={honor.tagIcon} color="#ffffff" size={10} />
+                  {honor.tag}
+                </span>
+              </div>
+              <span className="font-card text-[13px] font-semibold leading-snug" style={{ color: accent }}>
+                {honor.sub}
+              </span>
+            </div>
+            {!honor.placeholder && (
+              <a
+                href={honor.url}
+                {...(proofExternal
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+                onClick={(e) => e.stopPropagation()}
+                className="shrink-0 font-pixel text-[6px] leading-none px-2 py-1.5 rounded-[4px] text-white border-2 cursor-pointer hover:brightness-110 active:scale-[0.97] transition-all"
+                style={{ background: accent, borderColor: NAVY, boxShadow: "0 2px 0 rgba(0,0,0,0.2)" }}
+              >
+                OPEN PROOF {proofExternal ? "↗" : "→"}
+              </a>
+            )}
           </div>
-          <span className="font-card text-[13px] font-semibold leading-snug shrink-0" style={{ color: accent }}>
-            {honor.sub}
-          </span>
 
           {hasWins ? (
             <div className="min-h-0 flex-1 flex flex-col gap-1 overflow-hidden">
@@ -507,18 +510,22 @@ function HonorWorldDetail({ honor }: { honor: BackHonor }) {
               </div>
             </div>
           ) : (
-            /* highlight box — center the star + copy so it doesnt float top-left in empty tint space */
+            /*
+             * highlight box — CSS grid so star stays left and copy always eats
+             * the remaining columns. flex + line-clamp (-webkit-box) was
+             * shrinking the text to a skinny middle column with empty right space.
+             */
             <div
-              className="rounded-[10px] border px-3.5 py-3 flex items-center justify-center gap-3 min-h-0 flex-1 overflow-hidden"
+              className="w-full min-h-0 flex-1 rounded-[10px] border pl-2 pr-3 py-2.5 grid grid-cols-[28px_minmax(0,1fr)] gap-x-2.5 items-center overflow-hidden"
               style={{ background: honor.tint, borderColor: accent }}
             >
-              <NounIcon name="star" color={accent} size={26} className="shrink-0" />
-              <span
-                className="min-w-0 max-w-[28ch] font-card text-[15px] font-semibold leading-[1.35] line-clamp-4 text-left"
+              <NounIcon name="star" color={accent} size={24} className="justify-self-start" />
+              <p
+                className="min-w-0 m-0 font-card text-[14px] font-semibold leading-[1.35] line-clamp-3 text-left"
                 style={{ color: "#1f2a44" }}
               >
                 {honor.highlight}
-              </span>
+              </p>
             </div>
           )}
         </div>
