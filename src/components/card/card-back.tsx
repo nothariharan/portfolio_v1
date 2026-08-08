@@ -226,7 +226,7 @@ function HonorWorldCard({
       : honor.world === "garage"
         ? "#fb651e"
         : honor.world === "arena"
-          ? "#f0c020"
+          ? "#ffcc00"
           : "#e23b2e";
 
   return (
@@ -262,119 +262,39 @@ function HonorWorldCard({
 }
 
 /**
- * Tokens zone — unique from other honors (no left tile).
- * Wide-short stacks turn the blast into a postage stamp, so this is a side stage:
- * furnace+conveyor on the left (full height), HOW IT FLOWS logos on the right.
+ * Tokens zone — one optimized raster card (AVIF → WebP → PNG).
+ * Top honor sticker tabs stay HTML; this detail is a single art asset.
+ * OPEN PROOF is an invisible hit-target over the painted button so the link stays real.
  */
 function TokensHonorDetail({ honor }: { honor: BackHonor }) {
-  const accent = honor.color;
-  const agents = honor.agents ?? [];
   const proofExternal = /^https?:\/\//.test(honor.url);
+  const cardBase = honor.heroArt?.replace(/\.(png|webp|avif)$/i, "") ?? "/honors/1b-tokens";
+
   return (
-    <div
-      className="relative flex-1 min-h-0 flex flex-col rounded-[10px] border-2 overflow-hidden bg-white"
-      style={{ borderColor: accent }}
-    >
-      <div className="shrink-0 flex items-center justify-between gap-2 px-3 pt-2 pb-1.5">
-        <div className="min-w-0 flex items-center gap-2 flex-wrap">
-          <span className="font-pixel text-[11px] leading-none" style={{ color: accent }}>
-            1B+ TOKENS
-          </span>
-          <span className="font-pixel text-[7px] leading-none text-[#1f2a44]">🔥 / WK</span>
-          <span
-            className="inline-flex items-center gap-1 font-pixel text-[5px] leading-none px-1.5 py-[3px] rounded-full text-white"
-            style={{ background: accent }}
-          >
-            <NounIcon name="bolt" color="#ffffff" size={8} />
-            AI VELOCITY
-          </span>
-        </div>
-        {!honor.placeholder && (
-          <a
-            href={honor.url}
-            {...(proofExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-            onClick={(e) => e.stopPropagation()}
-            className="shrink-0 font-pixel text-[6px] leading-none px-2 py-1.5 rounded-[4px] text-white border-2 cursor-pointer hover:brightness-110 active:scale-[0.97] transition-all"
-            style={{ background: accent, borderColor: NAVY, boxShadow: "0 2px 0 rgba(0,0,0,0.2)" }}
-          >
-            OPEN PROOF {proofExternal ? "↗" : "→"}
-          </a>
-        )}
-      </div>
+    <div className="relative flex-1 min-h-0 rounded-[10px] overflow-hidden bg-[#f6f1e6]">
+      <picture className="absolute inset-0 block h-full w-full">
+        <source srcSet={`${cardBase}.avif?v=wide24`} type="image/avif" />
+        <source srcSet={`${cardBase}.webp?v=wide24`} type="image/webp" />
+        <img
+          src={`${cardBase}.png?v=wide24`}
+          alt="1B+ tokens per week — production AI velocity"
+          className="h-full w-full object-cover object-center select-none"
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+        />
+      </picture>
 
-      <div className="min-h-0 flex-1 flex gap-2 px-3 pb-1.5 overflow-hidden">
-        {/* blast — gets the height budget so furnace + conveyor actually read */}
-        <div
-          className="relative min-w-0 flex-[1.35] rounded-[8px] overflow-hidden"
-          style={{ background: "#f4eee4" }}
-        >
-          <img
-            src={`${honor.heroArt ?? honor.artTile}?v=11`}
-            alt=""
-            className="absolute inset-0 h-full w-full object-contain pixelated"
-            style={{ imageRendering: "pixelated" }}
-            draggable={false}
-          />
-        </div>
-
-        {/* flow column — separate from art so nothing overlaps / clips */}
-        <div
-          className="w-[132px] shrink-0 min-h-0 flex flex-col rounded-[8px] border px-1.5 py-1.5 overflow-hidden"
-          style={{ borderColor: `${accent}33`, background: "#fffaf6" }}
-        >
-          <span
-            className="shrink-0 self-center font-pixel text-[5px] leading-none px-1.5 py-[3px] rounded-[3px] text-white mb-1"
-            style={{ background: "#1f2a44" }}
-          >
-            HOW IT FLOWS
-          </span>
-          <div className="min-h-0 flex-1 flex flex-col justify-center gap-1.5 py-0.5">
-            {agents.map((agent) => (
-              <div
-                key={agent.label}
-                className="flex items-center gap-1.5 min-w-0"
-                title={`${agent.label} — ${agent.blurb}`}
-              >
-                <img
-                  src={`/logos/${agent.logo}.svg`}
-                  alt=""
-                  className="h-[14px] w-[14px] object-contain shrink-0"
-                  draggable={false}
-                />
-                <span className="font-pixel text-[5px] leading-none truncate" style={{ color: accent }}>
-                  {agent.short ?? agent.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="shrink-0 grid grid-cols-3 border-t h-[54px] bg-white"
-        style={{ borderColor: `${accent}44` }}
-      >
-        {honor.metrics.map((m, i) => (
-          <div
-            key={m.label}
-            className={`flex items-center gap-2 px-2.5 min-w-0 h-full ${i > 0 ? "border-l border-dashed" : ""}`}
-            style={{ borderColor: `${accent}55` }}
-          >
-            <NounIcon name={m.icon} color={accent} size={17} className="shrink-0" />
-            <span className="min-w-0 overflow-hidden">
-              <span
-                className="block font-pixel text-[10px] leading-none whitespace-nowrap truncate"
-                style={{ color: accent }}
-              >
-                {m.value}
-              </span>
-              <span className="block font-pixel text-[6px] leading-none mt-1.5 text-[#7a8290] whitespace-nowrap truncate">
-                {m.label}
-              </span>
-            </span>
-          </div>
-        ))}
-      </div>
+      {!honor.placeholder && (
+        <a
+          href={honor.url}
+          {...(proofExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          onClick={(e) => e.stopPropagation()}
+          aria-label="Open proof"
+          title="OPEN PROOF"
+          className="absolute z-10 top-[3.5%] right-[2.8%] w-[17%] min-w-[72px] max-w-[150px] aspect-[3.4/1] rounded-[4px] cursor-pointer hover:brightness-110 active:scale-[0.98] transition-transform"
+        />
+      )}
     </div>
   );
 }
