@@ -273,10 +273,10 @@ function TokensHonorDetail({ honor }: { honor: BackHonor }) {
   return (
     <div className="relative flex-1 min-h-0 rounded-[10px] overflow-hidden bg-[#f6f1e6]">
       <picture className="absolute inset-0 block h-full w-full">
-        <source srcSet={`${cardBase}.avif?v=wide24`} type="image/avif" />
-        <source srcSet={`${cardBase}.webp?v=wide24`} type="image/webp" />
+        <source srcSet={`${cardBase}.avif?v=safe45`} type="image/avif" />
+        <source srcSet={`${cardBase}.webp?v=safe45`} type="image/webp" />
         <img
-          src={`${cardBase}.png?v=wide24`}
+          src={`${cardBase}.png?v=safe45`}
           alt="1B+ tokens per week — production AI velocity"
           className="h-full w-full object-cover object-center select-none"
           loading="lazy"
