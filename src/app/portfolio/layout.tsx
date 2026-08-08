@@ -12,6 +12,7 @@ function activeFromPath(pathname: string) {
   if (pathname.startsWith("/portfolio/skills")) return "skills";
   if (pathname.startsWith("/portfolio/achievements")) return "achievements";
   if (pathname.startsWith("/portfolio/blog")) return "blog";
+  if (pathname.startsWith("/portfolio/hari")) return "hari";
   return "home";
 }
 

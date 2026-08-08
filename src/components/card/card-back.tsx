@@ -269,32 +269,39 @@ function HonorWorldCard({
 function TokensHonorDetail({ honor }: { honor: BackHonor }) {
   const proofExternal = /^https?:\/\//.test(honor.url);
   const cardBase = honor.heroArt?.replace(/\.(png|webp|avif)$/i, "") ?? "/honors/1b-tokens";
+  const accent = honor.color;
 
   return (
-    <div className="relative flex-1 min-h-0 rounded-[10px] overflow-hidden bg-[#f6f1e6]">
-      <picture className="absolute inset-0 block h-full w-full">
-        <source srcSet={`${cardBase}.avif?v=safe45`} type="image/avif" />
-        <source srcSet={`${cardBase}.webp?v=safe45`} type="image/webp" />
-        <img
-          src={`${cardBase}.png?v=safe45`}
-          alt="1B+ tokens per week — production AI velocity"
-          className="h-full w-full object-cover object-center select-none"
-          loading="lazy"
-          decoding="async"
-          draggable={false}
-        />
-      </picture>
+    <div
+      className="relative flex-1 min-h-0 flex flex-col rounded-[10px] border-2 overflow-hidden bg-white"
+      style={{ borderColor: accent }}
+    >
+      {/* same chrome as the other honor worlds — accent ring, then the art sits inset */}
+      <div className="relative flex-1 min-h-0 m-1.5 rounded-[7px] overflow-hidden bg-[#f6f1e6]">
+        <picture className="absolute inset-0 block h-full w-full">
+          <source srcSet={`${cardBase}.avif?v=frame1`} type="image/avif" />
+          <source srcSet={`${cardBase}.webp?v=frame1`} type="image/webp" />
+          <img
+            src={`${cardBase}.png?v=frame1`}
+            alt="1B+ tokens per week — production AI velocity"
+            className="h-full w-full object-contain object-center select-none"
+            loading="lazy"
+            decoding="async"
+            draggable={false}
+          />
+        </picture>
 
-      {!honor.placeholder && (
-        <a
-          href={honor.url}
-          {...(proofExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-          onClick={(e) => e.stopPropagation()}
-          aria-label="Open proof"
-          title="OPEN PROOF"
-          className="absolute z-10 top-[3.5%] right-[2.8%] w-[17%] min-w-[72px] max-w-[150px] aspect-[3.4/1] rounded-[4px] cursor-pointer hover:brightness-110 active:scale-[0.98] transition-transform"
-        />
-      )}
+        {!honor.placeholder && (
+          <a
+            href={honor.url}
+            {...(proofExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            onClick={(e) => e.stopPropagation()}
+            aria-label="Open proof"
+            title="OPEN PROOF"
+            className="absolute z-10 top-[3.5%] right-[2.8%] w-[17%] min-w-[72px] max-w-[150px] aspect-[3.4/1] rounded-[4px] cursor-pointer hover:brightness-110 active:scale-[0.98] transition-transform"
+          />
+        )}
+      </div>
     </div>
   );
 }
@@ -669,9 +676,10 @@ function IconTile({ color, size, children }: { color: string; size: number; chil
 
 interface CardBackProps {
   onEnterPortfolio: (tab: TabKey) => void;
+  onOpenHariMd: () => void;
 }
 
-export function CardBack({ onEnterPortfolio }: CardBackProps) {
+export function CardBack({ onEnterPortfolio, onOpenHariMd }: CardBackProps) {
   const [sel, setSel] = useState(0);
   const [honorSel, setHonorSel] = useState(0);
   const active = PANELS[sel];
@@ -757,7 +765,7 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
 
       {/* details box — inset rings; extra-thick top band survives 3D foreshortening */}
       <div
-        className="relative flex-1 min-h-0 mx-3.5 my-3 rounded-[8px] p-3 flex flex-col"
+        className="relative flex-1 min-h-0 mx-3.5 mt-3 mb-1.5 rounded-[8px] pt-3 px-3 pb-1 flex flex-col"
         style={{
           background: PANEL_CREAM,
           boxShadow: `
@@ -962,9 +970,9 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
           )}
         </PanelScroll>
 
-        {/* bottom footer hint and button */}
-        <div className="flex items-center justify-between border-t pt-2 mt-2 gap-2 shrink-0" style={{ borderColor: "#e0d3a4" }}>
-          <span className="font-card text-[16px] text-[#8a7c56] leading-none">
+        {/* bottom footer hint + hari.md — shared across every tab */}
+        <div className="flex items-center justify-between border-t pt-1 mt-1 gap-2 shrink-0" style={{ borderColor: "#e0d3a4" }}>
+          <span className="font-card text-[13px] text-[#8a7c56] leading-none">
             {active.tab === "honors"
               ? "tap a tile · ← → to browse"
               : active.tab === "experience"
@@ -974,12 +982,12 @@ export function CardBack({ onEnterPortfolio }: CardBackProps) {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onEnterPortfolio(active.tab);
+              onOpenHariMd();
             }}
-            className="shrink-0 font-pixel px-3 py-2.5 text-white text-[9px] leading-none rounded-[5px] cursor-pointer border-2 transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-[0.97]"
-            style={{ background: "#e0524a", borderColor: NAVY, boxShadow: "inset 0 0 0 2px #a32f28, 0 2px 0 rgba(0,0,0,0.3)" }}
+            className="shrink-0 font-pixel px-2.5 py-1.5 text-white text-[8px] leading-none rounded-[4px] cursor-pointer border-2 transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-[0.97]"
+            style={{ background: "#111111", borderColor: NAVY, boxShadow: "inset 0 0 0 2px #2a2a2a, 0 2px 0 rgba(0,0,0,0.35)" }}
           >
-            ▶ MAIN PORTFOLIO
+            hari.md
           </button>
         </div>
       </div>

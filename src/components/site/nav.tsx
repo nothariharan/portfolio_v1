@@ -17,6 +17,7 @@ const LINKS = [
   { id: "skills", label: "skills", href: "/portfolio/skills" },
   { id: "achievements", label: "awards", href: "/portfolio/achievements" },
   { id: "blog", label: "blog", href: "/portfolio/blog" },
+  { id: "hari", label: "hari.md", href: "/portfolio/hari" },
 ];
 
 export function SiteNav({ onBack, active = "home" }: { onBack: () => void; active?: string }) {

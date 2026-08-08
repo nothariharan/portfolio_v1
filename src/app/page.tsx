@@ -94,7 +94,10 @@ export default function Home() {
           damping: 18,
         }}
       >
-        <TrainerCard onEnterPortfolio={(tab) => startTransition(`/portfolio?tab=${tab}`)} />
+        <TrainerCard
+          onEnterPortfolio={(tab) => startTransition(`/portfolio?tab=${tab}`)}
+          onOpenHariMd={() => startTransition("/portfolio/hari")}
+        />
       </motion.div>
 
       {/* bottom-left: cycle page background color */}

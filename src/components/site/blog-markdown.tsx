@@ -3,11 +3,31 @@ import remarkGfm from "remark-gfm";
 import type { Components } from "react-markdown";
 
 const components: Components = {
+  h1: ({ children }) => (
+    <h1 className="mt-0 scroll-mt-24 font-display text-3xl font-semibold tracking-tight text-portfolio-text sm:text-[2.15rem]">
+      {children}
+    </h1>
+  ),
   h2: ({ children }) => (
     <h2 className="mt-10 scroll-mt-24 font-display text-xl font-semibold tracking-tight text-portfolio-text first:mt-0">
       {children}
     </h2>
   ),
+  table: ({ children }) => (
+    <div className="mt-6 overflow-x-auto">
+      <table className="w-full min-w-[28rem] border-collapse text-left text-[13px] text-portfolio-muted">
+        {children}
+      </table>
+    </div>
+  ),
+  thead: ({ children }) => <thead className="border-b border-portfolio-border/80">{children}</thead>,
+  th: ({ children }) => (
+    <th className="px-2 py-2 font-mono text-[11px] font-medium uppercase tracking-wide text-portfolio-text/70">
+      {children}
+    </th>
+  ),
+  td: ({ children }) => <td className="border-b border-portfolio-border/40 px-2 py-2 align-top">{children}</td>,
+  tr: ({ children }) => <tr>{children}</tr>,
   h3: ({ children }) => (
     <h3 className="mt-8 scroll-mt-24 font-display text-lg font-semibold tracking-tight text-portfolio-text">
       {children}

@@ -18,6 +18,7 @@ import type { TabKey } from "../portfolio/data";
 
 interface TrainerCardProps {
   onEnterPortfolio: (tab: TabKey) => void;
+  onOpenHariMd: () => void;
 }
 
 /**
@@ -70,7 +71,7 @@ function CardFace({
   );
 }
 
-export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
+export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const reduceMotion = useReducedMotion();
@@ -148,7 +149,7 @@ export function TrainerCard({ onEnterPortfolio }: TrainerCardProps) {
           </CardFace>
 
           <CardFace flipped={isFlipped} isBack>
-            <CardBack onEnterPortfolio={onEnterPortfolio} />
+            <CardBack onEnterPortfolio={onEnterPortfolio} onOpenHariMd={onOpenHariMd} />
           </CardFace>
         </motion.div>
       </motion.div>
