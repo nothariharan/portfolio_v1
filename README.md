@@ -65,7 +65,7 @@ deploy target is **vercel** — push to main and it goes live
 ```text
 public/
   sprites/          pixel art for the card (mascot, focus icons, panel art)
-  logos/            tech stack svg logos
+  logos/            tech stack svg logos (thesvg.org via npm run sync:icons)
 
 src/
   app/

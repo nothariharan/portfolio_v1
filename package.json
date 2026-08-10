@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "sync:icons": "node scripts/sync-simple-icons.mjs"
+    "sync:icons": "node scripts/sync-thesvg-icons.mjs",
+    "sync:icons:simple": "node scripts/sync-simple-icons.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.42.0",

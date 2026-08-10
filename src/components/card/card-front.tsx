@@ -3,11 +3,20 @@
 /**
  * Trainer card FRONT — identity side.
  *
- * FOCUS is four square pixel tiles (labels under, no subtitles). CURRENTLY
- * overlay stays short so it doesnt eat the avatar / footer badges.
+ * Two layouts share the same content blocks:
+ *   desktop — wide GBA card, focus 1×4, badge strip + floating CURRENTLY
+ *   mobile  — portrait shell, focus 2×2, EXP|CURRENTLY row, no badge strip
+ *
+ * Pass `layout` from TrainerCard (driven by CARD_MOBILE_QUERY) so shell size
+ * and face stay in lockstep. Future glass/bg can hang off data-layout.
  */
 
 import { TRAINER_ID } from "../portfolio/data";
+import {
+  CARD_PANEL_STYLE,
+  CARD_PINK_DIVIDER,
+  type CardLayout,
+} from "./card-layout";
 
 /* ================================================================== */
 /*  Small reusable marks                                              */
@@ -113,19 +122,34 @@ const INFRA_STACK = [
 ];
 
 // a single 8-bit bordered tile holding one official logo; hover lifts + cyan border + tooltip
-function StackTile({ name, logo, more }: { name: string; logo?: string; more?: boolean }) {
+function StackTile({
+  name,
+  logo,
+  more,
+  compact,
+}: {
+  name: string;
+  logo?: string;
+  more?: boolean;
+  compact?: boolean;
+}) {
+  const box = compact ? "w-[28px] h-[28px] rounded-[4px]" : "w-[34px] h-[34px] rounded-[5px]";
+  const img = compact ? "w-[18px] h-[18px]" : "w-[22px] h-[22px]";
+  const moreText = compact ? "text-[7px]" : "text-[8px]";
+
   return (
     <div className="group relative shrink-0">
       <div
-        className="w-[34px] h-[34px] bg-white rounded-[5px] flex items-center justify-center transition-all duration-150 shadow-[inset_0_0_0_1.5px_#c5c8d0,0_1px_0_rgba(0,0,0,0.08)] group-hover:-translate-y-0.5 group-hover:shadow-[inset_0_0_0_1.5px_#4a76c9,0_3px_0_rgba(0,0,0,0.12)]"
+        className={`${box} bg-white flex items-center justify-center transition-all duration-150 shadow-[inset_0_0_0_1.5px_#c5c8d0,0_1px_0_rgba(0,0,0,0.08)] group-hover:-translate-y-0.5 group-hover:shadow-[inset_0_0_0_1.5px_#4a76c9,0_3px_0_rgba(0,0,0,0.12)]`}
       >
         {more ? (
-          <span className="font-pixel text-[8px] leading-none text-[#9aa0a6] group-hover:text-[#1f9fb8]">MORE</span>
+          <span className={`font-pixel ${moreText} leading-none text-[#9aa0a6] group-hover:text-[#1f9fb8]`}>
+            MORE
+          </span>
         ) : (
-          <img src={logo} alt={name} className="w-[22px] h-[22px] object-contain" />
+          <img src={logo} alt={name} className={`${img} object-contain`} />
         )}
       </div>
-      {/* retro tooltip */}
       <span
         className="pointer-events-none absolute left-1/2 -translate-x-1/2 -top-[20px] z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-150 font-pixel text-[7px] leading-none whitespace-nowrap px-1.5 py-1 rounded-[3px] text-white"
         style={{ background: "#2c2c2c", boxShadow: "0 2px 0 rgba(0,0,0,0.3)" }}
@@ -291,12 +315,254 @@ function QuickLink({ href, label, children }: { href: string; label: string; chi
 }
 
 /* ================================================================== */
-/*  AVATAR — static final sprite                                      */
+/*  Content blocks — shared across desktop / mobile                   */
 /* ================================================================== */
 
-function CardAvatar() {
+function FocusGrid({ columns }: { columns: 2 | 4 }) {
   return (
-    <div className="absolute right-[12px] top-[-8px] z-20 h-[290px] w-[170px] pointer-events-none">
+    <div
+      className={
+        columns === 2
+          ? "grid grid-cols-2 gap-x-2 gap-y-2 pl-[22px] max-w-[200px]"
+          : "flex gap-1.5 pl-[26px]"
+      }
+    >
+      {FOCUS.map((f) => (
+        <div
+          key={f.label}
+          className={
+            columns === 2
+              ? "flex flex-col items-center gap-1"
+              : "flex-1 min-w-0 flex flex-col items-center gap-1"
+          }
+        >
+          <div
+            className={
+              columns === 2
+                ? "w-full max-w-[78px] aspect-square overflow-hidden flex items-center justify-center"
+                : "w-full aspect-square overflow-hidden flex items-center justify-center"
+            }
+            style={{
+              background: f.fill,
+              ...pixelSquareBorder(f.border),
+            }}
+          >
+            <img
+              src={`${f.img}?v=sq1`}
+              alt={f.label}
+              className="w-full h-full object-cover object-center pixelated select-none"
+              draggable={false}
+              decoding="async"
+            />
+          </div>
+          <span
+            className={`font-pixel leading-none tracking-tight text-center ${columns === 2 ? "text-[7px]" : "text-[8px]"}`}
+            style={{ color: f.labelColor }}
+          >
+            {f.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function StackRows({ compact }: { compact?: boolean }) {
+  const labelW = compact ? "w-[28px]" : "w-[34px]";
+  const gap = compact ? "gap-1" : "gap-2";
+  // mobile: single-line scroll so logos never wrap into a messy pile
+  const row = compact
+    ? `flex flex-nowrap ${gap} overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`
+    : `flex flex-wrap ${gap}`;
+
+  return (
+    <div className={`flex flex-col ${compact ? "gap-1" : "gap-1.5"} ${compact ? "pl-[20px]" : "pl-[26px]"}`}>
+      <div className="flex items-center gap-1.5 min-w-0">
+        <span className={`font-pixel text-[8px] leading-none text-[#a4a9af] ${labelW} text-right shrink-0`}>
+          CORE
+        </span>
+        <div className={`${row} min-w-0`}>
+          {CORE_STACK.map((s) => (
+            <StackTile key={s.key} name={s.name} logo={`/logos/${s.key}.svg`} compact={compact} />
+          ))}
+        </div>
+      </div>
+      <div className="flex items-center gap-1.5 min-w-0">
+        <span className={`font-pixel text-[8px] leading-none text-[#a4a9af] ${labelW} text-right shrink-0`}>
+          INFRA
+        </span>
+        <div className={`${row} min-w-0`}>
+          {INFRA_STACK.map((s) => (
+            <StackTile key={s.key} name={s.name} logo={`/logos/${s.key}.svg`} compact={compact} />
+          ))}
+          <StackTile name="More to come" more compact={compact} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function IdentityPanel({ layout }: { layout: CardLayout }) {
+  const mobile = layout === "mobile";
+
+  return (
+    <div
+      className={`relative z-10 flex flex-col rounded-[8px] ${
+        mobile ? "w-[calc(100%-104px)] gap-1 px-2 py-1.5" : "w-[64%] gap-1 px-2.5 py-1.5"
+      }`}
+      style={CARD_PANEL_STYLE}
+    >
+      <div>
+        <div className="flex items-center gap-2 min-w-0">
+          <Bullet size={mobile ? 14 : 16} />
+          <span className={`font-pixel leading-none text-[#56618c] shrink-0 ${mobile ? "text-[10px]" : "text-[12px]"}`}>
+            NAME:
+          </span>
+          <span
+            className={`font-pixel leading-none text-[#c23a33] tracking-wide ${
+              mobile ? "text-[12px]" : "text-[14px] truncate"
+            }`}
+          >
+            HARIHARAN
+          </span>
+        </div>
+        <div
+          className={`font-card leading-none text-[#56618c] ${
+            mobile ? "text-[12px] pl-[22px] mt-1" : "text-[14px] pl-[26px] mt-1.5"
+          }`}
+        >
+          AKA: Hari
+        </div>
+        <div className="h-px mt-1.5" style={{ background: CARD_PINK_DIVIDER }} />
+      </div>
+
+      <div>
+        <div className={`flex items-center gap-2 ${mobile ? "mb-1" : "mb-1"}`}>
+          <Bullet size={mobile ? 14 : 16} />
+          <span className={`font-pixel leading-none text-[#56618c] ${mobile ? "text-[10px]" : "text-[12px]"}`}>
+            FOCUS:
+          </span>
+        </div>
+        <FocusGrid columns={mobile ? 2 : 4} />
+        <div className="h-px mt-1.5" style={{ background: CARD_PINK_DIVIDER }} />
+      </div>
+
+      <div>
+        <div className={`flex items-center gap-2 ${mobile ? "mb-1" : "mb-1.5"}`}>
+          <Bullet size={mobile ? 14 : 16} />
+          <span className={`font-pixel leading-none text-[#56618c] ${mobile ? "text-[10px]" : "text-[12px]"}`}>
+            STACK:
+          </span>
+        </div>
+        <StackRows compact={mobile} />
+      </div>
+    </div>
+  );
+}
+
+function ExpPanel({ compact }: { compact?: boolean }) {
+  return (
+    <div
+      className={`rounded-[7px] flex flex-col ${compact ? "px-1.5 py-1.5 gap-1 h-full" : "px-2 py-1.5 gap-1"}`}
+      style={CARD_PANEL_STYLE}
+    >
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <Bullet size={14} />
+        <span className="font-pixel text-[11px] leading-none text-[#56618c]">EXP:</span>
+        <BarChartIcon />
+        <span className="font-pixel text-[12px] leading-none text-[#3f9b46] whitespace-nowrap">1+ YEAR</span>
+      </div>
+      <div className="flex flex-col gap-1">
+        {EXP_LINES.map((line) => (
+          <div key={line.label} className="flex items-center gap-1.5 min-w-0">
+            <span
+              className="w-[16px] h-[16px] shrink-0 flex items-center justify-center rounded-[2px]"
+              style={{
+                background: "#fffdf0",
+                boxShadow: `inset 0 0 0 1px ${line.accent}88, 0 0 0 1px #c9a04e66`,
+              }}
+            >
+              {line.icon}
+            </span>
+            <span className={`font-card leading-none text-[#56618c] ${compact ? "text-[11px]" : "text-[12px]"}`}>
+              {line.label}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CurrentlyPanel({ layout }: { layout: CardLayout }) {
+  const mobile = layout === "mobile";
+
+  return (
+    <div
+      className={
+        mobile
+          ? "relative z-10 flex-1 min-w-0 h-[118px] rounded-[8px] overflow-hidden pointer-events-none"
+          : "absolute right-3 bottom-[2px] z-50 w-[62%] max-w-[420px] h-[120px] rounded-[8px] overflow-hidden pointer-events-none"
+      }
+      style={{
+        boxShadow:
+          "inset 0 0 0 2px #33406b, 0 0 0 2px rgba(255,255,255,0.35), 0 8px 18px rgba(0,0,0,0.35)",
+      }}
+    >
+      <img
+        src="/sprites/front_bg.webp"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover object-right pixelated"
+        decoding="async"
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(9,15,26,0.96) 38%, rgba(9,15,26,0.6) 62%, rgba(9,15,26,0) 82%)",
+        }}
+      />
+      <div className={`relative z-10 h-full flex flex-col ${mobile ? "px-2 pt-1.5 pb-2" : "px-3 pt-2 pb-2.5"}`}>
+        <div className="flex items-center gap-1.5 mb-1.5">
+          <Bullet size={14} />
+          <span className="font-pixel text-[11px] leading-none text-white">CURRENTLY:</span>
+          <span className="w-[9px] h-[9px] rounded-full bg-[#46c463] ml-1 shadow-[0_0_6px_#46c463]" />
+        </div>
+        <div className={`flex flex-col ${mobile ? "gap-1" : "gap-1.5"}`}>
+          {CURRENT.map((c, i) => (
+            <div key={i} className="flex items-center gap-1.5 min-w-0">
+              <span
+                className={`${mobile ? "w-[20px] h-[20px]" : "w-[23px] h-[23px]"} shrink-0 flex items-center justify-center rounded-[3px]`}
+                style={{
+                  background: "rgba(255,255,255,0.08)",
+                  boxShadow: `inset 0 0 0 1.5px ${c.accent}66`,
+                }}
+              >
+                {c.icon}
+              </span>
+              <span
+                className={`font-card leading-none text-white truncate ${mobile ? "text-[13px]" : "text-[16px]"}`}
+              >
+                {c.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CardAvatar({ layout }: { layout: CardLayout }) {
+  const mobile = layout === "mobile";
+  return (
+    <div
+      className={
+        mobile
+          ? "absolute right-0 top-1 z-20 h-[280px] w-[118px] pointer-events-none"
+          : "absolute right-[12px] top-[-8px] z-20 h-[290px] w-[170px] pointer-events-none"
+      }
+    >
       <div className="absolute inset-0 drop-shadow-[2px_4px_4px_rgba(0,0,0,0.22)]">
         <img
           src="/harifinal.webp"
@@ -310,245 +576,150 @@ function CardAvatar() {
   );
 }
 
-/* ================================================================== */
-/*  CARD FRONT                                                        */
-/* ================================================================== */
-
-const PINK_DIVIDER = "#e6d6a6";
-
-export function CardFront() {
-  // fixed trainer id — random per-render values break SSR hydration
-  const id = TRAINER_ID;
+function CardHeader({ id, layout }: { id: string; layout: CardLayout }) {
+  const mobile = layout === "mobile";
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-[#f6ecc6] text-slate-800 select-none">
-      {/* ===================== HEADER ===================== */}
-      <div
-        className="relative flex items-center justify-between px-3.5 h-[50px]"
-        style={{
-          background: "linear-gradient(180deg, #ec605c 0%, #df4f4c 60%, #d8453f 100%)",
-          boxShadow: "inset 0 2px 0 rgba(255,255,255,0.25), inset 0 -3px 0 rgba(0,0,0,0.16)",
-        }}
-      >
-        <div className="flex items-center gap-2.5 min-w-0">
-          <HeaderEmblem size={30} />
-          <span className="font-pixel text-[18px] leading-none text-white tracking-wide drop-shadow-[2px_2px_0_rgba(0,0,0,0.22)]">
-            DEVELOPER CARD
-          </span>
-        </div>
+    <div
+      className={`relative flex items-center justify-between shrink-0 ${mobile ? "px-2.5 h-[44px]" : "px-3.5 h-[50px]"}`}
+      style={{
+        background: "linear-gradient(180deg, #ec605c 0%, #df4f4c 60%, #d8453f 100%)",
+        boxShadow: "inset 0 2px 0 rgba(255,255,255,0.25), inset 0 -3px 0 rgba(0,0,0,0.16)",
+      }}
+    >
+      <div className="flex items-center gap-2 min-w-0">
+        <HeaderEmblem size={mobile ? 24 : 30} />
+        <span
+          className={`font-pixel leading-none text-white tracking-wide drop-shadow-[2px_2px_0_rgba(0,0,0,0.22)] ${
+            mobile ? "text-[13px]" : "text-[18px]"
+          }`}
+        >
+          {mobile ? "DEV CARD" : "DEVELOPER CARD"}
+        </span>
+      </div>
 
-        <div className="flex items-center gap-1.5 shrink-0">
-          <QuickLink href="https://github.com/nothariharan" label="GitHub">
-            <svg viewBox="0 0 24 24" className="w-[13px] h-[13px]" fill="#fff" aria-hidden>
-              <path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05A9.3 9.3 0 0 1 12 6.84c.85 0 1.7.12 2.5.34 1.9-1.32 2.74-1.05 2.74-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.03 10.03 0 0 0 22 12.26C22 6.58 17.52 2 12 2z" />
-            </svg>
-          </QuickLink>
+      <div className={`flex items-center shrink-0 ${mobile ? "gap-1" : "gap-1.5"}`}>
+        <QuickLink href="https://github.com/nothariharan" label="GitHub">
+          <svg viewBox="0 0 24 24" className="w-[13px] h-[13px]" fill="#fff" aria-hidden>
+            <path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05A9.3 9.3 0 0 1 12 6.84c.85 0 1.7.12 2.5.34 1.9-1.32 2.74-1.05 2.74-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.03 10.03 0 0 0 22 12.26C22 6.58 17.52 2 12 2z" />
+          </svg>
+        </QuickLink>
+        {!mobile && (
           <QuickLink href="https://www.linkedin.com/in/nmhariharan/" label="LinkedIn">
             <svg viewBox="0 0 24 24" className="w-[13px] h-[13px]" fill="#fff" aria-hidden>
               <path d="M6.34 8.95H2.67V21h3.67V8.95zM4.5 3C3.12 3 2 4.12 2 5.5S3.12 8 4.5 8 7 6.88 7 5.5 5.88 3 4.5 3zM21.33 21h-3.66v-5.89c0-1.4-.03-3.2-1.95-3.2-1.95 0-2.25 1.52-2.25 3.1V21H9.8V8.95h3.51v1.65h.05c.49-.93 1.68-1.9 3.46-1.9 3.7 0 4.51 2.44 4.51 5.61V21z" />
             </svg>
           </QuickLink>
-          <QuickLink href="mailto:nmhariharanme@gmail.com" label="Email">
-            <svg viewBox="0 0 24 24" className="w-[13px] h-[13px]" fill="none" aria-hidden>
-              <rect x="2.5" y="5" width="19" height="14" rx="2" fill="#fff" />
-              <path d="M3.5 6.5 L12 13 L20.5 6.5" stroke={LINK_BLUE} strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </QuickLink>
+        )}
+        <QuickLink href="mailto:nmhariharanme@gmail.com" label="Email">
+          <svg viewBox="0 0 24 24" className="w-[13px] h-[13px]" fill="none" aria-hidden>
+            <rect x="2.5" y="5" width="19" height="14" rx="2" fill="#fff" />
+            <path
+              d="M3.5 6.5 L12 13 L20.5 6.5"
+              stroke={LINK_BLUE}
+              strokeWidth="1.8"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </QuickLink>
 
-          <div className="flex items-baseline gap-1.5 px-2.5 py-1.5 rounded-[6px] bg-[#f8edc8]" style={{ boxShadow: "inset 0 0 0 1.5px rgba(90,70,20,0.25)" }}>
-            <span className="font-pixel text-[11px] leading-none text-[#3a3a3a]">IDNo.</span>
-            <span className="font-pixel text-[11px] leading-none text-[#3a3a3a]">{id}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* ===================== MAIN ===================== */}
-      <div className="relative px-4 pt-2 pb-1.5 flex flex-col" style={{ height: "calc(100% - 50px - 40px)" }}>
-        {/* avatar on the right */}
-        <CardAvatar />
-
-        {/* ---------- left info column (NAME / FOCUS / STACK) ---------- */}
         <div
-          className="relative z-10 w-[64%] flex flex-col gap-1 rounded-[8px] px-2.5 py-1.5"
-          style={{ background: "#fdf6da", boxShadow: "0 0 0 2px #c9a04e, inset 0 0 0 2px #fffdf0" }}
+          className={`flex items-baseline rounded-[6px] bg-[#f8edc8] ${mobile ? "gap-1 px-1.5 py-1" : "gap-1.5 px-2.5 py-1.5"}`}
+          style={{ boxShadow: "inset 0 0 0 1.5px rgba(90,70,20,0.25)" }}
         >
-          {/* NAME */}
-          <div>
-            <div className="flex items-center gap-2.5">
-              <Bullet />
-              <span className="font-pixel text-[12px] leading-none text-[#56618c]">NAME:</span>
-              <span className="font-pixel text-[14px] leading-none text-[#c23a33] tracking-wide">HARIHARAN</span>
-            </div>
-            <div className="font-card text-[14px] leading-none text-[#56618c] pl-[26px] mt-1.5">
-              AKA: Hari
-            </div>
-            <div className="h-px mt-2" style={{ background: PINK_DIVIDER }} />
-          </div>
-
-          {/* FOCUS — square pixel tiles */}
-          <div>
-            <div className="flex items-center gap-2.5 mb-1">
-              <Bullet />
-              <span className="font-pixel text-[12px] leading-none text-[#56618c]">FOCUS:</span>
-            </div>
-            <div className="flex gap-1.5 pl-[26px]">
-              {FOCUS.map((f) => (
-                <div key={f.label} className="flex-1 min-w-0 flex flex-col items-center gap-1">
-                  <div
-                    className="w-full aspect-square overflow-hidden flex items-center justify-center"
-                    style={{
-                      background: f.fill,
-                      ...pixelSquareBorder(f.border),
-                    }}
-                  >
-                    <img
-                      src={`${f.img}?v=sq1`}
-                      alt={f.label}
-                      className="w-full h-full object-cover object-center pixelated select-none"
-                      draggable={false}
-                      decoding="async"
-                    />
-                  </div>
-                  <span
-                    className="font-pixel text-[8px] leading-none tracking-tight text-center"
-                    style={{ color: f.labelColor }}
-                  >
-                    {f.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div className="h-px mt-1.5" style={{ background: PINK_DIVIDER }} />
-          </div>
-
-          {/* STACK */}
-          <div>
-            <div className="flex items-center gap-2.5 mb-1.5">
-              <Bullet />
-              <span className="font-pixel text-[12px] leading-none text-[#56618c]">STACK:</span>
-            </div>
-            <div className="flex flex-col gap-1.5 pl-[26px]">
-              {/* core technologies */}
-              <div className="flex items-center gap-2.5">
-                <span className="font-pixel text-[8px] leading-none text-[#a4a9af] w-[34px] text-right">CORE</span>
-                <div className="flex gap-2">
-                  {CORE_STACK.map((s) => (
-                    <StackTile key={s.key} name={s.name} logo={`/logos/${s.key}.svg`} />
-                  ))}
-                </div>
-              </div>
-              {/* infrastructure */}
-              <div className="flex items-center gap-2.5">
-                <span className="font-pixel text-[8px] leading-none text-[#a4a9af] w-[34px] text-right">INFRA</span>
-                <div className="flex gap-2">
-                  {INFRA_STACK.map((s) => (
-                    <StackTile key={s.key} name={s.name} logo={`/logos/${s.key}.svg`} />
-                  ))}
-                  <StackTile name="More to come" more />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ---------- EXP — same outlined box language as the left panel ---------- */}
-        <div className="relative z-10 mt-auto pt-2 w-[32%] min-w-[150px] max-w-[190px] shrink-0">
-          <div
-            className="rounded-[7px] px-2 py-1.5 flex flex-col gap-1"
-            style={{ background: "#fdf6da", boxShadow: "0 0 0 2px #c9a04e, inset 0 0 0 2px #fffdf0" }}
-          >
-            <div className="flex items-center gap-1.5">
-              <Bullet size={14} />
-              <span className="font-pixel text-[11px] leading-none text-[#56618c]">EXP:</span>
-              <BarChartIcon />
-              <span className="font-pixel text-[12px] leading-none text-[#3f9b46] whitespace-nowrap">1+ YEAR</span>
-            </div>
-            <div className="flex flex-col gap-1">
-              {EXP_LINES.map((line) => (
-                <div key={line.label} className="flex items-center gap-1.5 min-w-0">
-                  <span
-                    className="w-[16px] h-[16px] shrink-0 flex items-center justify-center rounded-[2px]"
-                    style={{
-                      background: "#fffdf0",
-                      boxShadow: `inset 0 0 0 1px ${line.accent}88, 0 0 0 1px #c9a04e66`,
-                    }}
-                  >
-                    {line.icon}
-                  </span>
-                  <span className="font-card text-[12px] leading-none text-[#56618c]">{line.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <span className={`font-pixel leading-none text-[#3a3a3a] ${mobile ? "text-[9px]" : "text-[11px]"}`}>
+            IDNo.
+          </span>
+          <span className={`font-pixel leading-none text-[#3a3a3a] ${mobile ? "text-[9px]" : "text-[11px]"}`}>
+            {id}
+          </span>
         </div>
       </div>
+    </div>
+  );
+}
 
-      {/* CURRENTLY — dropped lower on purpose; can cover PRESS A since flip is hinted above the card too */}
+function BadgeFooter() {
+  return (
+    <div
+      className="relative z-20 h-[40px] flex items-center gap-0 px-4 py-1 shrink-0 overflow-visible"
+      style={{
+        background: "#ead9a8",
+        boxShadow: "inset 0 2px 0 #33406b, inset 0 -1px 0 rgba(0,0,0,0.08)",
+      }}
+    >
+      <SlantedSlot title="Y Combinator · Startup School" earned attachIndex={0}>
+        <YcBadge />
+      </SlantedSlot>
+      {Array.from({ length: 3 }).map((_, i) => (
+        <SlantedSlot key={i} title="Badge slot — locked" attachIndex={i + 1} />
+      ))}
+      <span className="ml-auto font-pixel text-[9px] leading-none text-[#7a6a3d] tracking-wide">
+        PRESS <span className="text-[#c23a33]">A</span> TO FLIP ▸
+      </span>
+    </div>
+  );
+}
+
+function MobileFlipBar() {
+  return (
+    <div
+      className="relative z-20 h-[28px] flex items-center justify-center shrink-0"
+      style={{
+        background: "#ead9a8",
+        boxShadow: "inset 0 2px 0 #33406b, inset 0 -1px 0 rgba(0,0,0,0.08)",
+      }}
+    >
+      <span className="font-pixel text-[9px] leading-none text-[#7a6a3d] tracking-wide">
+        TAP TO FLIP ▸
+      </span>
+    </div>
+  );
+}
+
+/* ================================================================== */
+/*  CARD FRONT                                                        */
+/* ================================================================== */
+
+export function CardFront({ layout = "desktop" }: { layout?: CardLayout }) {
+  // fixed trainer id — random per-render values break SSR hydration
+  const id = TRAINER_ID;
+  const mobile = layout === "mobile";
+
+  return (
+    <div
+      className="card-surface relative w-full h-full overflow-hidden bg-[#f6ecc6] text-slate-800 select-none flex flex-col"
+      data-layout={layout}
+    >
+      {/* Slot for a future scenery / glass layer behind content */}
+      <div className="card-surface__backdrop absolute inset-0 pointer-events-none" aria-hidden />
+
+      <CardHeader id={id} layout={layout} />
+
       <div
-        className="absolute right-3 bottom-[2px] z-50 w-[62%] max-w-[420px] h-[120px] rounded-[8px] overflow-hidden pointer-events-none"
-        style={{
-          boxShadow:
-            "inset 0 0 0 2px #33406b, 0 0 0 2px rgba(255,255,255,0.35), 0 8px 18px rgba(0,0,0,0.35)",
-        }}
+        className={`relative flex-1 min-h-0 flex flex-col ${mobile ? "px-2 pt-1.5 pb-1.5" : "px-4 pt-2 pb-1.5"}`}
       >
-        <img
-          src="/sprites/front_bg.webp"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover object-right pixelated"
-          decoding="async"
-        />
-        {/* left darkening so the text stays legible */}
-        <div
-          className="absolute inset-0"
-          style={{ background: "linear-gradient(90deg, rgba(9,15,26,0.96) 38%, rgba(9,15,26,0.6) 62%, rgba(9,15,26,0) 82%)" }}
-        />
-        <div className="relative z-10 h-full px-3 pt-2 pb-2.5 flex flex-col">
-          <div className="flex items-center gap-1.5 mb-1.5">
-            <Bullet size={14} />
-            <span className="font-pixel text-[11px] leading-none text-white">CURRENTLY:</span>
-            <span className="w-[9px] h-[9px] rounded-full bg-[#46c463] ml-1 shadow-[0_0_6px_#46c463]" />
+        <CardAvatar layout={layout} />
+        <IdentityPanel layout={layout} />
+
+        {mobile ? (
+          <div className="relative z-30 mt-auto flex items-stretch gap-1.5 pt-2">
+            <div className="w-[36%] min-w-[112px] shrink-0">
+              <ExpPanel compact />
+            </div>
+            <CurrentlyPanel layout="mobile" />
           </div>
-          <div className="flex flex-col gap-1.5">
-            {CURRENT.map((c, i) => (
-              <div key={i} className="flex items-center gap-2 min-w-0">
-                <span
-                  className="w-[23px] h-[23px] shrink-0 flex items-center justify-center rounded-[3px]"
-                  style={{
-                    background: "rgba(255,255,255,0.08)",
-                    boxShadow: `inset 0 0 0 1.5px ${c.accent}66`,
-                  }}
-                >
-                  {c.icon}
-                </span>
-                <span className="font-card text-[16px] leading-none text-white">
-                  {c.label}
-                </span>
-              </div>
-            ))}
+        ) : (
+          <div className="relative z-10 mt-auto pt-2 w-[32%] min-w-[150px] max-w-[190px] shrink-0">
+            <ExpPanel />
           </div>
-        </div>
+        )}
       </div>
 
-      {/* ===================== FOOTER: attached slanted badge strip ===================== */}
-      <div
-        className="relative z-20 h-[40px] flex items-center gap-0 px-4 py-1 shrink-0 overflow-visible"
-        style={{
-          background: "#ead9a8",
-          boxShadow: "inset 0 2px 0 #33406b, inset 0 -1px 0 rgba(0,0,0,0.08)",
-        }}
-      >
-        {/* earned: Y Combinator — Startup School */}
-        <SlantedSlot title="Y Combinator · Startup School" earned attachIndex={0}>
-          <YcBadge />
-        </SlantedSlot>
-        {/* empty placeholder wells — attached to the earned badge */}
-        {Array.from({ length: 3 }).map((_, i) => (
-          <SlantedSlot key={i} title="Badge slot — locked" attachIndex={i + 1} />
-        ))}
-        <span className="ml-auto font-pixel text-[9px] leading-none text-[#7a6a3d] tracking-wide">
-          PRESS <span className="text-[#c23a33]">A</span> TO FLIP ▸
-        </span>
-      </div>
+      {!mobile && <CurrentlyPanel layout="desktop" />}
+      {mobile ? <MobileFlipBar /> : <BadgeFooter />}
     </div>
   );
 }

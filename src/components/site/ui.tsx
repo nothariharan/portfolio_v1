@@ -69,13 +69,13 @@ export function SectionHeading({
   );
 }
 
-// Simple Icons SVGs in /public/logos (synced via scripts/sync-simple-icons.mjs).
+// Brand SVGs in /public/logos (synced from thesvg.org via scripts/sync-thesvg-icons.mjs).
 // Keys without a file still render as text-only pills.
 export const LOGO_KEYS = new Set([
   "anthropic", "aws", "bash", "claude", "copilot", "cpp", "csharp", "css3", "cursor",
   "dart", "deepgram", "digitalocean", "docker", "electron", "elevenlabs", "express",
   "fastapi", "ffmpeg", "firebase", "flutter", "gcp", "gemini", "git", "github",
-  "githubactions", "google", "googlescholar", "html5", "huggingface", "javascript",
+  "githubactions", "google", "googlescholar", "hermes", "html5", "huggingface", "javascript",
   "kimi", "kubernetes", "langgraph", "leetcode", "linux", "mongodb", "nextjs", "nginx",
   "nodejs", "numpy", "openai", "opencode", "opencv", "openrouter", "pandas",
   "perplexity", "deepseek", "postgresql", "python", "pytorch", "react", "redis",
@@ -124,7 +124,7 @@ const NAMES: Record<string, string> = {
   google: "Google",
   deepseek: "DeepSeek",
   perplexity: "Perplexity",
-  // text-only (no Simple Icon / logo file) —
+  // text-only (no logo file) —
   adk: "Google ADK",
   bedrock: "Bedrock",
   zustand: "Zustand",
@@ -135,7 +135,7 @@ export const prettyTech = (k: string) => NAMES[k] ?? k.charAt(0).toUpperCase() +
 /** Logos whose fill is near-black — invert so they read on BrandTile. */
 const DARK_LOGOS = new Set([
   "unity", "github", "nextjs", "vercel", "kimi", "opencode", "express", "socketio",
-  "cursor", "copilot", "elevenlabs", "anthropic", "linux",
+  "cursor", "copilot", "elevenlabs", "anthropic", "linux", "hermes", "openai",
 ]);
 
 /** Brand logo on a black tile — used for experience rows and other portfolio marks. */
@@ -170,7 +170,7 @@ export function BrandTile({
   );
 }
 
-/** Portfolio row mark: Simple Icon on black, emoji, or outline glyph. */
+/** Portfolio row mark: brand logo on black, emoji, or outline glyph. */
 export function RowMark({ name, size = 36 }: { name: string; size?: number }) {
   if (LOGO_KEYS.has(name)) {
     return <BrandTile k={name} size={size} />;

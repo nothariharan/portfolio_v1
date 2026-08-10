@@ -539,7 +539,7 @@ export const BACK_EXPERIENCE: BackExperience[] = [
  *
  * left tile art: /public/honors/*-tile.png
  * pixel icons:   /public/icons/noun/*.png  (Noun Project, CSS-mask tinted)
- * brand logos:   /public/logos/*.svg       (Simple Icons)
+ * brand logos:   /public/logos/*.svg       (thesvg.org)
  */
 export type BackHonorWorld = "forest" | "garage" | "arena" | "furnace";
 

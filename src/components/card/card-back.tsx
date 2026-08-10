@@ -27,6 +27,7 @@ import {
   type TabKey,
 } from "../portfolio/data";
 import { NounIcon } from "../ui/noun-icon";
+import type { CardLayout } from "./card-layout";
 
 // pokemon menu palette shared across the back face
 const NAVY = "#33406b";
@@ -562,18 +563,33 @@ function PanelScroll({
 }
 
 // white tile holding a technology logo that lifts on hover
-function LogoChip({ k, size = 30 }: { k: string; size?: number }) {
+function LogoChip({
+  k,
+  size = 30,
+  fill,
+}: {
+  k: string;
+  size?: number;
+  /** Stretch into a CSS grid cell (mobile skills). */
+  fill?: boolean;
+}) {
   return (
     <span
-      className="group/chip relative rounded-[6px] bg-white flex items-center justify-center shrink-0 shadow-[inset_0_0_0_2px_#d9cba0] transition-transform duration-150 ease-out will-change-transform hover:z-10 hover:-translate-y-[3px] hover:scale-[1.12] hover:shadow-[inset_0_0_0_2px_#4a76c9,0_5px_10px_rgba(0,0,0,0.18)]"
-      style={{ width: size, height: size }}
+      className={`group/chip relative rounded-[6px] bg-white flex items-center justify-center shadow-[inset_0_0_0_2px_#d9cba0] transition-transform duration-150 ease-out will-change-transform hover:z-10 hover:-translate-y-[3px] hover:scale-[1.08] hover:shadow-[inset_0_0_0_2px_#4a76c9,0_5px_10px_rgba(0,0,0,0.18)] ${
+        fill ? "w-full aspect-square min-w-0" : "shrink-0"
+      }`}
+      style={fill ? undefined : { width: size, height: size }}
       title={k}
     >
       <img
         src={`/logos/${k}.svg`}
         alt={k}
-        className="object-contain transition-transform duration-150 group-hover/chip:scale-105"
-        style={{ width: size - 12, height: size - 12 }}
+        className={`object-contain transition-transform duration-150 group-hover/chip:scale-105 ${
+          fill ? "w-[62%] h-[62%]" : ""
+        }`}
+        style={fill ? undefined : { width: size - 12, height: size - 12 }}
+        loading="lazy"
+        decoding="async"
       />
     </span>
   );
@@ -676,14 +692,28 @@ function IconTile({ color, size, children }: { color: string; size: number; chil
   );
 }
 
+/** Short tab chrome for the portrait shell — don't shrink the pixel font. */
+const MOBILE_TAB_LABEL: Record<TabKey, string> = {
+  projects: "PROJ",
+  experience: "EXP",
+  honors: "HONORS",
+  skills: "SKILLS",
+};
+
 interface CardBackProps {
+  layout?: CardLayout;
   onEnterPortfolio: (tab: TabKey) => void;
   onOpenHariMd: () => void;
 }
 
-export function CardBack({ onEnterPortfolio, onOpenHariMd }: CardBackProps) {
+export function CardBack({
+  layout = "desktop",
+  onEnterPortfolio,
+  onOpenHariMd,
+}: CardBackProps) {
   const [sel, setSel] = useState(0);
   const [honorSel, setHonorSel] = useState(0);
+  const mobile = layout === "mobile";
   const active = PANELS[sel];
   const activeHonor = BACK_HONORS[honorSel] ?? BACK_HONORS[0];
 
@@ -727,22 +757,30 @@ export function CardBack({ onEnterPortfolio, onOpenHariMd }: CardBackProps) {
       </div>
 
       {/* pokemon-style tab buttons — click to switch (no hover-switch) */}
-      <div className="flex gap-1.5 px-3.5 pt-3 shrink-0" role="tablist" aria-label="Data file sections">
+      <div
+        className={`flex shrink-0 ${mobile ? "gap-1 px-2.5 pt-2.5" : "gap-1.5 px-3.5 pt-3"}`}
+        role="tablist"
+        aria-label="Data file sections"
+      >
         {PANELS.map((panel, i) => {
           const on = i === sel;
+          const label = mobile ? MOBILE_TAB_LABEL[panel.tab] : panel.label;
           return (
             <button
               key={panel.tab}
               type="button"
               role="tab"
               aria-selected={on}
+              aria-label={panel.label}
               aria-controls={`panel-${panel.tab}`}
               id={`tab-${panel.tab}`}
               onClick={(e) => {
                 e.stopPropagation();
                 setSel(i);
               }}
-              className="flex-1 min-w-0 font-pixel text-[9px] leading-none py-2.5 rounded-[6px] cursor-pointer border-2 transition-all duration-100 ease-out active:scale-[0.97]"
+              className={`flex-1 min-w-0 font-pixel leading-none rounded-[6px] cursor-pointer border-2 transition-all duration-100 ease-out active:scale-[0.97] ${
+                mobile ? "text-[8px] py-2 px-0.5" : "text-[9px] py-2.5"
+              }`}
               style={
                 on
                   ? {
@@ -759,7 +797,7 @@ export function CardBack({ onEnterPortfolio, onOpenHariMd }: CardBackProps) {
                     }
               }
             >
-              {panel.label}
+              {label}
             </button>
           );
         })}
@@ -767,7 +805,9 @@ export function CardBack({ onEnterPortfolio, onOpenHariMd }: CardBackProps) {
 
       {/* details box — inset rings; extra-thick top band survives 3D foreshortening */}
       <div
-        className="relative flex-1 min-h-0 mx-3.5 mt-3 mb-1.5 rounded-[8px] pt-3 px-3 pb-1 flex flex-col"
+        className={`relative flex-1 min-h-0 mb-1.5 rounded-[8px] pb-1 flex flex-col ${
+          mobile ? "mx-2.5 mt-2 pt-2 px-2" : "mx-3.5 mt-3 pt-3 px-3"
+        }`}
         style={{
           background: PANEL_CREAM,
           boxShadow: `
@@ -799,35 +839,72 @@ export function CardBack({ onEnterPortfolio, onOpenHariMd }: CardBackProps) {
         >
           {/* projects — No. + name + one line + link, nothing else */}
           {active.tab === "projects" && (
-            <div className="flex flex-col gap-2">
-              {BACK_PROJECTS.map((p, i) => (
-                <div key={p.name} className="group flex items-center gap-2 rounded-[6px] p-1.5 pl-2.5" style={rowStyle(p.color)}>
-                  <RedCursor />
-                  <IconTile color={p.color} size={36}>
-                    <ProjectThumb icon={p.icon} name={p.name} color={p.color} />
-                  </IconTile>
-                  <span className="min-w-0 flex-1">
-                    <span className="flex items-center gap-1.5 mb-[3px]">
-                      <span className="font-pixel text-[7px] leading-none" style={{ color: p.color }}>
-                        No.{String(i + 1).padStart(3, "0")}
+            <div
+              className={
+                mobile
+                  ? "flex flex-col justify-between h-full min-h-full gap-2"
+                  : "flex flex-col gap-2"
+              }
+            >
+              <div className={`flex flex-col ${mobile ? "gap-2.5 flex-1" : "gap-2"}`}>
+                {BACK_PROJECTS.map((p, i) => (
+                  <div
+                    key={p.name}
+                    className={`group flex items-center rounded-[6px] ${
+                      mobile ? "gap-2.5 p-2.5 pl-3 flex-1 min-h-[72px]" : "gap-2 p-1.5 pl-2.5"
+                    }`}
+                    style={rowStyle(p.color)}
+                  >
+                    {!mobile && <RedCursor />}
+                    <IconTile color={p.color} size={mobile ? 44 : 36}>
+                      <ProjectThumb icon={p.icon} name={p.name} color={p.color} />
+                    </IconTile>
+                    <span className="min-w-0 flex-1">
+                      <span className={`flex items-center gap-1.5 ${mobile ? "mb-1" : "mb-[3px]"}`}>
+                        <span
+                          className={`font-pixel leading-none ${mobile ? "text-[8px]" : "text-[7px]"}`}
+                          style={{ color: p.color }}
+                        >
+                          No.{String(i + 1).padStart(3, "0")}
+                        </span>
+                        <TypePill label={p.tag} color={p.color} />
                       </span>
-                      <TypePill label={p.tag} color={p.color} />
+                      <span
+                        className={`block font-pixel leading-none text-[#2b2b2b] ${
+                          mobile ? "text-[12px] mb-1" : "text-[11px] mb-[3px]"
+                        }`}
+                      >
+                        {p.name}
+                      </span>
+                      <span
+                        className={`block font-card leading-snug text-[#5a6068] ${
+                          mobile ? "text-[14px] line-clamp-2" : "text-[13px] truncate"
+                        }`}
+                      >
+                        {p.desc}
+                      </span>
                     </span>
-                    <span className="block font-pixel text-[11px] leading-none mb-[3px] text-[#2b2b2b]">{p.name}</span>
-                    <span className="block font-card text-[13px] leading-snug text-[#5a6068] truncate">{p.desc}</span>
-                  </span>
-                  <span className="flex items-center gap-1.5 shrink-0">
-                    {p.live && <LinkBtn href={p.live} title="Live site"><SvgIcon name="globe" /></LinkBtn>}
-                    <LinkBtn href={p.repo} title="Source"><SvgIcon name="github" /></LinkBtn>
-                  </span>
-                </div>
-              ))}
+                    <span className="flex items-center gap-1.5 shrink-0">
+                      {p.live && (
+                        <LinkBtn href={p.live} title="Live site" size={mobile ? 32 : 30}>
+                          <SvgIcon name="globe" />
+                        </LinkBtn>
+                      )}
+                      <LinkBtn href={p.repo} title="Source" size={mobile ? 32 : 30}>
+                        <SvgIcon name="github" />
+                      </LinkBtn>
+                    </span>
+                  </div>
+                ))}
+              </div>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onEnterPortfolio("projects");
                 }}
-                className="group font-pixel text-[10px] text-[#3d5380] py-2 rounded-[6px] cursor-pointer flex items-center justify-center gap-1.5 border-2 transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-[0.98] active:translate-y-0 active:scale-[0.98]"
+                className={`group font-pixel text-[#3d5380] rounded-[6px] cursor-pointer flex items-center justify-center gap-1.5 border-2 transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-[0.98] active:translate-y-0 active:scale-[0.98] shrink-0 ${
+                  mobile ? "text-[10px] py-2.5" : "text-[10px] py-2"
+                }`}
                 style={{ background: "#fdf6dd", borderColor: NAVY, boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.1)" }}
               >
                 <span className="text-[#c23a33] opacity-0 group-hover:opacity-100 transition-opacity">▶</span>
@@ -836,92 +913,164 @@ export function CardBack({ onEnterPortfolio, onOpenHariMd }: CardBackProps) {
             </div>
           )}
 
-          {/* experience timeline — bigger type, popped cards, contained scroll */}
+          {/* experience timeline — desktop side-actions; mobile stacks actions under copy */}
           {active.tab === "experience" && (
-            <div className="relative pl-6 pr-0.5">
+            <div className={`relative ${mobile ? "pl-5 pr-0" : "pl-6 pr-0.5"}`}>
               <div
-                className="absolute left-[8px] top-5 bottom-10 w-0"
+                className={`absolute top-5 bottom-10 w-0 ${mobile ? "left-[6px]" : "left-[8px]"}`}
                 style={{ borderLeft: "2px dashed #c9bc8a" }}
               />
               {BACK_EXPERIENCE.map((e, i) => (
-                <div key={i} className="relative mb-3">
+                <div key={i} className={`relative ${mobile ? "mb-2.5" : "mb-3"}`}>
                   <span
-                    className="absolute left-[-20px] top-[26px] w-[14px] h-[14px] rounded-full bg-white z-10"
-                    style={{ boxShadow: `inset 0 0 0 3.5px ${e.color}` }}
+                    className={`absolute top-[22px] rounded-full bg-white z-10 ${
+                      mobile ? "left-[-17px] w-[12px] h-[12px]" : "left-[-20px] top-[26px] w-[14px] h-[14px]"
+                    }`}
+                    style={{ boxShadow: `inset 0 0 0 ${mobile ? 3 : 3.5}px ${e.color}` }}
                   />
                   <div
-                    className="group relative rounded-[8px] p-2.5 pl-3 pr-2"
+                    className={`group relative rounded-[8px] ${mobile ? "p-2 pl-2.5 pr-2" : "p-2.5 pl-3 pr-2"}`}
                     style={rowStyle(e.color)}
                   >
-                    <CornerBadge badge={e.badge} />
-                    <div className="flex items-start gap-2.5 pr-6">
-                      <RedCursor />
-                      <IconTile color={e.color} size={42}>
-                        <SvgIcon name={e.icon} color={e.color} />
-                      </IconTile>
-                      <div className="min-w-0 flex-1 pr-1">
-                        <div className="flex items-center gap-1.5 flex-wrap mb-1.5">
-                          <span className="font-pixel text-[9px] leading-none" style={{ color: e.color }}>
-                            {e.year}
-                          </span>
-                          <TypePill label={e.tag} color={e.color} />
-                          <StatusDot status={e.status} />
+                    {!mobile && <CornerBadge badge={e.badge} />}
+
+                    {mobile ? (
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-start gap-2 min-w-0">
+                          <IconTile color={e.color} size={34}>
+                            <SvgIcon name={e.icon} color={e.color} />
+                          </IconTile>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1 flex-wrap mb-1">
+                              <span className="font-pixel text-[8px] leading-none" style={{ color: e.color }}>
+                                {e.year}
+                              </span>
+                              <TypePill label={e.tag} color={e.color} />
+                              <StatusDot status={e.status} />
+                            </div>
+                            <span className="block font-pixel text-[11px] leading-snug mb-0.5 text-[#1f2430]">
+                              {e.title}
+                            </span>
+                            <span className="block font-card text-[13px] leading-snug text-[#4a515c]">
+                              {e.sub}
+                            </span>
+                          </div>
                         </div>
-                        <span className="block font-pixel text-[12px] leading-snug mb-1 text-[#1f2430]">{e.title}</span>
-                        <span className="block font-card text-[15px] leading-snug text-[#4a515c]">{e.sub}</span>
-                      </div>
-                      <div className="flex flex-col items-end gap-2 shrink-0 mt-5">
-                        <OpenRecordBtn href={e.url} />
-                        <span className="flex items-center gap-1.5">
-                          {e.github && (
-                            <LinkBtn href={e.github} title="GitHub" size={28}>
-                              <span className="scale-[0.9] flex">
-                                <SvgIcon name="github" />
+                        <div
+                          className="flex items-center justify-between gap-2 pt-1.5 border-t border-dashed"
+                          style={{ borderColor: "#e0d3a4" }}
+                        >
+                          <OpenRecordBtn href={e.url} />
+                          <span className="flex items-center gap-1">
+                            {e.github && (
+                              <LinkBtn href={e.github} title="GitHub" size={26}>
+                                <span className="scale-[0.85] flex">
+                                  <SvgIcon name="github" />
+                                </span>
+                              </LinkBtn>
+                            )}
+                            <LinkBtn href={e.url} title="LinkedIn" size={26}>
+                              <span className="scale-[0.85] flex">
+                                <SvgIcon name="linkedin" />
                               </span>
                             </LinkBtn>
-                          )}
-                          <LinkBtn href={e.url} title="LinkedIn" size={28}>
-                            <span className="scale-[0.9] flex">
-                              <SvgIcon name="linkedin" />
-                            </span>
-                          </LinkBtn>
-                        </span>
+                          </span>
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="flex items-start gap-2.5 pr-6">
+                        <RedCursor />
+                        <IconTile color={e.color} size={42}>
+                          <SvgIcon name={e.icon} color={e.color} />
+                        </IconTile>
+                        <div className="min-w-0 flex-1 pr-1">
+                          <div className="flex items-center gap-1.5 flex-wrap mb-1.5">
+                            <span className="font-pixel text-[9px] leading-none" style={{ color: e.color }}>
+                              {e.year}
+                            </span>
+                            <TypePill label={e.tag} color={e.color} />
+                            <StatusDot status={e.status} />
+                          </div>
+                          <span className="block font-pixel text-[12px] leading-snug mb-1 text-[#1f2430]">
+                            {e.title}
+                          </span>
+                          <span className="block font-card text-[15px] leading-snug text-[#4a515c]">
+                            {e.sub}
+                          </span>
+                        </div>
+                        <div className="flex flex-col items-end gap-2 shrink-0 mt-5">
+                          <OpenRecordBtn href={e.url} />
+                          <span className="flex items-center gap-1.5">
+                            {e.github && (
+                              <LinkBtn href={e.github} title="GitHub" size={28}>
+                                <span className="scale-[0.9] flex">
+                                  <SvgIcon name="github" />
+                                </span>
+                              </LinkBtn>
+                            )}
+                            <LinkBtn href={e.url} title="LinkedIn" size={28}>
+                              <span className="scale-[0.9] flex">
+                                <SvgIcon name="linkedin" />
+                              </span>
+                            </LinkBtn>
+                          </span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
 
               <div className="relative">
                 <span
-                  className="absolute left-[-19px] top-[20px] w-[12px] h-[12px] rounded-full z-10"
+                  className={`absolute z-10 rounded-full ${
+                    mobile ? "left-[-16px] top-[16px] w-[10px] h-[10px]" : "left-[-19px] top-[20px] w-[12px] h-[12px]"
+                  }`}
                   style={{ background: PANEL_CREAM, boxShadow: "inset 0 0 0 2px #c9bc8a" }}
                 />
                 <div
-                  className="flex items-center gap-2.5 rounded-[10px] p-3 pl-3.5 border-2 border-dashed"
+                  className={`flex items-center border-2 border-dashed ${
+                    mobile ? "gap-2 rounded-[8px] p-2 pl-2.5" : "gap-2.5 rounded-[10px] p-3 pl-3.5"
+                  }`}
                   style={{
                     background: "rgba(255,251,233,0.65)",
                     borderColor: "#c9bc8a",
                     boxShadow: "0 4px 0 rgba(0,0,0,0.06)",
                   }}
                 >
-                  <IconTile color="#9aa0a8" size={38}>
+                  <IconTile color="#9aa0a8" size={mobile ? 32 : 38}>
                     <SvgIcon name="question" />
                   </IconTile>
                   <span className="min-w-0 flex-1">
-                    <span className="block font-pixel text-[11px] leading-none mb-1.5 text-[#5b6470]">MORE TO COME...</span>
-                    <span className="block font-card text-[14px] leading-snug text-[#7a828c]">Future adventures loading</span>
-                  </span>
-                  <span className="flex flex-col items-center gap-1 shrink-0 max-w-[84px] text-center">
                     <span
-                      className="w-[30px] h-[30px] rounded-[6px] bg-white flex items-center justify-center"
-                      style={{ boxShadow: "inset 0 0 0 1.5px #d9cba0" }}
+                      className={`block font-pixel leading-none text-[#5b6470] ${
+                        mobile ? "text-[10px] mb-1" : "text-[11px] mb-1.5"
+                      }`}
                     >
-                      <SvgIcon name="lock" />
+                      MORE TO COME...
                     </span>
-                    <span className="font-pixel text-[7px] leading-tight text-[#9aa0a8]">LOCKED</span>
-                    <span className="font-card text-[11px] leading-tight text-[#a0a6ae]">Keep leveling up to unlock.</span>
+                    <span
+                      className={`block font-card leading-snug text-[#7a828c] ${
+                        mobile ? "text-[12px]" : "text-[14px]"
+                      }`}
+                    >
+                      Future adventures loading
+                    </span>
                   </span>
+                  {!mobile && (
+                    <span className="flex flex-col items-center gap-1 shrink-0 max-w-[84px] text-center">
+                      <span
+                        className="w-[30px] h-[30px] rounded-[6px] bg-white flex items-center justify-center"
+                        style={{ boxShadow: "inset 0 0 0 1.5px #d9cba0" }}
+                      >
+                        <SvgIcon name="lock" />
+                      </span>
+                      <span className="font-pixel text-[7px] leading-tight text-[#9aa0a8]">LOCKED</span>
+                      <span className="font-card text-[11px] leading-tight text-[#a0a6ae]">
+                        Keep leveling up to unlock.
+                      </span>
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -950,26 +1099,51 @@ export function CardBack({ onEnterPortfolio, onOpenHariMd }: CardBackProps) {
             </div>
           )}
 
-          {/* skills logo lines — bigger chips so the panel doesn't look empty */}
-          {active.tab === "skills" && (
-            <div className="flex flex-col justify-between h-full gap-2 py-0.5">
-              {BACK_SKILLS.map((g) => (
-                <div key={g.label} className="flex items-center gap-3 min-w-0">
-                  <span
-                    className="font-pixel text-[10px] leading-tight w-[72px] text-right shrink-0"
-                    style={{ color: LABEL_BLUE }}
-                  >
-                    {g.label}
-                  </span>
-                  <span className="flex items-center gap-2 flex-1 flex-wrap content-center">
-                    {g.icons.map((k) => (
-                      <LogoChip key={k} k={k} size={42} />
-                    ))}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* skills — desktop: side labels; mobile: stacked sections + bigger grid */}
+          {active.tab === "skills" &&
+            (mobile ? (
+              <div className="flex flex-col gap-3 py-0.5 pb-1">
+                {BACK_SKILLS.map((g) => (
+                  <div key={g.label} className="flex flex-col gap-1.5 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="font-pixel text-[10px] leading-none tracking-wide shrink-0"
+                        style={{ color: LABEL_BLUE }}
+                      >
+                        {g.label}
+                      </span>
+                      <span className="h-px flex-1" style={{ background: "#e0d3a4" }} />
+                      <span className="font-pixel text-[7px] leading-none text-[#b0a57a] tabular-nums">
+                        {String(g.icons.length).padStart(2, "0")}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-5 gap-2">
+                      {g.icons.map((k) => (
+                        <LogoChip key={k} k={k} fill />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col justify-between h-full gap-2 py-0.5">
+                {BACK_SKILLS.map((g) => (
+                  <div key={g.label} className="flex items-center gap-3 min-w-0">
+                    <span
+                      className="font-pixel text-[10px] leading-tight w-[72px] text-right shrink-0"
+                      style={{ color: LABEL_BLUE }}
+                    >
+                      {g.label}
+                    </span>
+                    <span className="flex items-center gap-2 flex-1 flex-wrap content-center">
+                      {g.icons.map((k) => (
+                        <LogoChip key={k} k={k} size={42} />
+                      ))}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))}
         </PanelScroll>
 
         {/* bottom footer hint + hari.md — shared across every tab */}
@@ -979,7 +1153,11 @@ export function CardBack({ onEnterPortfolio, onOpenHariMd }: CardBackProps) {
               ? "tap a tile · ← → to browse"
               : active.tab === "experience"
                 ? "scroll the records"
-                : "tap a row to open ↗"}
+                : active.tab === "skills"
+                  ? mobile
+                    ? "skill loadout"
+                    : "hover a chip for the name"
+                  : "tap a row to open ↗"}
           </span>
           <button
             onClick={(e) => {

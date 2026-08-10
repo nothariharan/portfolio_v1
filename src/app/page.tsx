@@ -4,16 +4,15 @@
  * Landing — the trainer card is the whole first impression.
  *
  * zoom goes up to 210% becoz the DATA FILE (esp honors) needs room to breathe.
- * mobile starts smaller (0.82) so the card fits; desktop opens closer (1.3).
+ * mobile uses a native portrait card layout (scale ~1); desktop opens closer (1.3).
  * bg color cycle + zoom sit in the corners so they dont fight the card.
- *
- * mobile note: this page is still basically a desktop card experience —
- * proper phone layout is still cooking (see chat / later pass).
  */
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { TrainerCard } from "@/components/card/trainer-card";
+import { CARD_MOBILE_MAX_PX } from "@/components/card/card-layout";
+import { useCardMobileLayout } from "@/hooks/use-media-query";
 import { useTransition } from "@/hooks/use-transition";
 
 const BG_THEMES = [
@@ -27,17 +26,23 @@ const BG_THEMES = [
 
 function defaultScale() {
   if (typeof window === "undefined") return 1.15;
-  return window.matchMedia("(max-width: 720px)").matches ? 0.82 : 1.3;
+  return window.matchMedia(`(max-width: ${CARD_MOBILE_MAX_PX}px)`).matches ? 1 : 1.3;
 }
 
 export default function Home() {
   const { startTransition } = useTransition();
   const [scale, setScale] = useState(1.15);
   const [bgIdx, setBgIdx] = useState(0);
+  const isMobileLayout = useCardMobileLayout();
 
   useEffect(() => {
     setScale(defaultScale());
   }, []);
+
+  // entering mobile layout: snap zoom back to 100% so the portrait card isn't oversized
+  useEffect(() => {
+    if (isMobileLayout) setScale(1);
+  }, [isMobileLayout]);
 
   // scale handlers — roomy zoom so the Data File stays readable
   const ZOOM_MIN = 0.7;
@@ -72,21 +77,23 @@ export default function Home() {
         >
           ▶ MAIN PORTFOLIO
         </button>
-        <p className="font-card text-[13px] leading-snug text-slate-500 text-right max-w-[210px] select-none">
+        <p className="font-card text-[13px] leading-snug text-slate-500 text-right max-w-[210px] select-none max-[720px]:hidden">
           not a big fan of cards? then go to my main portfolio :)
         </p>
       </motion.div>
 
       {/* floating helper instruction text */}
-      <div className="mb-4 text-center select-none z-10">
+      <div className="mb-3 text-center select-none z-10">
         <p className="text-[8px] font-pixel text-slate-500 animate-pulse">
-          click or press A to flip · hover to tilt
+          {isMobileLayout ? "tap to flip" : "click or press A to flip · hover to tilt"}
         </p>
       </div>
 
       {/* trainer card with retro spring zoom scale animation */}
       <motion.div
-        className="w-full max-w-[900px] flex items-center justify-center z-10 py-16"
+        className={`w-full flex items-center justify-center z-10 ${
+          isMobileLayout ? "max-w-[440px] py-6" : "max-w-[900px] py-16"
+        }`}
         animate={{ scale: scale }}
         transition={{
           type: "spring",
