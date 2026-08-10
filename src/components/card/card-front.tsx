@@ -3,9 +3,8 @@
 /**
  * Trainer card FRONT — identity side.
  *
- * layout is tight on purpose: FOCUS labels only (no subtitles — they were
- * crowding the badges), CURRENTLY overlay kept shorter so it doesnt eat the
- * avatar / footer badges. YC slot copy is Startup School not Starter School.
+ * FOCUS is four square pixel tiles (labels under, no subtitles). CURRENTLY
+ * overlay stays short so it doesnt eat the avatar / footer badges.
  */
 
 import { TRAINER_ID } from "../portfolio/data";
@@ -39,7 +38,7 @@ function HeaderEmblem({ size = 30 }: { size?: number }) {
 }
 
 /* ================================================================== */
-/*  FOCUS — four slanted discipline badges                            */
+/*  FOCUS — four square pixel tiles                                   */
 /* ================================================================== */
 
 type Focus = {
@@ -47,52 +46,47 @@ type Focus = {
   fill: string;
   border: string;
   labelColor: string;
-  sub: string;
-  dashed?: boolean;
   img: string;
 };
 
 const FOCUS: Focus[] = [
   {
     label: "AI / ML",
-    sub: "Building smart solutions",
     fill: "#c8a9ec",
     border: "#8a5bc4",
     labelColor: "#7d4fb3",
-    img: "/sprites/focus_ai.png",
+    img: "/sprites/focus_ai.webp",
   },
   {
     label: "WEB APP",
-    sub: "Crafting fast & modern apps",
     fill: "#a8d2f2",
     border: "#5a9bd6",
     labelColor: "#2f78bf",
-    img: "/sprites/focus_web.png",
+    img: "/sprites/focus_web.webp",
   },
   {
     label: "DEVOPS",
-    sub: "Automate, deploy & scale",
     fill: "#a9d99f",
     border: "#5aa84d",
     labelColor: "#3f8f33",
-    img: "/sprites/focus_devops.png",
+    img: "/sprites/focus_devops.webp",
   },
   {
     label: "EXPLORING",
-    sub: "Always learning new things",
     fill: "#e0e2e5",
-    border: "#bfc4c9",
-    labelColor: "#9a9ea3",
-    dashed: true,
-    img: "/sprites/focus_explore.png",
+    border: "#9aa0a6",
+    labelColor: "#6f757c",
+    img: "/sprites/focus_explore.webp",
   },
 ];
 
-// pixel-style border stack for slanted cards (inner color ring + dark outer edge + drop)
-function slantedCardBorder(border: string, dashed?: boolean) {
+/** chunky pixel square — navy outer ring + accent inset + soft drop */
+function pixelSquareBorder(border: string) {
   return {
-    boxShadow: `inset 0 0 0 2px ${border}, inset 0 0 0 4px rgba(255,255,255,0.45), 0 0 0 2px #33406b, 0 3px 0 rgba(0,0,0,0.18)`,
-    border: dashed ? `2px dashed ${border}` : undefined,
+    boxShadow: `inset 0 0 0 2px ${border}, inset 0 0 0 4px rgba(255,255,255,0.4), 0 0 0 2px #33406b, 0 2px 0 rgba(0,0,0,0.18)`,
+    // stepped corners via clip-path (pixel chamfer)
+    clipPath:
+      "polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px), 0 4px)",
   } as const;
 }
 
@@ -305,10 +299,11 @@ function CardAvatar() {
     <div className="absolute right-[12px] top-[-8px] z-20 h-[290px] w-[170px] pointer-events-none">
       <div className="absolute inset-0 drop-shadow-[2px_4px_4px_rgba(0,0,0,0.22)]">
         <img
-          src="/harifinal.png"
+          src="/harifinal.webp"
           alt="Hariharan"
           className="h-full w-full object-contain object-bottom pixelated select-none"
           draggable={false}
+          decoding="async"
         />
       </div>
     </div>
@@ -390,43 +385,40 @@ export function CardFront() {
             <div className="h-px mt-2" style={{ background: PINK_DIVIDER }} />
           </div>
 
-          {/* FOCUS — attached slanted illustrated cards */}
+          {/* FOCUS — square pixel tiles */}
           <div>
             <div className="flex items-center gap-2.5 mb-1">
               <Bullet />
               <span className="font-pixel text-[12px] leading-none text-[#56618c]">FOCUS:</span>
             </div>
-            <div className="flex pl-[26px]">
-              {FOCUS.map((f, i) => (
-                <div
-                  key={f.label}
-                  className="flex-1 min-w-0 flex flex-col items-center"
-                  style={{ marginLeft: i > 0 ? -10 : 0, zIndex: i }}
-                >
+            <div className="flex gap-1.5 pl-[26px]">
+              {FOCUS.map((f) => (
+                <div key={f.label} className="flex-1 min-w-0 flex flex-col items-center gap-1">
                   <div
-                    className="w-full h-[42px] overflow-hidden flex items-center justify-center"
+                    className="w-full aspect-square overflow-hidden flex items-center justify-center"
                     style={{
                       background: f.fill,
-                      transform: "skewX(-9deg)",
-                      ...slantedCardBorder(f.border, f.dashed),
+                      ...pixelSquareBorder(f.border),
                     }}
                   >
                     <img
-                      src={f.img}
+                      src={`${f.img}?v=sq1`}
                       alt={f.label}
-                      className="w-full h-full object-contain object-center pixelated scale-[1.45]"
+                      className="w-full h-full object-cover object-center pixelated select-none"
                       draggable={false}
+                      decoding="async"
                     />
                   </div>
-                  <div className="flex flex-col items-center mt-1 pt-0.5 w-full">
-                    <span className="font-pixel text-[9px] leading-none tracking-tight text-center" style={{ color: f.labelColor }}>
-                      {f.label}
-                    </span>
-                  </div>
+                  <span
+                    className="font-pixel text-[8px] leading-none tracking-tight text-center"
+                    style={{ color: f.labelColor }}
+                  >
+                    {f.label}
+                  </span>
                 </div>
               ))}
             </div>
-            <div className="h-px mt-1" style={{ background: PINK_DIVIDER }} />
+            <div className="h-px mt-1.5" style={{ background: PINK_DIVIDER }} />
           </div>
 
           {/* STACK */}
@@ -491,18 +483,19 @@ export function CardFront() {
         </div>
       </div>
 
-      {/* CURRENTLY — top overlay, sits above footer / avatar / everything */}
+      {/* CURRENTLY — dropped lower on purpose; can cover PRESS A since flip is hinted above the card too */}
       <div
-        className="absolute right-3 bottom-[30px] z-50 w-[62%] max-w-[420px] h-[120px] rounded-[8px] overflow-hidden pointer-events-none"
+        className="absolute right-3 bottom-[2px] z-50 w-[62%] max-w-[420px] h-[120px] rounded-[8px] overflow-hidden pointer-events-none"
         style={{
           boxShadow:
             "inset 0 0 0 2px #33406b, 0 0 0 2px rgba(255,255,255,0.35), 0 8px 18px rgba(0,0,0,0.35)",
         }}
       >
         <img
-          src="/sprites/front_bg.png"
+          src="/sprites/front_bg.webp"
           alt=""
           className="absolute inset-0 w-full h-full object-cover object-right pixelated"
+          decoding="async"
         />
         {/* left darkening so the text stays legible */}
         <div

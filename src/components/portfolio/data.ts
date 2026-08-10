@@ -388,10 +388,10 @@ export const SKILL_STATS_FOOTER = [
 // back-of-card panels data
 
 export const PANELS: { tab: TabKey; label: string; img: string; accent: string }[] = [
-  { tab: "projects", label: "PROJECTS", img: "/sprites/panel_projects.png", accent: "#5fd0e6" },
-  { tab: "experience", label: "EXPERIENCE", img: "/sprites/panel_experience.png", accent: "#7fd6a6" },
-  { tab: "honors", label: "HONORS", img: "/sprites/panel_honors.png", accent: "#f0c84a" },
-  { tab: "skills", label: "SKILLS", img: "/sprites/panel_skills.png", accent: "#9aa0f0" },
+  { tab: "projects", label: "PROJECTS", img: "/sprites/panel_projects.webp", accent: "#5fd0e6" },
+  { tab: "experience", label: "EXPERIENCE", img: "/sprites/panel_experience.webp", accent: "#7fd6a6" },
+  { tab: "honors", label: "HONORS", img: "/sprites/panel_honors.webp", accent: "#f0c84a" },
+  { tab: "skills", label: "SKILLS", img: "/sprites/panel_skills.webp", accent: "#9aa0f0" },
 ];
 
 // summaries for card back sections pulled from the knowledge base / README.
@@ -624,14 +624,14 @@ export const BACK_HONORS: BackHonor[] = [
     sub: "Top-tier open-source contributor",
     tag: "OPEN SOURCE",
     tagIcon: "code",
-    artTile: "/honors/hacktoberfest-tile.png",
+    artTile: "/honors/hacktoberfest-tile.webp",
     color: "#33406b",
     tint: "#e8eef8",
     url: "https://github.com/nothariharan",
     rank: "GOLDEN TIER",
     verified: true,
     world: "forest",
-    cardArt: "/honors/hacktoberfest-card.png",
+    cardArt: "/honors/hacktoberfest-card.webp",
     highlight:
       "Top-tier Hacktoberfest '25 — 32 PRs merged, golden tier, basically living in open source for a month.",
     metrics: [
@@ -646,14 +646,14 @@ export const BACK_HONORS: BackHonor[] = [
     sub: "Y Combinator — India cohort",
     tag: "Y COMBINATOR",
     tagIcon: "rocket",
-    artTile: "/honors/yc-tile.png",
+    artTile: "/honors/yc-tile.webp",
     color: "#fb651e",
     tint: "#fff0e6",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7451484147975356416/",
     rank: "SELECTED",
     verified: true,
     world: "garage",
-    cardArt: "/honors/yc-garage-card.png",
+    cardArt: "/honors/yc-garage-card.webp",
     highlight:
       "Beat 100k+ apps into YC Startup School India '26 — founder track, not the equity batch. $25k AI credits and a cohort of builders actually shipping companies.",
     metrics: [
@@ -668,32 +668,32 @@ export const BACK_HONORS: BackHonor[] = [
     sub: "Across 2+ international and 12+ national hackathons.",
     tag: "HACKATHONS",
     tagIcon: "trophy",
-    artTile: "/honors/hackathon-tile.png",
+    artTile: "/honors/hackathon-tile.webp",
     color: "#ffcc00",
     tint: "#fff7c2",
     url: "/portfolio/achievements",
     rank: "HACKATHON CHAMPION",
     verified: true,
     world: "arena",
-    cardArt: "/honors/hackathon-arena-card.png",
+    cardArt: "/honors/hackathon-arena-card.webp",
     highlight: "Wins across 2+ international and 12+ national hackathons.",
     wins: [
       {
         label: "AMUHacks",
         result: "Winner",
-        shot: "/shots/justask.png",
+        shot: "/shots/justask.webp",
         href: "/portfolio/projects#justask",
       },
       {
         label: "Ideaverse",
         result: "Winner",
-        shot: "/shots/yui.png",
+        shot: "/shots/yui.webp",
         href: "/portfolio/projects#yui",
       },
       {
         label: "VahanLive",
         result: "Winner",
-        shot: "/shots/vahanlive.png",
+        shot: "/shots/vahanlive.webp",
         href: "/portfolio/projects#vahanlive",
       },
     ],
@@ -710,17 +710,17 @@ export const BACK_HONORS: BackHonor[] = [
     sub: "Production AI — not recreational burn.",
     tag: "AI VELOCITY",
     tagIcon: "bolt",
-    artTile: "/honors/tokens-tile.png",
+    artTile: "/honors/tokens-tile.webp",
     color: "#e23b2e",
     tint: "#fdecea",
     url: "https://github.com/nothariharan",
     rank: "1B+ / WK",
     verified: true,
     world: "furnace",
-    cardArt: "/honors/tokens-furnace-card.png",
+    cardArt: "/honors/tokens-furnace-card.webp",
     highlight: "Burning tokens, shipping real stuff — production AI, not recreational burn.",
     /** full tokens detail card raster — served as AVIF/WebP/PNG via <picture> */
-    heroArt: "/honors/1b-tokens.png",
+    heroArt: "/honors/1b-tokens.webp",
     agents: [
       { label: "Claude Code", short: "Claude", blurb: "Deep reasoning & coding", logo: "claude" },
       { label: "Cursor", short: "Cursor", blurb: "AI-native IDE velocity", logo: "cursor" },

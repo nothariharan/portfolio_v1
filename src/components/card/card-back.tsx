@@ -653,11 +653,13 @@ function ProjectThumb({ icon, name, color }: { icon: string; name: string; color
   }
   return (
     <img
-      src={`/sprites/proj_${icon}.png`}
+      src={`/sprites/proj_${icon}.webp`}
       alt={name}
       className="w-full h-full pixelated"
       onError={() => setOk(false)}
       style={{ background: color }}
+      loading="lazy"
+      decoding="async"
     />
   );
 }

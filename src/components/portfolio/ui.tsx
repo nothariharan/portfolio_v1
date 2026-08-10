@@ -235,9 +235,10 @@ export function DataFileShell({
 export function Mascot({ className = "" }: { className?: string }) {
   return (
     <img
-      src="/sprites/hari_stand.png"
+      src="/sprites/hari_stand.webp"
       alt="Hariharan"
       className={`object-contain pixelated drop-shadow-[2px_4px_3px_rgba(0,0,0,0.18)] pointer-events-none select-none ${className}`}
+      decoding="async"
     />
   );
 }

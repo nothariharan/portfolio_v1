@@ -87,7 +87,7 @@ export function ProjectsSection() {
                 className="text-left rounded-[10px] p-3 flex gap-3 items-center cursor-pointer transition-all"
                 style={{ background: on ? "#fff" : "#ece8df", boxShadow: on ? `inset 0 0 0 2px ${pr.color}` : "inset 0 0 0 1px #ded9cd" }}
               >
-                <img src={`/sprites/proj_${m.icon}.png`} alt={pr.short} className="w-[50px] h-[50px] rounded-[8px] pixelated shrink-0" />
+                <img src={`/sprites/proj_${m.icon}.webp`} alt={pr.short} className="w-[50px] h-[50px] rounded-[8px] pixelated shrink-0" loading="lazy" decoding="async" />
                 <span className="min-w-0 flex-1">
                   <span className="block font-pixel text-[13px] leading-none mb-2" style={{ color: on ? pr.color : "#34383e" }}>{pr.short}</span>
                   <span className="block font-card text-[14px] leading-tight text-[#5a6068]">{m.listDesc}</span>

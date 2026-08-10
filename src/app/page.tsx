@@ -96,7 +96,9 @@ export default function Home() {
       >
         <TrainerCard
           onEnterPortfolio={(tab) => startTransition(`/portfolio?tab=${tab}`)}
-          onOpenHariMd={() => startTransition("/portfolio/hari")}
+          onOpenHariMd={() => {
+            window.location.href = "/hari.md";
+          }}
         />
       </motion.div>
 

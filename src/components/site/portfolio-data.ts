@@ -58,7 +58,7 @@ export const PROJECTS: SiteProject[] = [
     repo: "https://github.com/nothariharan/scout",
     live: "https://scout-dusky-six.vercel.app",
     award: "⏳ Hack-Nation #6 · results Jul 25",
-    shot: "/shots/scout.png",
+    shot: "/shots/scout.webp",
     featured: true,
   },
   {
@@ -72,7 +72,7 @@ export const PROJECTS: SiteProject[] = [
     date: "Jul 2026",
     repo: "https://github.com/nothariharan/slopmark",
     live: "https://slopmark.vercel.app",
-    shot: "/shots/slopmark.png",
+    shot: "/shots/slopmark.webp",
     featured: true,
   },
   {
@@ -86,7 +86,7 @@ export const PROJECTS: SiteProject[] = [
     date: "Jul 2026",
     repo: "https://github.com/nothariharan/crux",
     live: "https://crux-snowy.vercel.app",
-    shot: "/shots/crux.png",
+    shot: "/shots/crux.webp",
     featured: true,
   },
   {
@@ -111,7 +111,7 @@ export const PROJECTS: SiteProject[] = [
     date: "Jul 2026",
     repo: "https://github.com/nothariharan/certamen",
     live: "https://web-theta-khaki-90.vercel.app",
-    shot: "/shots/certamen.png",
+    shot: "/shots/certamen.webp",
     featured: true,
   },
   {
@@ -125,7 +125,7 @@ export const PROJECTS: SiteProject[] = [
     date: "Jun 2026",
     repo: "https://github.com/nothariharan/CoFound",
     live: "https://cofounder-alpha.vercel.app",
-    shot: "/shots/cofound.png",
+    shot: "/shots/cofound.webp",
     featured: true,
   },
   {
@@ -140,7 +140,7 @@ export const PROJECTS: SiteProject[] = [
     repo: "https://github.com/nothariharan/JustAsk",
     live: "https://justask-one.vercel.app",
     award: "🥇 1st · AMUHACKS 5.0",
-    shot: "/shots/justask.png",
+    shot: "/shots/justask.webp",
   },
   {
     slug: "yui",
@@ -153,7 +153,7 @@ export const PROJECTS: SiteProject[] = [
     date: "Apr 2026",
     live: "https://yui-lemon-five.vercel.app",
     award: "🏆 Won · Ideaverse @ Abhisarga '26",
-    shot: "/shots/yui.png",
+    shot: "/shots/yui.webp",
   },
   {
     slug: "monkeyspeak",
@@ -166,7 +166,7 @@ export const PROJECTS: SiteProject[] = [
     date: "Jun 2026",
     repo: "https://github.com/nothariharan/monkeyspeak",
     live: "https://monkeyspeak-delta.vercel.app",
-    shot: "/shots/monkeyspeak.png",
+    shot: "/shots/monkeyspeak.webp",
   },
   {
     slug: "mugen",
@@ -179,7 +179,7 @@ export const PROJECTS: SiteProject[] = [
     date: "Apr 2026",
     repo: "https://github.com/nothariharan/Mugen",
     live: "https://mugen-flax.vercel.app",
-    shot: "/shots/mugen.png",
+    shot: "/shots/mugen.webp",
   },
   {
     slug: "vahanlive",
@@ -193,7 +193,7 @@ export const PROJECTS: SiteProject[] = [
     repo: "https://github.com/nothariharan/VahanLive",
     live: "https://vahan-live.vercel.app",
     award: "🏆 Winner · MVP Sprint Challenge",
-    shot: "/shots/vahanlive.png",
+    shot: "/shots/vahanlive.webp",
   },
   {
     slug: "veda",
@@ -287,7 +287,7 @@ export const PROJECTS: SiteProject[] = [
     date: "Mar 2026",
     repo: "https://github.com/nothariharan/Bharat_Seva",
     live: "https://bharat-seva-alpha.vercel.app",
-    shot: "/shots/bharat-seva.png",
+    shot: "/shots/bharat-seva.webp",
   },
   {
     slug: "mandisaathi",

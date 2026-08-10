@@ -9,11 +9,11 @@ import { Container, GitHubIcon, LinkedInIcon, MailIcon } from "./ui";
 // sitting loop for the portfolio hero — frames are already lined up on the feet
 // s1 typing / s2 typing shift / s3 grab coffee / s4 sip / s5 back to typing
 const SIT_FRAMES = [
-  "/sprites/sit-norm/s1.png",
-  "/sprites/sit-norm/s2.png",
-  "/sprites/sit-norm/s3.png",
-  "/sprites/sit-norm/s4.png",
-  "/sprites/sit-norm/s5.png",
+  "/sprites/sit-norm/s1.webp",
+  "/sprites/sit-norm/s2.webp",
+  "/sprites/sit-norm/s3.webp",
+  "/sprites/sit-norm/s4.webp",
+  "/sprites/sit-norm/s5.webp",
 ];
 // type for a bit, reach for coffee, sip twice, then back to work
 const SIT_SEQ = [0, 0, 0, 1, 1, 2, 3, 3, 4, 4, 0];
@@ -35,6 +35,7 @@ function SittingSprite() {
       alt="Hariharan"
       className="pixelated h-52 w-auto object-contain object-bottom select-none"
       draggable={false}
+      decoding="async"
     />
   );
 }
