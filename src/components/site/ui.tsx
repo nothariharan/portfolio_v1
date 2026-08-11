@@ -135,7 +135,7 @@ export const prettyTech = (k: string) => NAMES[k] ?? k.charAt(0).toUpperCase() +
 /** Logos whose fill is near-black — invert so they read on BrandTile. */
 const DARK_LOGOS = new Set([
   "unity", "github", "nextjs", "vercel", "kimi", "opencode", "express", "socketio",
-  "cursor", "copilot", "elevenlabs", "anthropic", "linux", "hermes", "openai",
+  "cursor", "copilot", "elevenlabs", "anthropic", "linux", "hermes", "openai", "bash",
 ]);
 
 /** Brand logo on a black tile — used for experience rows and other portfolio marks. */

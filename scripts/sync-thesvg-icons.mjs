@@ -97,6 +97,7 @@ const SLUGS = {
  */
 const VARIANT_OVERRIDE = {
   anthropic: "light",
+  bash: "light",
   copilot: "mono",
   cursor: "mono",
   elevenlabs: "mono",
