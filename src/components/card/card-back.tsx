@@ -208,7 +208,7 @@ function SvgIcon({ name, color = "#5d6b7a" }: { name: string; color?: string }) 
 }
 
 /**
- * One sticker slot in the 4-up honors grid.
+ * One sticker slot in the honors grid (4-up desktop / 2×2 mobile).
  * CSS owns the hard border — PNGs are flat rect art so we dont fight letterboxing.
  * selected state is ring + brightness only (no scale) so neighbors dont reflow.
  */
@@ -216,10 +216,12 @@ function HonorWorldCard({
   honor,
   selected,
   onSelect,
+  mobile = false,
 }: {
   honor: BackHonor;
   selected: boolean;
   onSelect: () => void;
+  mobile?: boolean;
 }) {
   const fill =
     honor.world === "forest"
@@ -227,7 +229,7 @@ function HonorWorldCard({
       : honor.world === "garage"
         ? "#fb651e"
         : honor.world === "arena"
-          ? "#ffcc00"
+          ? "#c9a227"
           : "#e23b2e";
 
   return (
@@ -239,7 +241,9 @@ function HonorWorldCard({
       }}
       aria-pressed={selected}
       aria-label={honor.cardTitle}
-      className="relative min-w-0 w-full aspect-[480/200] overflow-hidden rounded-[6px] border-[3px] border-[#111] cursor-pointer transition-[box-shadow,filter,opacity] duration-150"
+      className={`relative min-w-0 w-full overflow-hidden rounded-[6px] border-[3px] border-[#111] cursor-pointer transition-[box-shadow,filter,opacity] duration-150 ${
+        mobile ? "aspect-[480/210]" : "aspect-[480/200]"
+      }`}
       style={{
         background: fill,
         opacity: selected ? 1 : 0.92,
@@ -252,7 +256,7 @@ function HonorWorldCard({
     >
       {/* ?v=slot2 busts old cached letterboxed exports after we swapped art */}
       <img
-        src={`${honor.cardArt}?v=slot2`}
+        src={`${honor.cardArt}?v=slot3`}
         alt=""
         className="absolute inset-0 block h-full w-full object-contain object-center pointer-events-none select-none"
         style={{ background: fill }}
@@ -267,24 +271,31 @@ function HonorWorldCard({
  * Top honor sticker tabs stay HTML; this detail is a single art asset.
  * OPEN PROOF is an invisible hit-target over the painted button so the link stays real.
  */
-function TokensHonorDetail({ honor }: { honor: BackHonor }) {
+function TokensHonorDetail({ honor, mobile = false }: { honor: BackHonor; mobile?: boolean }) {
   const proofExternal = /^https?:\/\//.test(honor.url);
+  // tokens stays on the original furnace card — no separate dump image
   const cardBase = honor.heroArt?.replace(/\.(png|webp|avif)$/i, "") ?? "/honors/1b-tokens";
   const accent = honor.color;
 
   return (
     <div
-      className="relative flex-1 min-h-0 flex flex-col rounded-[10px] border-2 overflow-hidden bg-white"
+      className={`relative flex-1 min-h-0 flex flex-col rounded-[10px] border-2 overflow-hidden bg-white ${
+        mobile ? "rounded-[8px]" : ""
+      }`}
       style={{ borderColor: accent }}
     >
-      {/* same chrome as the other honor worlds — accent ring, then the art sits inset */}
-      <div className="relative flex-1 min-h-0 m-1.5 rounded-[7px] overflow-hidden bg-[#f6f1e6]">
+      {/* mobile: tighter inset so portrait honor art fills space under the 2×2 stickers */}
+      <div
+        className={`relative flex-1 min-h-0 overflow-hidden bg-[#f6f1e6] ${
+          mobile ? "m-1 rounded-[5px]" : "m-1.5 rounded-[7px]"
+        }`}
+      >
         <picture className="absolute inset-0 block h-full w-full">
-          <source srcSet={`${cardBase}.avif?v=frame1`} type="image/avif" />
-          <source srcSet={`${cardBase}.webp?v=frame1`} type="image/webp" />
+          <source srcSet={`${cardBase}.avif?v=frame3`} type="image/avif" />
+          <source srcSet={`${cardBase}.webp?v=frame3`} type="image/webp" />
           <img
-            src={`${cardBase}.png?v=frame1`}
-            alt="1B+ tokens per week — production AI velocity"
+            src={`${cardBase}.png?v=frame3`}
+            alt={honor.title}
             className="h-full w-full object-contain object-center select-none"
             loading="lazy"
             decoding="async"
@@ -299,7 +310,11 @@ function TokensHonorDetail({ honor }: { honor: BackHonor }) {
             onClick={(e) => e.stopPropagation()}
             aria-label="Open proof"
             title="OPEN PROOF"
-            className="absolute z-10 top-[3.5%] right-[2.8%] w-[17%] min-w-[72px] max-w-[150px] aspect-[3.4/1] rounded-[4px] cursor-pointer hover:brightness-110 active:scale-[0.98] transition-transform"
+            className={`absolute z-10 rounded-[4px] cursor-pointer hover:brightness-110 active:scale-[0.98] transition-transform ${
+              mobile
+                ? "top-[2.8%] right-[2.2%] w-[22%] min-w-[64px] max-w-[120px] aspect-[3.4/1]"
+                : "top-[3.5%] right-[2.8%] w-[17%] min-w-[72px] max-w-[150px] aspect-[3.4/1]"
+            }`}
           />
         )}
       </div>
@@ -310,65 +325,106 @@ function TokensHonorDetail({ honor }: { honor: BackHonor }) {
 /**
  * Simple honor detail — mock layout:
  * left art tile + rank · title/tag/sub · highlight (text / win-shots) · 3 metrics.
+ * Mobile stacks a short art strip above the copy (no side column).
  * Tokens honor uses TokensHonorDetail instead.
  * OPEN PROOF sits as a top-right button box (not a underline link under the text).
  */
-function HonorWorldDetail({ honor }: { honor: BackHonor }) {
+function HonorWorldDetail({ honor, mobile = false }: { honor: BackHonor; mobile?: boolean }) {
   const accent = honor.color;
   const hasWins = Boolean(honor.wins?.length);
   const hasAgents = Boolean(honor.agents?.length);
   const proofExternal = /^https?:\/\//.test(honor.url);
 
+  /* tokens keeps the full-bleed furnace card; everyone else uses the HTML detail */
   if (hasAgents) {
-    return <TokensHonorDetail honor={honor} />;
+    return <TokensHonorDetail honor={honor} mobile={mobile} />;
   }
+
+  const mobileArt = honor.artTileMobile ?? honor.artTile;
+
+  const artTile = mobile ? (
+    <div
+      className="w-full shrink-0 rounded-[7px] border overflow-hidden flex flex-col"
+      style={{ borderColor: accent, background: honor.tint }}
+    >
+      <div className="relative h-[56px] bg-[#fff3c4]">
+        <img
+          src={`${mobileArt}?v=7`}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover pixelated"
+          style={{ imageRendering: "pixelated" }}
+          draggable={false}
+        />
+      </div>
+      <span
+        className="flex items-center justify-center gap-1 font-pixel text-[5px] leading-none text-center py-1 px-1.5 text-white"
+        style={{ background: accent }}
+      >
+        <NounIcon name="trophy" color="#ffffff" size={8} />
+        {honor.rank}
+      </span>
+    </div>
+  ) : (
+    <div
+      className="shrink-0 w-[96px] rounded-[8px] border overflow-hidden flex flex-col"
+      style={{ borderColor: accent, background: honor.tint }}
+    >
+      <div className="relative flex-1 min-h-[84px] bg-[#fff3c4]">
+        <img
+          src={`${honor.artTile}?v=5`}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover pixelated"
+          style={{ imageRendering: "pixelated" }}
+          draggable={false}
+        />
+      </div>
+      <span
+        className="flex items-center justify-center gap-1 font-pixel text-[5px] leading-none text-center py-1.5 px-1 text-white"
+        style={{ background: accent }}
+      >
+        <NounIcon name="trophy" color="#ffffff" size={9} />
+        {honor.rank}
+      </span>
+    </div>
+  );
 
   return (
     <div
       className="relative flex-1 min-h-0 flex flex-col rounded-[10px] border-2 overflow-hidden bg-white"
       style={{ borderColor: accent }}
     >
-      <div className="flex gap-2.5 p-2.5 min-h-0 flex-1 overflow-hidden">
-        {/* left sub-card — pixel scene + rank strip */}
-        <div
-          className="shrink-0 w-[96px] rounded-[8px] border overflow-hidden flex flex-col"
-          style={{ borderColor: accent, background: honor.tint }}
-        >
-          <div className="relative flex-1 min-h-[84px] bg-[#fff3c4]">
-            <img
-              src={`${honor.artTile}?v=5`}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover pixelated"
-              style={{ imageRendering: "pixelated" }}
-              draggable={false}
-            />
-          </div>
-          <span
-            className="flex items-center justify-center gap-1 font-pixel text-[5px] leading-none text-center py-1.5 px-1 text-white"
-            style={{ background: accent }}
-          >
-            <NounIcon name="trophy" color="#ffffff" size={9} />
-            {honor.rank}
-          </span>
-        </div>
+      <div
+        className={`min-h-0 flex-1 overflow-hidden ${
+          mobile ? "flex flex-col gap-1.5 p-2" : "flex gap-2.5 p-2.5"
+        }`}
+      >
+        {artTile}
 
         {/* no pr-16 gutter — OPEN PROOF sits in the title row so highlight can use full width */}
-        <div className="min-w-0 flex-1 flex flex-col gap-1.5 overflow-hidden">
+        <div className={`min-w-0 flex-1 flex flex-col overflow-hidden ${mobile ? "gap-1" : "gap-1.5"}`}>
           <div className="flex items-start justify-between gap-2 shrink-0">
-            <div className="min-w-0 flex flex-col gap-1">
+            <div className={`min-w-0 flex flex-col ${mobile ? "gap-0.5" : "gap-1"}`}>
               <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="font-pixel text-[11px] leading-none" style={{ color: accent }}>
+                <span
+                  className={`font-pixel leading-none ${mobile ? "text-[10px]" : "text-[11px]"}`}
+                  style={{ color: accent }}
+                >
                   {honor.title}
                 </span>
                 <span
-                  className="inline-flex items-center gap-1 font-pixel text-[6px] leading-none px-1.5 py-[3px] rounded-[4px] text-white shrink-0"
+                  className={`inline-flex items-center gap-1 font-pixel leading-none rounded-[4px] text-white shrink-0 ${
+                    mobile ? "text-[5px] px-1 py-[2px]" : "text-[6px] px-1.5 py-[3px]"
+                  }`}
                   style={{ background: accent }}
                 >
-                  <NounIcon name={honor.tagIcon} color="#ffffff" size={10} />
+                  <NounIcon name={honor.tagIcon} color="#ffffff" size={mobile ? 8 : 10} />
                   {honor.tag}
                 </span>
               </div>
-              <span className="font-card text-[13px] font-semibold leading-snug" style={{ color: accent }}>
+              <span
+                className={`font-card font-semibold leading-snug ${mobile ? "text-[12px]" : "text-[13px]"}`}
+                style={{ color: accent }}
+              >
                 {honor.sub}
               </span>
             </div>
@@ -379,7 +435,9 @@ function HonorWorldDetail({ honor }: { honor: BackHonor }) {
                   ? { target: "_blank", rel: "noopener noreferrer" }
                   : {})}
                 onClick={(e) => e.stopPropagation()}
-                className="shrink-0 font-pixel text-[6px] leading-none px-2 py-1.5 rounded-[4px] text-white border-2 cursor-pointer hover:brightness-110 active:scale-[0.97] transition-all"
+                className={`shrink-0 font-pixel leading-none rounded-[4px] text-white border-2 cursor-pointer hover:brightness-110 active:scale-[0.97] transition-all ${
+                  mobile ? "text-[5px] px-1.5 py-1" : "text-[6px] px-2 py-1.5"
+                }`}
                 style={{ background: accent, borderColor: NAVY, boxShadow: "0 2px 0 rgba(0,0,0,0.2)" }}
               >
                 OPEN PROOF {proofExternal ? "↗" : "→"}
@@ -390,52 +448,89 @@ function HonorWorldDetail({ honor }: { honor: BackHonor }) {
           {hasWins ? (
             <div className="min-h-0 flex-1 flex flex-col gap-1 overflow-hidden">
               <div className="flex items-center gap-1 shrink-0">
-                <NounIcon name="star" color={accent} size={11} />
+                <NounIcon name="star" color={accent} size={mobile ? 10 : 11} />
                 <span className="font-pixel text-[6px] leading-none" style={{ color: accent }}>
                   Highlights
                 </span>
               </div>
-              <div className="min-h-0 flex-1 grid grid-cols-4 gap-1.5">
-                {honor.wins!.map((win) => (
-                  <a
-                    key={win.label}
-                    href={win.href}
-                    onClick={(e) => e.stopPropagation()}
-                    className="min-h-0 flex flex-col rounded-[6px] border overflow-hidden bg-white hover:brightness-[1.02] active:scale-[0.98] transition-all"
-                    style={{ borderColor: `${accent}88` }}
-                  >
-                    <div className="relative min-h-0 flex-1 bg-[#efe6c8]">
-                      <img
-                        src={win.shot}
-                        alt=""
-                        className="absolute inset-0 h-full w-full object-cover object-top"
-                        draggable={false}
-                      />
-                    </div>
-                    <span
-                      className="shrink-0 px-1 pt-1 font-pixel text-[5px] leading-none truncate"
-                      style={{ color: accent }}
+              {mobile ? (
+                /* phone: name chips only — screenshots get unreadable at this size */
+                <div className="min-h-0 flex-1 grid grid-cols-2 gap-1.5 content-start">
+                  {honor.wins!.map((win) => (
+                    <a
+                      key={win.label}
+                      href={win.href}
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex flex-col items-center justify-center gap-0.5 rounded-[6px] border px-1.5 py-2 text-center hover:brightness-[1.02] active:scale-[0.98] transition-all"
+                      style={{ borderColor: accent, background: honor.tint }}
                     >
-                      {win.label}
-                    </span>
-                    <span className="shrink-0 px-1 pb-1 font-card text-[9px] font-semibold leading-none text-[#1f2a44] truncate">
-                      🏆 {win.result}
-                    </span>
-                  </a>
-                ))}
-                {honor.moreWins && (
-                  <a
-                    href={honor.moreWins.href}
-                    onClick={(e) => e.stopPropagation()}
-                    className="min-h-0 flex items-center justify-center rounded-[6px] border border-dashed px-1 text-center hover:bg-[#fff8e1] active:scale-[0.98] transition-all"
-                    style={{ borderColor: accent, color: accent }}
-                  >
-                    <span className="font-pixel text-[6px] leading-tight">
-                      {honor.moreWins.label}
-                    </span>
-                  </a>
-                )}
-              </div>
+                      <span
+                        className="font-pixel text-[7px] leading-none truncate max-w-full"
+                        style={{ color: accent }}
+                      >
+                        {win.label}
+                      </span>
+                      <span className="font-card text-[10px] font-semibold leading-none text-[#1f2a44]">
+                        🏆 {win.result}
+                      </span>
+                    </a>
+                  ))}
+                  {honor.moreWins && (
+                    <a
+                      href={honor.moreWins.href}
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex items-center justify-center rounded-[6px] border border-dashed px-1.5 py-2 text-center hover:bg-[#fff8e1] active:scale-[0.98] transition-all"
+                      style={{ borderColor: accent, color: accent }}
+                    >
+                      <span className="font-pixel text-[6px] leading-tight">
+                        {honor.moreWins.label}
+                      </span>
+                    </a>
+                  )}
+                </div>
+              ) : (
+                <div className="min-h-0 flex-1 grid grid-cols-4 gap-1.5">
+                  {honor.wins!.map((win) => (
+                    <a
+                      key={win.label}
+                      href={win.href}
+                      onClick={(e) => e.stopPropagation()}
+                      className="min-h-0 flex flex-col rounded-[6px] border overflow-hidden bg-white hover:brightness-[1.02] active:scale-[0.98] transition-all"
+                      style={{ borderColor: `${accent}88` }}
+                    >
+                      <div className="relative min-h-0 flex-1 bg-[#efe6c8]">
+                        <img
+                          src={win.shot}
+                          alt=""
+                          className="absolute inset-0 h-full w-full object-cover object-top"
+                          draggable={false}
+                        />
+                      </div>
+                      <span
+                        className="shrink-0 px-1 pt-1 font-pixel text-[5px] leading-none truncate"
+                        style={{ color: accent }}
+                      >
+                        {win.label}
+                      </span>
+                      <span className="shrink-0 px-1 pb-1 font-card text-[9px] font-semibold leading-none text-[#1f2a44] truncate">
+                        🏆 {win.result}
+                      </span>
+                    </a>
+                  ))}
+                  {honor.moreWins && (
+                    <a
+                      href={honor.moreWins.href}
+                      onClick={(e) => e.stopPropagation()}
+                      className="min-h-0 flex items-center justify-center rounded-[6px] border border-dashed px-1 text-center hover:bg-[#fff8e1] active:scale-[0.98] transition-all"
+                      style={{ borderColor: accent, color: accent }}
+                    >
+                      <span className="font-pixel text-[6px] leading-tight">
+                        {honor.moreWins.label}
+                      </span>
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           ) : (
             /*
@@ -444,12 +539,23 @@ function HonorWorldDetail({ honor }: { honor: BackHonor }) {
              * shrinking the text to a skinny middle column with empty right space.
              */
             <div
-              className="w-full min-h-0 flex-1 rounded-[10px] border pl-2 pr-3 py-2.5 grid grid-cols-[28px_minmax(0,1fr)] gap-x-2.5 items-center overflow-hidden"
+              className={`w-full min-h-0 flex-1 rounded-[10px] border grid grid-cols-[28px_minmax(0,1fr)] items-center overflow-hidden ${
+                mobile
+                  ? "pl-1.5 pr-2 py-1.5 gap-x-2 rounded-[8px]"
+                  : "pl-2 pr-3 py-2.5 gap-x-2.5"
+              }`}
               style={{ background: honor.tint, borderColor: accent }}
             >
-              <NounIcon name="star" color={accent} size={24} className="justify-self-start" />
+              <NounIcon
+                name="star"
+                color={accent}
+                size={mobile ? 18 : 24}
+                className="justify-self-start"
+              />
               <p
-                className="min-w-0 m-0 font-card text-[14px] font-semibold leading-[1.35] line-clamp-3 text-left"
+                className={`min-w-0 m-0 font-card font-semibold leading-[1.35] line-clamp-3 text-left ${
+                  mobile ? "text-[12px]" : "text-[14px]"
+                }`}
                 style={{ color: "#1f2a44" }}
               >
                 {honor.highlight}
@@ -461,21 +567,32 @@ function HonorWorldDetail({ honor }: { honor: BackHonor }) {
 
       {/* metrics footer — fixed height so every honor card matches Hacktoberfest chrome */}
       <div
-        className="shrink-0 grid grid-cols-3 border-t h-[54px]"
+        className={`shrink-0 grid grid-cols-3 border-t ${mobile ? "h-[44px]" : "h-[54px]"}`}
         style={{ borderColor: `${accent}44` }}
       >
         {honor.metrics.map((m, i) => (
           <div
             key={m.label}
-            className={`flex items-center gap-2 px-2.5 min-w-0 h-full ${i > 0 ? "border-l border-dashed" : ""}`}
+            className={`flex items-center min-w-0 h-full ${
+              mobile ? "gap-1 px-1.5" : "gap-2 px-2.5"
+            } ${i > 0 ? "border-l border-dashed" : ""}`}
             style={{ borderColor: `${accent}55` }}
           >
-            <NounIcon name={m.icon} color={accent} size={17} className="shrink-0" />
+            <NounIcon name={m.icon} color={accent} size={mobile ? 13 : 17} className="shrink-0" />
             <span className="min-w-0">
-              <span className="block font-pixel text-[10px] leading-none truncate" style={{ color: accent }}>
+              <span
+                className={`block font-pixel leading-none truncate ${
+                  mobile ? "text-[8px]" : "text-[10px]"
+                }`}
+                style={{ color: accent }}
+              >
                 {m.value}
               </span>
-              <span className="block font-pixel text-[6px] leading-none mt-1.5 text-[#7a8290] truncate">
+              <span
+                className={`block font-pixel leading-none text-[#7a8290] truncate ${
+                  mobile ? "text-[5px] mt-1" : "text-[6px] mt-1.5"
+                }`}
+              >
                 {m.label}
               </span>
             </span>
@@ -1078,9 +1195,11 @@ export function CardBack({
 
           {/* honors — sticker world cards + morphing detail */}
           {active.tab === "honors" && (
-            <div className="flex flex-col gap-2 h-full min-h-0 overflow-hidden">
+            <div className={`flex flex-col h-full min-h-0 overflow-hidden ${mobile ? "gap-1.5" : "gap-2"}`}>
               <div
-                className="grid grid-cols-4 gap-1.5 shrink-0 pt-0.5"
+                className={`grid shrink-0 pt-0.5 ${
+                  mobile ? "grid-cols-2 gap-2" : "grid-cols-4 gap-1.5"
+                }`}
                 onPointerDown={(e) => e.stopPropagation()}
               >
                 {BACK_HONORS.map((h, i) => (
@@ -1089,12 +1208,13 @@ export function CardBack({
                     honor={h}
                     selected={i === honorSel}
                     onSelect={() => setHonorSel(i)}
+                    mobile={mobile}
                   />
                 ))}
               </div>
 
               <div key={activeHonor.title} className="flex-1 min-h-0 flex flex-col overflow-hidden">
-                <HonorWorldDetail honor={activeHonor} />
+                <HonorWorldDetail honor={activeHonor} mobile={mobile} />
               </div>
             </div>
           )}

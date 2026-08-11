@@ -598,6 +598,8 @@ export type BackHonor = {
   tagIcon: NounIconName;
   /** Left square art — pixel scene or dashed placeholder */
   artTile: string;
+  /** Optional wide banner for mobile stacked detail (falls back to artTile) */
+  artTileMobile?: string;
   color: string;
   tint: string;
   url: string;
@@ -613,6 +615,8 @@ export type BackHonor = {
   moreWins?: { label: string; href: string };
   /** tokens layout — furnace hero + brand logo flow */
   heroArt?: string;
+  /** Optional mobile-optimized furnace hero (falls back to heroArt) */
+  heroArtMobile?: string;
   agents?: BackHonorAgent[];
   metrics: [BackHonorMetric, BackHonorMetric, BackHonorMetric];
 };
@@ -625,6 +629,7 @@ export const BACK_HONORS: BackHonor[] = [
     tag: "OPEN SOURCE",
     tagIcon: "code",
     artTile: "/honors/hacktoberfest-tile.webp",
+    artTileMobile: "/honors/hacktoberfest-tile-mobile.webp",
     color: "#33406b",
     tint: "#e8eef8",
     url: "https://github.com/nothariharan",
@@ -647,6 +652,7 @@ export const BACK_HONORS: BackHonor[] = [
     tag: "Y COMBINATOR",
     tagIcon: "rocket",
     artTile: "/honors/yc-tile.webp",
+    artTileMobile: "/honors/yc-tile-mobile.webp",
     color: "#fb651e",
     tint: "#fff0e6",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7451484147975356416/",
@@ -669,8 +675,9 @@ export const BACK_HONORS: BackHonor[] = [
     tag: "HACKATHONS",
     tagIcon: "trophy",
     artTile: "/honors/hackathon-tile.webp",
-    color: "#ffcc00",
-    tint: "#fff7c2",
+    artTileMobile: "/honors/hackathon-tile-mobile.webp",
+    color: "#c9a227",
+    tint: "#f5edd0",
     url: "/portfolio/achievements",
     rank: "HACKATHON CHAMPION",
     verified: true,
@@ -711,6 +718,7 @@ export const BACK_HONORS: BackHonor[] = [
     tag: "AI VELOCITY",
     tagIcon: "bolt",
     artTile: "/honors/tokens-tile.webp",
+    artTileMobile: "/honors/tokens-tile-mobile.webp",
     color: "#e23b2e",
     tint: "#fdecea",
     url: "https://github.com/nothariharan",
@@ -721,6 +729,7 @@ export const BACK_HONORS: BackHonor[] = [
     highlight: "Burning tokens, shipping real stuff — production AI, not recreational burn.",
     /** full tokens detail card raster — served as AVIF/WebP/PNG via <picture> */
     heroArt: "/honors/1b-tokens.webp",
+    heroArtMobile: "/honors/1b-tokens.webp",
     agents: [
       { label: "Claude Code", short: "Claude", blurb: "Deep reasoning & coding", logo: "claude" },
       { label: "Cursor", short: "Cursor", blurb: "AI-native IDE velocity", logo: "cursor" },
