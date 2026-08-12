@@ -1,14 +1,15 @@
 "use client";
 
 /**
- * Trainer card shell — flip / tilt / float live here.
+ * Trainer card shell — flip / tilt / float / layout-morph live here.
  *
  * CardFace paints the GBA rings as nested padded borders INSIDE the face box
  * (outer box-shadow rings used to vanish when tilt foreshortened the top edge).
  * press A / Enter / Space / click to flip. prefers-reduced-motion kills tilt + float.
  *
  * Layout mode (desktop | mobile) is driven by CARD_MOBILE_QUERY and applied to
- * both shell size and CardFront so future glass/bg layers can key off data-layout.
+ * both shell size and CardFront. Crossing the breakpoint morphs shell size with
+ * a soft spring + brief depth pulse so device rotate / resize doesn't hard-cut.
  */
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -26,12 +27,41 @@ interface TrainerCardProps {
   onOpenHariMd: () => void;
 }
 
-/**
- * Shared flip curve — same duration + easing both directions so front→back
- * and back→front feel identical. Soft mid-turn scale/lift, no hard overshoot.
- */
-const FLIP_EASE: [number, number, number, number] = [0.45, 0.05, 0.25, 1];
-const FLIP_MS = 0.68;
+/** Shared flip curve — identical both directions, soft mid-turn lift. */
+const FLIP_EASE: [number, number, number, number] = [0.33, 0.0, 0.2, 1];
+const FLIP_MS = 0.78;
+
+/** Controls / links must not arm a flip (pointerup bubbles past stopPropagation on click). */
+const FLIP_IGNORE_SEL = "a, button, input, textarea, select, label, [data-no-flip]";
+/** Near-miss padding so taps just outside a control don't flip. */
+const FLIP_HIT_SLOP_PX = 12;
+
+function shouldIgnoreFlip(target: EventTarget | null, clientX?: number, clientY?: number) {
+  if (!(target instanceof Element)) return false;
+  if (target.closest(FLIP_IGNORE_SEL)) return true;
+
+  // taps in the soft margin around buttons / links / stickers
+  if (clientX == null || clientY == null) return false;
+  const root = target.closest("[data-flip-root]");
+  if (!root) return false;
+  for (const el of root.querySelectorAll(FLIP_IGNORE_SEL)) {
+    const r = el.getBoundingClientRect();
+    if (
+      clientX >= r.left - FLIP_HIT_SLOP_PX &&
+      clientX <= r.right + FLIP_HIT_SLOP_PX &&
+      clientY >= r.top - FLIP_HIT_SLOP_PX &&
+      clientY <= r.bottom + FLIP_HIT_SLOP_PX
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/** Shell resize when crossing mobile ↔ desktop. */
+const SHELL_SPRING = { type: "spring" as const, stiffness: 260, damping: 28, mass: 0.85 };
+const LAYOUT_MORPH_MS = 0.52;
+const LAYOUT_MORPH_EASE: [number, number, number, number] = [0.4, 0.0, 0.2, 1];
 
 /**
  * Face is slightly larger than the card so the GBA frame rings live inside the
@@ -47,7 +77,7 @@ function CardFace({
   children: ReactNode;
   flipped: boolean;
   isBack?: boolean;
-  /** Mid-flip: deepen the drop shadow so the lift reads. */
+  /** Mid-flip / morph: deepen the drop shadow so the lift reads. */
   lifting?: boolean;
 }) {
   const show = flipped === !!isBack;
@@ -64,10 +94,10 @@ function CardFace({
       }}
     >
       <div
-        className="absolute inset-0 rounded-[10px] pointer-events-none transition-[box-shadow] duration-500 ease-in-out"
+        className="absolute inset-0 rounded-[10px] pointer-events-none transition-[box-shadow] duration-500 ease-out"
         style={{
           boxShadow: lifting
-            ? "0 22px 40px rgba(0,0,0,0.45)"
+            ? "0 26px 48px rgba(0,0,0,0.48)"
             : "0 18px 34px rgba(0,0,0,0.4)",
         }}
         aria-hidden
@@ -94,19 +124,68 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
   const [isFlipped, setIsFlipped] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFlipping, setIsFlipping] = useState(false);
+  const [isMorphing, setIsMorphing] = useState(false);
   const flippingRef = useRef(false);
   const flippedRef = useRef(false);
+  /** Hard cooldown so click+ghost-click / Enter+click can't arm two flips. */
+  const lockUntilRef = useRef(0);
+  const layoutRef = useRef<CardLayout | null>(null);
   const flipControls = useAnimationControls();
+  const morphControls = useAnimationControls();
   const reduceMotion = useReducedMotion();
   const isMobileLayout = useCardMobileLayout();
   const layout: CardLayout = isMobileLayout ? "mobile" : "desktop";
   const shell = CARD_SHELL[layout];
   const { rotateX, rotateY, handleMouseMove, handleMouseLeave } = useCardTilt();
 
+  /* morph shell + depth pulse when crossing mobile ↔ desktop (rotate / resize) */
+  useEffect(() => {
+    const prev = layoutRef.current;
+    layoutRef.current = layout;
+    if (prev === null || prev === layout) return;
+
+    if (reduceMotion) {
+      void morphControls.set({ scale: 1, opacity: 1, filter: "blur(0px)", rotateZ: 0 });
+      return;
+    }
+
+    let cancelled = false;
+    setIsMorphing(true);
+    const toMobile = layout === "mobile";
+
+    void (async () => {
+      try {
+        await morphControls.start({
+          scale: [1, 0.935, 1.015, 1],
+          opacity: [1, 0.88, 1],
+          filter: ["blur(0px)", "blur(1.5px)", "blur(0px)"],
+          rotateZ: toMobile ? [0, -1.2, 0.4, 0] : [0, 1.2, -0.4, 0],
+          transition: {
+            duration: LAYOUT_MORPH_MS,
+            ease: LAYOUT_MORPH_EASE,
+            times: [0, 0.35, 0.75, 1],
+          },
+        });
+      } finally {
+        if (!cancelled) {
+          setIsMorphing(false);
+          void morphControls.set({ scale: 1, opacity: 1, filter: "blur(0px)", rotateZ: 0 });
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [layout, morphControls, reduceMotion]);
+
   async function runFlip() {
-    // one flip at a time — same full sequence every press, both directions
-    if (flippingRef.current) return;
+    const now = performance.now();
+    if (now < lockUntilRef.current) return;
+    if (flippingRef.current || isMorphing) return;
+    // lock before any await so a second event in the same tick can't re-enter
     flippingRef.current = true;
+    lockUntilRef.current = now + FLIP_MS * 1000 + 120;
     setIsFlipping(true);
 
     const next = !flippedRef.current;
@@ -123,12 +202,12 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
     try {
       await flipControls.start({
         rotateY: next ? 180 : 0,
-        scale: [1, 0.97, 1],
-        y: [0, -8, 0],
+        scale: [1, 0.955, 1.01, 1],
+        y: [0, -12, -4, 0],
         transition: {
           rotateY: { duration: FLIP_MS, ease: FLIP_EASE },
-          scale: { duration: FLIP_MS, times: [0, 0.5, 1], ease: "easeInOut" },
-          y: { duration: FLIP_MS, times: [0, 0.5, 1], ease: "easeInOut" },
+          scale: { duration: FLIP_MS, times: [0, 0.42, 0.78, 1], ease: "easeInOut" },
+          y: { duration: FLIP_MS, times: [0, 0.42, 0.78, 1], ease: "easeInOut" },
         },
       });
     } finally {
@@ -154,23 +233,28 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-    // runFlip reads refs + controls — stable enough for a single listener
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reduceMotion]);
 
   // padding must cover the -inset-[13px] face + tilt foreshortening
   const pad = isMobileLayout ? "p-3" : "p-5 sm:p-7";
-  const pauseFloat = reduceMotion || isHovered || isMobileLayout || isFlipping;
+  const busy = isFlipping || isMorphing;
+  const pauseFloat = reduceMotion || isHovered || isMobileLayout || busy;
+  const freezeTilt = reduceMotion || isMobileLayout || busy;
 
   return (
-    <div
-      className={`max-w-full flex items-center justify-center ${pad}`}
+    <motion.div
+      className={`w-full max-w-full flex items-center justify-center ${pad}`}
       data-layout={layout}
-      style={{
-        width: isMobileLayout ? `min(100%, ${shell.width}px)` : shell.width,
+      initial={false}
+      animate={{
+        maxWidth: shell.width,
         height: shell.height,
-        perspective: isMobileLayout ? 1400 : 1600,
-        perspectiveOrigin: "50% 50%",
+      }}
+      transition={reduceMotion ? { duration: 0 } : SHELL_SPRING}
+      style={{
+        perspective: isMobileLayout ? 1500 : 1700,
+        perspectiveOrigin: "50% 45%",
       }}
     >
       {/*
@@ -178,66 +262,84 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
         flip face shears into a blue edge line mid-rotate (esp. on mobile).
       */}
       <div className="w-full h-full rounded-lg outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#4a76c9] has-[:focus-visible]:ring-offset-4 has-[:focus-visible]:ring-offset-transparent">
-      <motion.div
-        className="w-full h-full relative cursor-pointer select-none outline-none rounded-lg"
-        role="button"
-        tabIndex={0}
-        aria-pressed={isFlipped}
-        aria-label={
-          isFlipped
-            ? "Trainer card back. Press A or Enter to flip."
-            : "Trainer card front. Press A or Enter to flip."
-        }
-        style={{
-          // tilt is desktop-only — phones get tap-to-flip without fighting scroll
-          rotateX: reduceMotion || isMobileLayout || isFlipping ? 0 : rotateX,
-          rotateY: reduceMotion || isMobileLayout || isFlipping ? 0 : rotateY,
-          transformStyle: "preserve-3d",
-        }}
-        animate={{
-          y: pauseFloat ? 0 : [0, -8, 0],
-        }}
-        transition={{
-          y: pauseFloat
-            ? { duration: 0.35, ease: "easeOut" }
-            : { duration: 4, repeat: Infinity, ease: "easeInOut" },
-        }}
-        onMouseMove={reduceMotion || isMobileLayout || isFlipping ? undefined : handleMouseMove}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={handleLeave}
-        onClick={(e) => {
-          void runFlip();
-          // pointer/tap focus was painting a blue ring that sheared during flip
-          if (e.detail !== 0) e.currentTarget.blur();
-        }}
-        onKeyDown={(e) => {
-          if (e.target !== e.currentTarget) return;
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            void runFlip();
-          }
-        }}
-      >
+        {/* layout morph layer — device rotate / breakpoint cross */}
         <motion.div
-          className="w-full h-full relative will-change-transform"
-          style={{ transformStyle: "preserve-3d", transformOrigin: "center center" }}
-          initial={{ rotateY: 0, scale: 1, y: 0 }}
-          animate={flipControls}
+          className="w-full h-full will-change-transform"
+          initial={false}
+          animate={morphControls}
+          style={{ transformOrigin: "center center" }}
         >
-          <CardFace flipped={isFlipped} lifting={isFlipping}>
-            <CardFront layout={layout} />
-          </CardFace>
+          {/* tilt + idle float */}
+          <motion.div
+            className="w-full h-full relative cursor-pointer select-none outline-none rounded-lg will-change-transform"
+            role="button"
+            tabIndex={0}
+            data-flip-root
+            aria-pressed={isFlipped}
+            aria-label={
+              isFlipped
+                ? "Trainer card back. Press A or Enter to flip."
+                : "Trainer card front. Press A or Enter to flip."
+            }
+            style={{
+              rotateX: freezeTilt ? 0 : rotateX,
+              rotateY: freezeTilt ? 0 : rotateY,
+              transformStyle: "preserve-3d",
+              transformOrigin: "center center",
+            }}
+            animate={{
+              y: pauseFloat ? 0 : [0, -8, 0],
+            }}
+            transition={{
+              y: pauseFloat
+                ? { duration: 0.4, ease: "easeOut" }
+                : { duration: 4.2, repeat: Infinity, ease: "easeInOut" },
+            }}
+            onMouseMove={freezeTilt ? undefined : handleMouseMove}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={handleLeave}
+            onPointerUp={(e) => {
+              // Primary path — one arm per tap. Ignore controls + near-miss margin.
+              if (e.button !== 0) return;
+              if (e.pointerType === "mouse" && e.detail > 1) return;
+              if (shouldIgnoreFlip(e.target, e.clientX, e.clientY)) return;
+              void runFlip();
+            }}
+            onClick={(e) => {
+              // Don't hijack real control clicks; only swallow leftover shell activation.
+              if (shouldIgnoreFlip(e.target, e.clientX, e.clientY)) return;
+              e.preventDefault();
+            }}
+            onKeyDown={(e) => {
+              if (e.target !== e.currentTarget) return;
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                void runFlip();
+              }
+            }}
+          >
+            {/* flip layer */}
+            <motion.div
+              className="w-full h-full relative will-change-transform [transform:translateZ(0)]"
+              style={{ transformStyle: "preserve-3d", transformOrigin: "center center" }}
+              initial={{ rotateY: 0, scale: 1, y: 0 }}
+              animate={flipControls}
+            >
+              <CardFace flipped={isFlipped} lifting={busy}>
+                <CardFront layout={layout} />
+              </CardFace>
 
-          <CardFace flipped={isFlipped} isBack lifting={isFlipping}>
-            <CardBack
-              layout={layout}
-              onEnterPortfolio={onEnterPortfolio}
-              onOpenHariMd={onOpenHariMd}
-            />
-          </CardFace>
+              <CardFace flipped={isFlipped} isBack lifting={busy}>
+                <CardBack
+                  layout={layout}
+                  onEnterPortfolio={onEnterPortfolio}
+                  onOpenHariMd={onOpenHariMd}
+                />
+              </CardFace>
+            </motion.div>
+          </motion.div>
         </motion.div>
-      </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

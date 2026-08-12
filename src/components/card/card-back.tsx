@@ -270,7 +270,8 @@ function HonorWorldCard({
 /**
  * Full-bleed honor hero card (tokens furnace, Hacktoberfest golden card, etc).
  * Top sticker tabs stay HTML; this detail is one raster asset.
- * OPEN PROOF is an invisible hit-target over the painted button.
+ * OPEN PROOF is an invisible hit-target over the painted button — except the
+ * furnace card, whose art has no proof button (logos are paint, not links).
  */
 function TokensHonorDetail({ honor, mobile = false }: { honor: BackHonor; mobile?: boolean }) {
   const proofExternal = /^https?:\/\//.test(honor.url);
@@ -280,8 +281,8 @@ function TokensHonorDetail({ honor, mobile = false }: { honor: BackHonor; mobile
       : honor.heroArt ?? "/honors/1b-tokens-desktop.webp";
   const cardBase = heroSrc.replace(/\.(png|webp|avif)$/i, "");
   const accent = honor.color;
-  /* mobile furnace is a full painted scene — whole panel is the proof hit */
-  const fullProofHit = honor.world === "furnace" && mobile;
+  /* furnace art is decorative — no painted OPEN PROOF, so no overlay link */
+  const showProofHit = !honor.placeholder && honor.world !== "furnace";
 
   /* painted OPEN PROOF sits in different spots per card art */
   const proofHit =
@@ -311,23 +312,22 @@ function TokensHonorDetail({ honor, mobile = false }: { honor: BackHonor; mobile
           <img
             src={`${cardBase}.png?v=tok4`}
             alt={honor.title}
-            className="h-full w-full object-contain object-center select-none"
+            className="h-full w-full object-contain object-center select-none pointer-events-none"
             loading="lazy"
             decoding="async"
             draggable={false}
           />
         </picture>
 
-        {!honor.placeholder && (
+        {showProofHit && (
           <a
             href={honor.url}
             {...(proofExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             onClick={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
             aria-label="Open proof"
             title="OPEN PROOF"
-            className={`absolute z-10 cursor-pointer hover:brightness-110 active:scale-[0.99] transition-transform ${
-              fullProofHit ? "inset-0 rounded-[4px]" : `rounded-[4px] ${proofHit}`
-            }`}
+            className={`absolute z-10 cursor-pointer hover:brightness-110 active:scale-[0.99] transition-transform rounded-[4px] ${proofHit}`}
           />
         )}
       </div>
@@ -342,7 +342,15 @@ function TokensHonorDetail({ honor, mobile = false }: { honor: BackHonor; mobile
  * Tokens honor uses TokensHonorDetail instead.
  * OPEN PROOF sits as a top-right button box (not a underline link under the text).
  */
-function HonorWorldDetail({ honor, mobile = false }: { honor: BackHonor; mobile?: boolean }) {
+function HonorWorldDetail({
+  honor,
+  mobile = false,
+  onEnterPortfolio,
+}: {
+  honor: BackHonor;
+  mobile?: boolean;
+  onEnterPortfolio: (tab: TabKey) => void;
+}) {
   const accent = honor.color;
   const hasWins = Boolean(honor.wins?.length);
   const hasAgents = Boolean(honor.agents?.length);
@@ -375,7 +383,8 @@ function HonorWorldDetail({ honor, mobile = false }: { honor: BackHonor; mobile?
         className="w-full shrink-0 rounded-[7px] border overflow-hidden"
         style={{ borderColor: accent, background: heroBannerBg }}
       >
-        <div className="relative w-full aspect-[2/1]">
+        {/* shorter strip so Highlights chips get real room on mobile */}
+        <div className="relative w-full aspect-[2.55/1] max-h-[108px]">
           <picture className="absolute inset-0 block h-full w-full">
             <source
               srcSet={`${mobileArt.replace(/\.(png|webp|avif)$/i, "")}.avif?v=hero2`}
@@ -388,7 +397,10 @@ function HonorWorldDetail({ honor, mobile = false }: { honor: BackHonor; mobile?
             <img
               src={`${mobileArt.replace(/\.(png|webp|avif)$/i, "")}.png?v=hero2`}
               alt=""
-              className="h-full w-full object-cover object-center select-none"
+              className={`h-full w-full object-cover select-none ${
+                /* YC: bias down so the building crown isn't cropped */
+                honor.world === "garage" ? "object-[center_18%]" : "object-center"
+              }`}
               draggable={false}
             />
           </picture>
@@ -454,26 +466,29 @@ function HonorWorldDetail({ honor, mobile = false }: { honor: BackHonor; mobile?
         {artTile}
 
         {/* no pr-16 gutter — OPEN PROOF sits in the title row so highlight can use full width */}
-        <div className={`min-w-0 flex-1 flex flex-col overflow-hidden ${mobile ? "gap-1.5" : "gap-2"}`}>
+        <div
+          className={`min-w-0 flex-1 flex flex-col overflow-hidden ${
+            mobile ? (hasWins ? "gap-2" : "gap-1.5") : "gap-2"
+          }`}
+        >
           <div className="flex items-start justify-between gap-2 shrink-0">
-            <div className={`min-w-0 flex flex-col ${mobile ? "gap-1" : "gap-1"}`}>
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <span
-                  className={`font-pixel leading-none ${mobile ? "text-[10px]" : "text-[11px]"}`}
-                  style={{ color: accent }}
-                >
-                  {honor.title}
-                </span>
-                <span
-                  className={`inline-flex items-center gap-1 font-pixel leading-none rounded-[4px] text-white shrink-0 ${
-                    mobile ? "text-[5px] px-1 py-[2px]" : "text-[6px] px-1.5 py-[3px]"
-                  }`}
-                  style={{ background: accent }}
-                >
-                  <NounIcon name={honor.tagIcon} color="#ffffff" size={mobile ? 8 : 10} />
-                  {honor.tag}
-                </span>
-              </div>
+            <div className={`min-w-0 flex-1 flex flex-col ${mobile ? "gap-1" : "gap-1"}`}>
+              {/* card font — Press Start stretches long titles when forced into a wide row */}
+              <span
+                className={`font-card font-bold leading-snug ${mobile ? "text-[14px]" : "text-[15px]"}`}
+                style={{ color: accent }}
+              >
+                {honor.title}
+              </span>
+              <span
+                className={`inline-flex w-fit items-center gap-1 font-pixel leading-none rounded-[4px] text-white shrink-0 ${
+                  mobile ? "text-[5px] px-1 py-[2px]" : "text-[6px] px-1.5 py-[3px]"
+                }`}
+                style={{ background: accent }}
+              >
+                <NounIcon name={honor.tagIcon} color="#ffffff" size={mobile ? 8 : 10} />
+                {honor.tag}
+              </span>
               <span
                 className={`font-card font-semibold leading-snug ${mobile ? "text-[12px]" : "text-[13px]"}`}
                 style={{ color: accent }}
@@ -488,6 +503,7 @@ function HonorWorldDetail({ honor, mobile = false }: { honor: BackHonor; mobile?
                   ? { target: "_blank", rel: "noopener noreferrer" }
                   : {})}
                 onClick={(e) => e.stopPropagation()}
+                onPointerUp={(e) => e.stopPropagation()}
                 className={`shrink-0 font-pixel leading-none rounded-[4px] text-white border-2 cursor-pointer hover:brightness-110 active:scale-[0.97] transition-all ${
                   mobile ? "text-[5px] px-1.5 py-1" : "text-[6px] px-2 py-1.5"
                 }`}
@@ -499,67 +515,48 @@ function HonorWorldDetail({ honor, mobile = false }: { honor: BackHonor; mobile?
           </div>
 
           {hasWins ? (
-            <div className="min-h-0 flex-1 flex flex-col gap-1.5 overflow-hidden">
+            <div
+              className={`min-h-0 flex flex-col overflow-hidden ${
+                mobile ? "shrink-0 gap-2 pt-0.5 pb-1" : "flex-1 gap-1.5 justify-center"
+              }`}
+            >
               <div className="flex items-center gap-1.5 shrink-0">
                 <NounIcon name="star" color={accent} size={mobile ? 10 : 11} />
                 <span className="font-pixel text-[6px] leading-none" style={{ color: accent }}>
                   Highlights
                 </span>
               </div>
-              {/* app name buttons only — no screenshot embeds (unreadable at this size) */}
-              <div
-                className={`min-h-0 flex-1 grid content-start ${
-                  mobile ? "grid-cols-2 gap-2 auto-rows-min" : "grid-cols-4 gap-2 auto-rows-min"
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEnterPortfolio("projects");
+                }}
+                onPointerUp={(e) => e.stopPropagation()}
+                className={`w-full flex items-center justify-center gap-2 rounded-[8px] border-2 cursor-pointer transition-all duration-150 ease-out hover:brightness-[1.03] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] ${
+                  mobile ? "min-h-[52px] px-3 py-3" : "min-h-[56px] px-4 py-3.5"
                 }`}
+                style={{
+                  borderColor: accent,
+                  background: honor.tint,
+                  boxShadow: "0 2px 0 rgba(0,0,0,0.12)",
+                }}
               >
-                {honor.wins!.map((win) => (
-                  <a
-                    key={win.label}
-                    href={win.href}
-                    onClick={(e) => e.stopPropagation()}
-                    className={`flex flex-col items-center justify-center rounded-[7px] border text-center cursor-pointer hover:brightness-[1.03] active:scale-[0.98] transition-all ${
-                      mobile ? "gap-1 px-2 py-2.5 min-h-[44px]" : "gap-1 px-2 py-3 min-h-[52px]"
-                    }`}
-                    style={{
-                      borderColor: accent,
-                      background: honor.tint,
-                      boxShadow: "0 2px 0 rgba(0,0,0,0.12)",
-                    }}
-                  >
-                    <span
-                      className={`font-pixel leading-none truncate max-w-full ${
-                        mobile ? "text-[7px]" : "text-[8px]"
-                      }`}
-                      style={{ color: accent }}
-                    >
-                      {win.label}
-                    </span>
-                    <span
-                      className={`font-card font-semibold leading-none text-[#1f2a44] ${
-                        mobile ? "text-[11px]" : "text-[12px]"
-                      }`}
-                    >
-                      🏆 {win.result}
-                    </span>
-                  </a>
-                ))}
-                {honor.moreWins && (
-                  <a
-                    href={honor.moreWins.href}
-                    onClick={(e) => e.stopPropagation()}
-                    className={`flex items-center justify-center rounded-[7px] border border-dashed text-center cursor-pointer hover:bg-[#fff8e1] active:scale-[0.98] transition-all ${
-                      mobile ? "px-2 py-2.5 min-h-[44px]" : "px-2 py-3 min-h-[52px]"
-                    }`}
-                    style={{ borderColor: accent, color: accent }}
-                  >
-                    <span
-                      className={`font-pixel leading-tight ${mobile ? "text-[6px]" : "text-[7px]"}`}
-                    >
-                      {honor.moreWins.label}
-                    </span>
-                  </a>
-                )}
-              </div>
+                <NounIcon name="trophy" color={accent} size={mobile ? 14 : 16} />
+                <span
+                  className={`font-pixel leading-none ${mobile ? "text-[8px]" : "text-[9px]"}`}
+                  style={{ color: accent }}
+                >
+                  VIEW ALL PROJECTS HERE
+                </span>
+                <span
+                  className={`font-pixel leading-none ${mobile ? "text-[8px]" : "text-[9px]"}`}
+                  style={{ color: accent }}
+                  aria-hidden
+                >
+                  →
+                </span>
+              </button>
             </div>
           ) : (
             /*
@@ -681,7 +678,8 @@ function OpenRecordBtn({ href }: { href: string }) {
   );
 }
 
-/** Keeps wheel/touch scroll inside the panel */
+/** Keeps wheel/touch scroll inside the panel — taps still bubble so empty
+ *  chrome / honor copy can flip the card. Real controls use shouldIgnoreFlip. */
 function PanelScroll({
   children,
   className = "",
@@ -1243,7 +1241,11 @@ export function CardBack({
               </div>
 
               <div key={activeHonor.title} className="flex-1 min-h-0 flex flex-col overflow-hidden">
-                <HonorWorldDetail honor={activeHonor} mobile={mobile} />
+                <HonorWorldDetail
+                  honor={activeHonor}
+                  mobile={mobile}
+                  onEnterPortfolio={onEnterPortfolio}
+                />
               </div>
             </div>
           )}

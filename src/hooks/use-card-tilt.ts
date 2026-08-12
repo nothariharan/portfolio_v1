@@ -12,7 +12,7 @@ export function useCardTilt() {
   const rotateY = useTransform(x, [0, 1], [-5, 5]);
 
   // spring physics for smooth tracking
-  const springConfig = { damping: 25, stiffness: 150 };
+  const springConfig = { damping: 28, stiffness: 140, mass: 0.4 };
   const springX = useSpring(rotateY, springConfig);
   const springY = useSpring(rotateX, springConfig);
 

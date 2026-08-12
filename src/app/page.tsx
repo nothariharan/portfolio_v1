@@ -39,7 +39,7 @@ export default function Home() {
     setScale(defaultScale());
   }, []);
 
-  // entering mobile layout: snap zoom back to 100% so the portrait card isn't oversized
+  // entering mobile layout: ease zoom back to 100% so the portrait card isn't oversized
   useEffect(() => {
     if (isMobileLayout) setScale(1);
   }, [isMobileLayout]);
@@ -89,16 +89,21 @@ export default function Home() {
         </p>
       </div>
 
-      {/* trainer card with retro spring zoom scale animation */}
+      {/* trainer card — spring zoom + soft stage morph on layout change */}
       <motion.div
-        className={`w-full flex items-center justify-center z-10 ${
-          isMobileLayout ? "max-w-[440px] py-6" : "max-w-[900px] py-16"
-        }`}
-        animate={{ scale: scale }}
+        className="w-full flex items-center justify-center z-10"
+        initial={false}
+        animate={{
+          scale,
+          maxWidth: isMobileLayout ? 440 : 900,
+          paddingTop: isMobileLayout ? 24 : 64,
+          paddingBottom: isMobileLayout ? 24 : 64,
+        }}
         transition={{
-          type: "spring",
-          stiffness: 380,
-          damping: 18,
+          scale: { type: "spring", stiffness: 320, damping: 24 },
+          maxWidth: { type: "spring", stiffness: 240, damping: 28 },
+          paddingTop: { type: "spring", stiffness: 240, damping: 28 },
+          paddingBottom: { type: "spring", stiffness: 240, damping: 28 },
         }}
       >
         <TrainerCard

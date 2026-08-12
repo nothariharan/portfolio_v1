@@ -3,6 +3,7 @@ import { Press_Start_2P, Inter, DM_Serif_Display, Space_Grotesk, JetBrains_Mono 
 import localFont from "next/font/local";
 import { TransitionProvider } from "@/hooks/use-transition";
 import { FlashOverlay } from "@/components/transition/flash-overlay";
+import { FunTabTitle } from "@/components/site/fun-tab-title";
 import "./globals.css";
 
 // pixel art font for card elements
@@ -64,6 +65,7 @@ export default function RootLayout({
     >
       <body className="min-h-full bg-gba-teal transition-colors duration-500">
         <TransitionProvider>
+          <FunTabTitle />
           {children}
           <FlashOverlay />
         </TransitionProvider>

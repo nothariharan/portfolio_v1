@@ -376,7 +376,7 @@ function StackRows({ compact }: { compact?: boolean }) {
     : `flex flex-wrap ${gap}`;
 
   return (
-    <div className={`flex flex-col ${compact ? "gap-1" : "gap-1.5"} ${compact ? "pl-[8px]" : "pl-[12px]"}`}>
+    <div className={`flex flex-col ${compact ? "gap-1" : "gap-1.5"} ${compact ? "pl-0" : "pl-[12px]"}`}>
       <div className="flex items-center gap-1.5 min-w-0">
         <span className={`font-pixel text-[8px] leading-none text-[#a4a9af] ${labelW} text-right shrink-0`}>
           CORE
@@ -705,12 +705,16 @@ export function CardFront({ layout = "desktop" }: { layout?: CardLayout }) {
         <IdentityPanel layout={layout} />
 
         {mobile ? (
-          <div className="relative z-30 mt-auto flex items-stretch gap-1.5 pt-2">
-            <div className="w-[36%] min-w-[112px] shrink-0">
-              <ExpPanel compact />
+          <>
+            <div className="relative z-30 mt-1.5 flex items-stretch gap-1.5 shrink-0">
+              <div className="w-[36%] min-w-[112px] shrink-0">
+                <ExpPanel compact />
+              </div>
+              <CurrentlyPanel layout="mobile" />
             </div>
-            <CurrentlyPanel layout="mobile" />
-          </div>
+            {/* leftover height sits under EXP/CURRENTLY, not between STACK and EXP */}
+            <div className="flex-1 min-h-0" aria-hidden />
+          </>
         ) : (
           <div className="relative z-10 mt-auto pt-2 w-[32%] min-w-[150px] max-w-[190px] shrink-0">
             <ExpPanel />
