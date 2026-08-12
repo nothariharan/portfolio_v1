@@ -49,30 +49,30 @@ const pokemonDS = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://hariharann.me"),
-  title: "hariharan — welcome to my world",
+  title: "N. Hariharan — solution for your problems :DD",
   description:
-    "flip the GBA trainer card. peek the DATA FILE. trust me you wont be bored — AI, web, open source, and a little AGI??",
+    "N. Hariharan — solution for your problems :DD · UI/UX | Product | Application | Systems Developer · likes having fun",
   openGraph: {
-    title: "hariharan — welcome to my world",
+    title: "N. Hariharan — solution for your problems :DD",
     description:
-      "flip the GBA trainer card. peek the DATA FILE. trust me you wont be bored.",
+      "UI/UX | Product | Application | Systems Developer · likes having fun",
     url: "https://hariharann.me",
-    siteName: "hari",
+    siteName: "N. Hariharan",
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "hari — Welcome to my world",
+        alt: "N. Hariharan",
       },
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "hariharan — welcome to my world",
+    title: "N. Hariharan — solution for your problems :DD",
     description:
-      "flip the GBA trainer card. peek the DATA FILE. trust me you wont be bored.",
+      "UI/UX | Product | Application | Systems Developer · likes having fun",
     images: ["/og.png"],
   },
 };
