@@ -14,7 +14,7 @@ export function useMediaQuery(query: string, debounceMs = 80) {
 
   useEffect(() => {
     const mql = window.matchMedia(query);
-    let timer: ReturnType<typeof setTimeout> | undefined;
+    let timer: number | undefined;
 
     const apply = () => setMatches(mql.matches);
     const onChange = () => {
