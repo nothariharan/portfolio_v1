@@ -49,10 +49,12 @@ const pokemonDS = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://hariharann.me"),
-  title: "N. Hariharan — solution for your problems :DD",
+  // browser tab / default <title>
+  title: "hariharan - welcome!! :D",
   description:
     "N. Hariharan — solution for your problems :DD · UI/UX | Product | Application | Systems Developer · likes having fun",
   openGraph: {
+    // link-preview card only (Discord / Slack / iMessage / etc.)
     title: "N. Hariharan — solution for your problems :DD",
     description:
       "UI/UX | Product | Application | Systems Developer · likes having fun",
@@ -60,7 +62,7 @@ export const metadata: Metadata = {
     siteName: "N. Hariharan",
     images: [
       {
-        url: "/og.png",
+        url: "/og.png?v=3",
         width: 1200,
         height: 630,
         alt: "N. Hariharan",
@@ -73,7 +75,7 @@ export const metadata: Metadata = {
     title: "N. Hariharan — solution for your problems :DD",
     description:
       "UI/UX | Product | Application | Systems Developer · likes having fun",
-    images: ["/og.png"],
+    images: ["/og.png?v=3"],
   },
 };
 
