@@ -225,12 +225,12 @@ function HonorWorldCard({
 }) {
   const fill =
     honor.world === "forest"
-      ? "#2f7ad1"
+      ? "#2874e1"
       : honor.world === "garage"
-        ? "#fb651e"
+        ? "#ff6014"
         : honor.world === "arena"
-          ? "#c9a227"
-          : "#e23b2e";
+          ? "#fcd023"
+          : "#e9342e";
 
   return (
     <button
@@ -242,21 +242,22 @@ function HonorWorldCard({
       aria-pressed={selected}
       aria-label={honor.cardTitle}
       className={`relative min-w-0 w-full overflow-hidden rounded-[6px] border-[3px] border-[#111] cursor-pointer transition-[box-shadow,filter,opacity] duration-150 ${
-        mobile ? "aspect-[480/175]" : "aspect-[480/200]"
+        mobile ? "aspect-[480/145]" : "aspect-[480/200]"
       }`}
       style={{
         background: fill,
         opacity: selected ? 1 : 0.92,
+        /* ring uses sticker fill — honor.color is a different accent and looked like a mismatched halo */
         boxShadow: selected
-          ? `0 0 0 2px ${honor.color}, 0 3px 0 rgba(0,0,0,0.28)`
+          ? `0 0 0 2px ${fill}, 0 3px 0 rgba(0,0,0,0.28)`
           : "0 2px 0 rgba(0,0,0,0.2)",
         filter: selected ? "brightness(1.04)" : undefined,
         zIndex: selected ? 1 : 0,
       }}
     >
-      {/* ?v=slot2 busts old cached letterboxed exports after we swapped art */}
+      {/* contain — letterbox ok if CSS fill matches baked PNG bg */}
       <img
-        src={`${honor.cardArt}?v=slot3`}
+        src={`${honor.cardArt}?v=slot5`}
         alt=""
         className="absolute inset-0 block h-full w-full object-contain object-center pointer-events-none select-none"
         style={{ background: fill }}
@@ -305,14 +306,12 @@ function TokensHonorDetail({ honor, mobile = false }: { honor: BackHonor; mobile
         }`}
       >
         <picture className="absolute inset-0 block h-full w-full">
-          <source srcSet={`${cardBase}.avif?v=tok3`} type="image/avif" />
-          <source srcSet={`${cardBase}.webp?v=tok3`} type="image/webp" />
+          <source srcSet={`${cardBase}.avif?v=tok4`} type="image/avif" />
+          <source srcSet={`${cardBase}.webp?v=tok4`} type="image/webp" />
           <img
-            src={`${cardBase}.png?v=tok3`}
+            src={`${cardBase}.png?v=tok4`}
             alt={honor.title}
-            className={`h-full w-full object-center select-none ${
-              mobile && honor.world === "furnace" ? "object-cover" : "object-contain"
-            }`}
+            className="h-full w-full object-contain object-center select-none"
             loading="lazy"
             decoding="async"
             draggable={false}

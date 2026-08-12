@@ -376,7 +376,7 @@ function StackRows({ compact }: { compact?: boolean }) {
     : `flex flex-wrap ${gap}`;
 
   return (
-    <div className={`flex flex-col ${compact ? "gap-1" : "gap-1.5"} ${compact ? "pl-[20px]" : "pl-[26px]"}`}>
+    <div className={`flex flex-col ${compact ? "gap-1" : "gap-1.5"} ${compact ? "pl-[8px]" : "pl-[12px]"}`}>
       <div className="flex items-center gap-1.5 min-w-0">
         <span className={`font-pixel text-[8px] leading-none text-[#a4a9af] ${labelW} text-right shrink-0`}>
           CORE
