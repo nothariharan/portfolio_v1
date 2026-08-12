@@ -613,9 +613,9 @@ export type BackHonor = {
   /** if set, highlight box becomes a screenshot strip (hackathon layout) */
   wins?: BackHonorWin[];
   moreWins?: { label: string; href: string };
-  /** tokens layout — furnace hero + brand logo flow */
+  /** tokens / full-bleed hero — desktop (and mobile fallback) */
   heroArt?: string;
-  /** Optional mobile-optimized furnace hero (falls back to heroArt) */
+  /** Optional mobile-only full-bleed hero (tokens); Hacktoberfest uses artTileMobile banner + HTML */
   heroArtMobile?: string;
   agents?: BackHonorAgent[];
   metrics: [BackHonorMetric, BackHonorMetric, BackHonorMetric];
@@ -629,7 +629,8 @@ export const BACK_HONORS: BackHonor[] = [
     tag: "OPEN SOURCE",
     tagIcon: "code",
     artTile: "/honors/hacktoberfest-tile.webp",
-    artTileMobile: "/honors/hacktoberfest-tile-mobile.webp",
+    /** wide pixel hero (scene + GOLDEN TIER) — mobile detail uses HTML chrome below */
+    artTileMobile: "/honors/hacktoberfest-hero-mobile.webp",
     color: "#33406b",
     tint: "#e8eef8",
     url: "https://github.com/nothariharan",
@@ -637,8 +638,7 @@ export const BACK_HONORS: BackHonor[] = [
     verified: true,
     world: "forest",
     cardArt: "/honors/hacktoberfest-card.webp",
-    highlight:
-      "Top-tier Hacktoberfest '25 — 32 PRs merged, golden tier, basically living in open source for a month.",
+    highlight: "32 PRs merged · golden tier — a month deep in open source.",
     metrics: [
       { icon: "branch", label: "PRs Merged", value: "32" },
       { icon: "trophy", label: "Rank", value: "Top 1%" },
@@ -652,16 +652,17 @@ export const BACK_HONORS: BackHonor[] = [
     tag: "Y COMBINATOR",
     tagIcon: "rocket",
     artTile: "/honors/yc-tile.webp",
-    artTileMobile: "/honors/yc-tile-mobile.webp",
+    /** wide pixel hero (campus + cohort ribbon) — mobile detail uses HTML chrome below */
+    artTileMobile: "/honors/yc-hero-mobile.webp",
     color: "#fb651e",
     tint: "#fff0e6",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7451484147975356416/",
-    rank: "SELECTED",
+    rank: "INDIA COHORT",
     verified: true,
     world: "garage",
     cardArt: "/honors/yc-garage-card.webp",
     highlight:
-      "Beat 100k+ apps into YC Startup School India '26 — founder track, not the equity batch. $25k AI credits and a cohort of builders actually shipping companies.",
+      "Beat 100k+ apps into YC SS India '26 — founder track, $25k AI credits.",
     metrics: [
       { icon: "users", label: "Applicants", value: "100k+" },
       { icon: "globe", label: "Cohort", value: "India '26" },
@@ -671,11 +672,12 @@ export const BACK_HONORS: BackHonor[] = [
   {
     title: "15+ Hackathon Wins",
     cardTitle: "15+ Wins",
-    sub: "Across 2+ international and 12+ national hackathons.",
+    sub: "2+ international · 12+ national.",
     tag: "HACKATHONS",
     tagIcon: "trophy",
     artTile: "/honors/hackathon-tile.webp",
-    artTileMobile: "/honors/hackathon-tile-mobile.webp",
+    /** wide pixel hero (trophy + champion pennant) — mobile HTML wins/chrome below */
+    artTileMobile: "/honors/hackathon-hero-mobile.webp",
     color: "#c9a227",
     tint: "#f5edd0",
     url: "/portfolio/achievements",
@@ -727,9 +729,9 @@ export const BACK_HONORS: BackHonor[] = [
     world: "furnace",
     cardArt: "/honors/tokens-furnace-card.webp",
     highlight: "Burning tokens, shipping real stuff — production AI, not recreational burn.",
-    /** full tokens detail card raster — served as AVIF/WebP/PNG via <picture> */
+    /** desktop keeps prior furnace card; mobile uses new portrait full-bleed */
     heroArt: "/honors/1b-tokens.webp",
-    heroArtMobile: "/honors/1b-tokens.webp",
+    heroArtMobile: "/honors/1b-tokens-mobile.webp",
     agents: [
       { label: "Claude Code", short: "Claude", blurb: "Deep reasoning & coding", logo: "claude" },
       { label: "Cursor", short: "Cursor", blurb: "AI-native IDE velocity", logo: "cursor" },
