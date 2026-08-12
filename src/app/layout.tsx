@@ -48,9 +48,33 @@ const pokemonDS = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Hariharan — Trainer Card & Portfolio",
+  metadataBase: new URL("https://hariharann.me"),
+  title: "hariharan — welcome to my world",
   description:
-    "N. Hariharan — full-stack + AI builder. Pokémon GBA trainer card and developer portfolio: 22+ projects, 9 hackathon wins, YC Startup School.",
+    "flip the GBA trainer card. peek the DATA FILE. trust me you wont be bored — AI, web, open source, and a little AGI??",
+  openGraph: {
+    title: "hariharan — welcome to my world",
+    description:
+      "flip the GBA trainer card. peek the DATA FILE. trust me you wont be bored.",
+    url: "https://hariharann.me",
+    siteName: "hari",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "hari — Welcome to my world",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "hariharan — welcome to my world",
+    description:
+      "flip the GBA trainer card. peek the DATA FILE. trust me you wont be bored.",
+    images: ["/og.png"],
+  },
 };
 
 export default function RootLayout({
