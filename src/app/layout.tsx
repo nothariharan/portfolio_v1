@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import { TransitionProvider } from "@/hooks/use-transition";
 import { FlashOverlay } from "@/components/transition/flash-overlay";
 import { FunTabTitle } from "@/components/site/fun-tab-title";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 // pixel art font for card elements
