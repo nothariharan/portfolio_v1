@@ -74,31 +74,39 @@ function CardFace({
   flipped,
   isBack,
   lifting,
+  crossed,
 }: {
   children: ReactNode;
   flipped: boolean;
   isBack?: boolean;
   /** Mid-flip / morph: deepen the drop shadow so the lift reads. */
   lifting?: boolean;
+  /** Past ~90° — hide the outgoing face so it can't ghost through. */
+  crossed?: boolean;
 }) {
   const show = flipped === !!isBack;
-  // After the flip, hide the unused face. pointer-events:none is not enough —
-  // the front sprite still steals hits on the right (SKILLS) under 3D + zoom.
-  const inert = !show && !lifting;
+  // Keep the outgoing face only for the first half of the turn. After that,
+  // backface-visibility is not enough — nested chips / text paint as fragments.
+  const inert = !show && (!lifting || crossed);
 
   return (
     <div
-      className="absolute -inset-[13px]"
+      className="absolute -inset-[13px] rounded-[10px]"
       data-card-visual={show ? "" : undefined}
       aria-hidden={inert}
       style={{
-        transform: isBack ? "rotateY(180deg)" : undefined,
-        transformStyle: "preserve-3d",
+        transform: isBack
+          ? "rotateY(180deg) translateZ(1px)"
+          : "rotateY(0deg) translateZ(1px)",
+        // flat — preserve-3d on the face lets descendants ignore backface hide
+        transformStyle: "flat",
         pointerEvents: show ? "auto" : "none",
         // inherit — "visible" would punch through html[data-card-extending] hide
         visibility: inert ? "hidden" : "inherit",
+        opacity: inert ? 0 : 1,
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
+        isolation: "isolate",
       }}
     >
       <div
@@ -135,6 +143,7 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
   const [isFlipped, setIsFlipped] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFlipping, setIsFlipping] = useState(false);
+  const [flipCrossed, setFlipCrossed] = useState(false);
   const [isMorphing, setIsMorphing] = useState(false);
   const flippingRef = useRef(false);
   const flippedRef = useRef(false);
@@ -208,23 +217,32 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
       await flipControls.set({ rotateY: next ? 180 : 0, scale: 1, y: 0 });
       flippingRef.current = false;
       setIsFlipping(false);
+      setFlipCrossed(false);
       return;
     }
+
+    setFlipCrossed(false);
+    // Hide the outgoing face once the turn is past edge-on (~90°).
+    const mid = window.setTimeout(() => setFlipCrossed(true), FLIP_MS * 420);
 
     try {
       await flipControls.start({
         rotateY: next ? 180 : 0,
-        scale: [1, 0.955, 1.01, 1],
-        y: [0, -12, -4, 0],
+        scale: [1, 0.97, 1],
+        y: [0, -10, 0],
         transition: {
           rotateY: { duration: FLIP_MS, ease: FLIP_EASE },
-          scale: { duration: FLIP_MS, times: [0, 0.42, 0.78, 1], ease: "easeInOut" },
-          y: { duration: FLIP_MS, times: [0, 0.42, 0.78, 1], ease: "easeInOut" },
+          scale: { duration: FLIP_MS, times: [0, 0.45, 1], ease: "easeInOut" },
+          y: { duration: FLIP_MS, times: [0, 0.45, 1], ease: "easeInOut" },
         },
       });
+      // snap off sub-pixel leftovers (1.01 overshoot / compositor hairlines)
+      await flipControls.set({ rotateY: next ? 180 : 0, scale: 1, y: 0 });
     } finally {
+      window.clearTimeout(mid);
       flippingRef.current = false;
       setIsFlipping(false);
+      setFlipCrossed(false);
     }
   }
 
@@ -283,7 +301,7 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
       <div className="w-full h-full rounded-lg outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#4a76c9] has-[:focus-visible]:ring-offset-4 has-[:focus-visible]:ring-offset-transparent">
         {/* layout morph layer — device rotate / breakpoint cross */}
         <motion.div
-          className="w-full h-full will-change-transform"
+          className={`w-full h-full${busy ? " will-change-transform" : ""}`}
           initial={false}
           animate={morphControls}
           style={{ transformOrigin: "center center" }}
@@ -293,7 +311,7 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
             against a foreshortened box is what made the hover feel lagged.
           */}
           <motion.div
-            className="w-full h-full relative cursor-pointer select-none outline-none rounded-lg will-change-transform"
+            className={`w-full h-full relative cursor-pointer select-none outline-none rounded-lg${busy ? " will-change-transform" : ""}`}
             role={isFlipped ? "group" : "button"}
             tabIndex={0}
             data-flip-root
@@ -339,7 +357,7 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
           >
             {/* tilt only — spring isn't fighting the hover scale / float */}
             <motion.div
-              className="w-full h-full will-change-transform"
+              className={`w-full h-full${busy ? " will-change-transform" : ""}`}
               style={{
                 rotateX: freezeTilt ? 0 : rotateX,
                 rotateY: freezeTilt ? 0 : rotateY,
@@ -347,18 +365,18 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
                 transformOrigin: "center center",
               }}
             >
-            {/* flip layer */}
+            {/* flip layer — no translateZ(0); that flattens 3D and leaves hairlines */}
             <motion.div
-              className="w-full h-full relative will-change-transform [transform:translateZ(0)]"
+              className={`w-full h-full relative${busy ? " will-change-transform" : ""}`}
               style={{ transformStyle: "preserve-3d", transformOrigin: "center center" }}
               initial={{ rotateY: 0, scale: 1, y: 0 }}
               animate={flipControls}
             >
-              <CardFace flipped={isFlipped} lifting={busy}>
+              <CardFace flipped={isFlipped} lifting={busy} crossed={flipCrossed}>
                 <CardFront layout={layout} />
               </CardFace>
 
-              <CardFace flipped={isFlipped} isBack lifting={busy}>
+              <CardFace flipped={isFlipped} isBack lifting={busy} crossed={flipCrossed}>
                 <CardBack
                   layout={layout}
                   onEnterPortfolio={onEnterPortfolio}
