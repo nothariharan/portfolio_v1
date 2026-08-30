@@ -8,7 +8,7 @@
  * bg color cycle + zoom sit in the corners so they dont fight the card.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { TrainerCard } from "@/components/card/trainer-card";
 import { CARD_MOBILE_MAX_PX } from "@/components/card/card-layout";
@@ -25,17 +25,25 @@ const BG_THEMES = [
   { id: "dusk", label: "DUSK", color: "#b8c4d4" },
 ] as const;
 
-function defaultScale() {
-  if (typeof window === "undefined") return 1.15;
+/** Same on the server and the first client paint — never read `window` here. */
+const SSR_SCALE = 1.15;
+
+function readLandingScale() {
   return window.matchMedia(`(max-width: ${CARD_MOBILE_MAX_PX}px)`).matches ? 1 : 1.3;
 }
 
 export default function Home() {
   const { startTransition } = useTransition();
-  const [scale, setScale] = useState(defaultScale);
+  const [scale, setScale] = useState(SSR_SCALE);
   const [bgIdx, setBgIdx] = useState(0);
   const [soundOn, setSoundOn] = useState(true);
+  const [zoomLive, setZoomLive] = useState(false);
   const isMobileLayout = useCardMobileLayout();
+
+  useLayoutEffect(() => {
+    setScale(readLandingScale());
+    setZoomLive(true);
+  }, []);
 
   useEffect(() => {
     setSoundOn(retroSound.isEnabled());
@@ -109,6 +117,7 @@ export default function Home() {
 
       {/* trainer card — spring zoom + soft stage morph on layout change */}
       <motion.div
+        data-card-zoom
         className="w-full flex items-center justify-center z-10"
         initial={false}
         animate={{
@@ -117,12 +126,16 @@ export default function Home() {
           paddingTop: isMobileLayout ? 24 : 64,
           paddingBottom: isMobileLayout ? 24 : 64,
         }}
-        transition={{
-          scale: { type: "spring", stiffness: 320, damping: 24 },
-          maxWidth: { type: "spring", stiffness: 240, damping: 28 },
-          paddingTop: { type: "spring", stiffness: 240, damping: 28 },
-          paddingBottom: { type: "spring", stiffness: 240, damping: 28 },
-        }}
+        transition={
+          zoomLive
+            ? {
+                scale: { type: "spring", stiffness: 320, damping: 24 },
+                maxWidth: { type: "spring", stiffness: 240, damping: 28 },
+                paddingTop: { type: "spring", stiffness: 240, damping: 28 },
+                paddingBottom: { type: "spring", stiffness: 240, damping: 28 },
+              }
+            : { duration: 0 }
+        }
       >
         <TrainerCard
           onEnterPortfolio={(tab) => startTransition(`/portfolio?tab=${tab}`)}
