@@ -236,10 +236,15 @@ function HonorWorldCard({
   return (
     <button
       type="button"
-      onClick={(e) => {
+      onPointerDown={(e) => {
+        if (e.button !== 0) return;
         e.stopPropagation();
         retroSound.playSelect();
         onSelect();
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
       }}
       onMouseEnter={() => retroSound.playCursor()}
       aria-pressed={selected}
@@ -316,7 +321,6 @@ function TokensHonorDetail({ honor, mobile = false }: { honor: BackHonor; mobile
             src={`${cardBase}.png?v=tok4`}
             alt={honor.title}
             className="h-full w-full object-contain object-center select-none pointer-events-none"
-            loading="lazy"
             decoding="async"
             draggable={false}
           />
@@ -681,6 +685,19 @@ function OpenRecordBtn({ href }: { href: string }) {
   );
 }
 
+function preloadCardBackAssets() {
+  const urls = [
+    ...BACK_HONORS.flatMap((h) => [h.cardArt, h.heroArt, h.heroArtMobile].filter(Boolean)),
+    ...BACK_PROJECTS.map((p) => `/sprites/proj_${p.icon}.webp`),
+    ...BACK_SKILLS.flatMap((g) => g.icons.map((k) => `/logos/${k}.svg`)),
+  ] as string[];
+  for (const src of urls) {
+    const img = new Image();
+    img.decoding = "async";
+    img.src = src;
+  }
+}
+
 /** Keeps wheel/touch scroll inside the panel — taps still bubble so empty
  *  chrome / honor copy can flip the card. Real controls use shouldIgnoreFlip. */
 function PanelScroll({
@@ -735,7 +752,6 @@ function LogoChip({
           fill ? "w-[62%] h-[62%]" : ""
         }`}
         style={fill ? undefined : { width: size - 12, height: size - 12 }}
-        loading="lazy"
         decoding="async"
       />
     </span>
@@ -821,7 +837,6 @@ function ProjectThumb({ icon, name, color }: { icon: string; name: string; color
       className="w-full h-full pixelated"
       onError={() => setOk(false)}
       style={{ background: color }}
-      loading="lazy"
       decoding="async"
     />
   );
@@ -863,6 +878,58 @@ export function CardBack({
   const mobile = layout === "mobile";
   const active = PANELS[sel];
   const activeHonor = BACK_HONORS[honorSel] ?? BACK_HONORS[0];
+
+  useEffect(() => {
+    preloadCardBackAssets();
+  }, []);
+
+  useEffect(() => {
+    const root = document.querySelector("[data-flip-root]");
+    if (!(root instanceof HTMLElement)) return;
+
+    const tabAtPoint = (x: number, y: number) => {
+      const tabs = [...root.querySelectorAll<HTMLElement>('[role="tab"]')];
+      if (!tabs.length) return -1;
+      for (let i = 0; i < tabs.length; i++) {
+        const r = tabs[i].getBoundingClientRect();
+        if (x >= r.left - 8 && x <= r.right + 8 && y >= r.top - 10 && y <= r.bottom + 10) {
+          return i;
+        }
+      }
+      const top = Math.min(...tabs.map((t) => t.getBoundingClientRect().top)) - 12;
+      const bot = Math.max(...tabs.map((t) => t.getBoundingClientRect().bottom)) + 12;
+      if (y < top || y > bot) return -1;
+      const first = tabs[0].getBoundingClientRect();
+      const last = tabs[tabs.length - 1].getBoundingClientRect();
+      if (x < first.left - 16 || x > last.right + 24) return -1;
+      let best = 0;
+      let bestDx = Infinity;
+      tabs.forEach((t, i) => {
+        const r = t.getBoundingClientRect();
+        const dx = Math.abs(x - (r.left + r.right) / 2);
+        if (dx < bestDx) {
+          bestDx = dx;
+          best = i;
+        }
+      });
+      return best;
+    };
+
+    const onDown = (e: PointerEvent) => {
+      if (e.button !== 0) return;
+      if (root.getAttribute("aria-pressed") !== "true") return;
+      const hit = tabAtPoint(e.clientX, e.clientY);
+      if (hit < 0) return;
+      e.stopPropagation();
+      setSel((prev) => {
+        if (prev !== hit) retroSound.playSelect();
+        return hit;
+      });
+    };
+
+    root.addEventListener("pointerdown", onDown, true);
+    return () => root.removeEventListener("pointerdown", onDown, true);
+  }, []);
 
   useEffect(() => {
     if (active.tab !== "honors") return;
@@ -907,9 +974,13 @@ export function CardBack({
 
       {/* pokemon-style tab buttons — click to switch (no hover-switch) */}
       <div
-        className={`flex shrink-0 ${mobile ? "gap-1 px-2.5 pt-2.5" : "gap-1.5 px-3.5 pt-3"}`}
+        className={`relative z-20 flex shrink-0 ${mobile ? "gap-1 px-2.5 pt-2.5" : "gap-1.5 px-3.5 pt-3"}`}
         role="tablist"
         aria-label="Data file sections"
+        data-no-flip
+        style={{ touchAction: "manipulation" }}
+        onPointerDown={(e) => e.stopPropagation()}
+        onPointerUp={(e) => e.stopPropagation()}
       >
         {PANELS.map((panel, i) => {
           const on = i === sel;
@@ -923,10 +994,17 @@ export function CardBack({
               aria-label={panel.label}
               aria-controls={`panel-${panel.tab}`}
               id={`tab-${panel.tab}`}
+              onPointerDown={(e) => {
+                if (e.button !== 0) return;
+                e.stopPropagation();
+                setSel((prev) => {
+                  if (prev !== i) retroSound.playSelect();
+                  return i;
+                });
+              }}
               onClick={(e) => {
                 e.stopPropagation();
-                retroSound.playSelect();
-                setSel(i);
+                e.preventDefault();
               }}
               onMouseEnter={() => retroSound.playCursor()}
               className={`flex-1 min-w-0 font-pixel leading-none rounded-[6px] cursor-pointer border-2 transition-all duration-100 ease-out active:scale-[0.97] ${
@@ -968,7 +1046,6 @@ export function CardBack({
             inset -2px 0 0 ${NAVY},
             inset 0 0 0 4px #fffbe8
           `,
-          transform: "translateZ(1px)",
         }}
         role="tabpanel"
         id={`panel-${active.tab}`}
@@ -982,11 +1059,9 @@ export function CardBack({
         />
         {/* main details — contained scroll so wheel/swipe stays in-panel */}
         <PanelScroll
-          key={active.tab}
-          className={`flex-1 min-h-0 p-[3px] pr-1 animate-[fadeIn_120ms_ease-out] ${
+          className={`flex-1 min-h-0 p-[3px] pr-1 ${
             active.tab === "honors" ? "overflow-hidden" : "overflow-y-auto"
           }`}
-          axis="y"
         >
           {/* projects — No. + name + one line + link, nothing else */}
           {active.tab === "projects" && (

@@ -4,32 +4,26 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useRef,
   useState,
   type ReactNode,
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { WorldWipe } from "@/components/transition/world-wipe";
+import { CardExtend } from "@/components/transition/card-extend";
 import {
-  armCardGrow,
-  disarmWorldWipe,
   estimateCardOrigin,
   getCardOrigin,
   isPortfolioPath,
-  viewportRect,
-  WIPE_GROW_MS,
+  readStoredOrigin,
+  showLiveCard,
+  storeCardOrigin,
   type WipeState,
 } from "@/hooks/wipe-utils";
 
-export type { WipeDir, WipeRect, WipeState } from "@/hooks/wipe-utils";
-export { estimateCardOrigin, getCardOrigin, isPortfolioPath, viewportRect } from "@/hooks/wipe-utils";
-
 interface TransitionContextType {
   isTransitioning: boolean;
-  wipe: WipeState | null;
   startTransition: (url: string) => void;
-  commitNavigation: () => void;
-  endTransition: () => void;
 }
 
 const TransitionContext = createContext<TransitionContextType | undefined>(undefined);
@@ -42,11 +36,23 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
   const [wipe, setWipe] = useState<WipeState | null>(null);
   const hrefRef = useRef<string | null>(null);
   const busyRef = useRef(false);
-  const busySinceRef = useRef(0);
   const pathnameRef = useRef("/");
   const router = useRouter();
   const pathname = usePathname();
   pathnameRef.current = pathname;
+
+  const finish = useCallback(() => {
+    hrefRef.current = null;
+    busyRef.current = false;
+    showLiveCard();
+    setWipe(null);
+  }, []);
+
+  const commitNavigation = useCallback(() => {
+    const href = hrefRef.current;
+    if (!href) return;
+    router.push(href);
+  }, [router]);
 
   const startTransition = useCallback(
     (url: string) => {
@@ -56,7 +62,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
         router.push(url);
         return;
       }
-      if (busyRef.current && Date.now() - busySinceRef.current < 2000) return;
+      if (busyRef.current) return;
 
       if (prefersReducedMotion()) {
         router.push(url);
@@ -65,58 +71,45 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
 
       const goingToPortfolio = isPortfolioPath(url);
       const origin = goingToPortfolio
-        ? (getCardOrigin() ?? estimateCardOrigin())
-        : viewportRect();
+        ? (getCardOrigin() ?? readStoredOrigin() ?? estimateCardOrigin())
+        : (readStoredOrigin() ?? getCardOrigin() ?? estimateCardOrigin());
+      if (goingToPortfolio) storeCardOrigin(origin);
 
       busyRef.current = true;
-      busySinceRef.current = Date.now();
       hrefRef.current = url;
       router.prefetch(url);
-      if (goingToPortfolio) armCardGrow(origin);
       setWipe({
         dir: goingToPortfolio ? "expand" : "collapse",
         origin,
         href: url,
       });
-
-      // only if the grow callback never fires — still wait for the motion
-      window.setTimeout(() => {
-        if (!busyRef.current) return;
-        const href = hrefRef.current;
-        if (!href) return;
-        hrefRef.current = null;
-        router.push(href);
-      }, WIPE_GROW_MS + 80);
     },
     [router],
   );
 
-  const commitNavigation = useCallback(() => {
-    const href = hrefRef.current;
-    if (!href) return;
-    hrefRef.current = null;
-    router.push(href);
-  }, [router]);
-
-  const endTransition = useCallback(() => {
-    hrefRef.current = null;
-    busyRef.current = false;
-    disarmWorldWipe();
-    setWipe(null);
-  }, []);
+  useEffect(() => {
+    if (!wipe) return;
+    const t = window.setTimeout(() => {
+      const href = hrefRef.current;
+      if (!href) {
+        finish();
+        return;
+      }
+      const landed = isPortfolioPath(href)
+        ? isPortfolioPath(pathnameRef.current)
+        : pathnameRef.current === "/";
+      if (landed) finish();
+      else router.push(href);
+    }, 8000);
+    return () => window.clearTimeout(t);
+  }, [wipe, finish, router]);
 
   return (
     <TransitionContext.Provider
-      value={{
-        isTransitioning: wipe !== null,
-        wipe,
-        startTransition,
-        commitNavigation,
-        endTransition,
-      }}
+      value={{ isTransitioning: wipe !== null, startTransition }}
     >
       {children}
-      <WorldWipe wipe={wipe} onCommit={commitNavigation} onEnd={endTransition} />
+      <CardExtend wipe={wipe} onCommit={commitNavigation} onEnd={finish} />
     </TransitionContext.Provider>
   );
 }

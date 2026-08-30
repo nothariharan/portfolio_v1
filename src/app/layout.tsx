@@ -93,7 +93,7 @@ export default function RootLayout({
       <body className="min-h-full bg-gba-teal transition-colors duration-500">
         <TransitionProvider>
           <FunTabTitle />
-          {children}
+          <div id="world-stage">{children}</div>
         </TransitionProvider>
         <Analytics />
       </body>

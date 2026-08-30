@@ -82,14 +82,20 @@ function CardFace({
   lifting?: boolean;
 }) {
   const show = flipped === !!isBack;
+  // After the flip, hide the unused face. pointer-events:none is not enough —
+  // the front sprite still steals hits on the right (SKILLS) under 3D + zoom.
+  const inert = !show && !lifting;
 
   return (
     <div
       className="absolute -inset-[13px]"
+      data-card-visual={show ? "" : undefined}
+      aria-hidden={inert}
       style={{
         transform: isBack ? "rotateY(180deg)" : undefined,
         transformStyle: "preserve-3d",
         pointerEvents: show ? "auto" : "none",
+        visibility: inert ? "hidden" : "visible",
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
       }}
@@ -109,7 +115,10 @@ function CardFace({
         <div className="h-full w-full rounded-[8px] bg-[#33406b] p-[3px]">
           <div className="h-full w-full rounded-[6px] bg-[#f2e6bc] p-[5px]">
             <div className="h-full w-full rounded-[5px] bg-[#33406b] p-[3px]">
-              <div className="relative h-full w-full rounded-[4px] overflow-hidden">
+              <div
+                className="relative h-full w-full rounded-[4px] overflow-hidden"
+                data-card-face-inner={show ? "" : undefined}
+              >
                 {children}
                 <div className="absolute inset-[2px] rounded-[3px] bg-gradient-to-tr from-white/0 via-white/20 to-white/0 pointer-events-none opacity-30" />
               </div>
@@ -241,8 +250,9 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
   // padding must cover the -inset-[13px] face + tilt foreshortening
   const pad = isMobileLayout ? "p-3" : "p-5 sm:p-7";
   const busy = isFlipping || isMorphing;
-  const pauseFloat = reduceMotion || isHovered || isMobileLayout || busy;
-  const freezeTilt = reduceMotion || isMobileLayout || busy;
+  // Back face is a control surface — tilt/float move the tabs off the cursor.
+  const pauseFloat = reduceMotion || isHovered || isMobileLayout || busy || isFlipped;
+  const freezeTilt = reduceMotion || isMobileLayout || busy || isFlipped;
 
   return (
     <motion.div
@@ -278,7 +288,7 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
           */}
           <motion.div
             className="w-full h-full relative cursor-pointer select-none outline-none rounded-lg will-change-transform"
-            role="button"
+            role={isFlipped ? "group" : "button"}
             tabIndex={0}
             data-flip-root
             aria-pressed={isFlipped}

@@ -32,13 +32,12 @@ function defaultScale() {
 
 export default function Home() {
   const { startTransition } = useTransition();
-  const [scale, setScale] = useState(1.15);
+  const [scale, setScale] = useState(defaultScale);
   const [bgIdx, setBgIdx] = useState(0);
   const [soundOn, setSoundOn] = useState(true);
   const isMobileLayout = useCardMobileLayout();
 
   useEffect(() => {
-    setScale(defaultScale());
     setSoundOn(retroSound.isEnabled());
   }, []);
 
@@ -84,14 +83,14 @@ export default function Home() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed top-5 right-5 z-50 flex flex-col items-end gap-2"
+        className="fixed top-5 right-5 z-50 flex flex-col items-end gap-2 pointer-events-none"
       >
         <button
           onClick={() => {
             retroSound.playSelect();
             startTransition("/portfolio");
           }}
-          className="font-pixel text-white text-[11px] leading-none px-4 py-3 rounded-[6px] cursor-pointer transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-[0.97] select-none"
+          className="pointer-events-auto font-pixel text-white text-[11px] leading-none px-4 py-3 rounded-[6px] cursor-pointer transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-[0.97] select-none"
           style={{ background: "#e0524a", boxShadow: "inset 0 0 0 2px #a32f28, 0 3px 0 rgba(0,0,0,0.3)" }}
         >
           ▶ MAIN PORTFOLIO
