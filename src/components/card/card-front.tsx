@@ -201,23 +201,6 @@ function LearnMini() {
   );
 }
 
-function ShipMini() {
-  return (
-    <svg viewBox="0 0 16 16" className="w-[11px] h-[11px]" aria-hidden>
-      <rect x="3" y="8" width="10" height="5" fill="#5aa84d" />
-      <rect x="5" y="4" width="6" height="4" fill="#7fd66a" />
-      <rect x="7" y="2" width="2" height="2" fill="#f0c84a" />
-      <rect x="2" y="13" width="12" height="2" fill="#3f8f33" />
-    </svg>
-  );
-}
-
-const EXP_LINES = [
-  { label: "Building.", icon: <BuildMini />, accent: "#5a9bd6" },
-  { label: "Learning.", icon: <LearnMini />, accent: "#8a5bc4" },
-  { label: "Shipping.", icon: <ShipMini />, accent: "#5aa84d" },
-];
-
 /* ================================================================== */
 /*  CURRENTLY — what i'm up to right now                              */
 /* ================================================================== */
@@ -476,33 +459,23 @@ function IdentityPanel({ layout }: { layout: CardLayout }) {
 function ExpPanel({ compact }: { compact?: boolean }) {
   return (
     <div
-      className={`rounded-[7px] flex flex-col ${compact ? "px-1.5 py-1.5 gap-1 h-full" : "px-2 py-1.5 gap-1"}`}
+      className={`rounded-[7px] flex items-center shrink-0 ${
+        compact ? "gap-1 px-1.5 py-1" : "gap-1.5 px-2 py-1.5"
+      }`}
       style={CARD_PANEL_STYLE}
     >
-      <div className="flex items-center gap-1.5 flex-wrap">
-        <Bullet size={14} />
-        <span className="font-pixel text-[11px] leading-none text-[#56618c]">EXP:</span>
-        <BarChartIcon />
-        <span className="font-pixel text-[12px] leading-none text-[#3f9b46] whitespace-nowrap">1+ YEAR</span>
-      </div>
-      <div className="flex flex-col gap-1">
-        {EXP_LINES.map((line) => (
-          <div key={line.label} className="flex items-center gap-1.5 min-w-0">
-            <span
-              className="w-[16px] h-[16px] shrink-0 flex items-center justify-center rounded-[2px]"
-              style={{
-                background: "#fffdf0",
-                boxShadow: `inset 0 0 0 1px ${line.accent}88, 0 0 0 1px #c9a04e66`,
-              }}
-            >
-              {line.icon}
-            </span>
-            <span className={`font-card leading-none text-[#56618c] ${compact ? "text-[11px]" : "text-[12px]"}`}>
-              {line.label}
-            </span>
-          </div>
-        ))}
-      </div>
+      <Bullet size={compact ? 12 : 14} />
+      <span className={`font-pixel leading-none text-[#56618c] ${compact ? "text-[10px]" : "text-[11px]"}`}>
+        EXP:
+      </span>
+      <BarChartIcon />
+      <span
+        className={`font-pixel leading-none text-[#3f9b46] whitespace-nowrap ${
+          compact ? "text-[11px]" : "text-[12px]"
+        }`}
+      >
+        1+ YEAR
+      </span>
     </div>
   );
 }
@@ -712,24 +685,21 @@ export function CardFront({ layout = "desktop" }: { layout?: CardLayout }) {
       <CardHeader id={id} layout={layout} />
 
       <div
-        className={`relative flex-1 min-h-0 flex flex-col ${mobile ? "px-2 pt-1.5 pb-1.5" : "px-4 pt-2 pb-1.5"}`}
+        className={`relative flex-1 min-h-0 flex flex-col ${mobile ? "px-2 pt-1.5 pb-1.5" : "px-4 pt-2 pb-2"}`}
       >
         <CardAvatar layout={layout} />
         <IdentityPanel layout={layout} />
 
         {mobile ? (
           <>
-            <div className="relative z-30 mt-1.5 flex items-stretch gap-1.5 shrink-0">
-              <div className="w-[36%] min-w-[112px] shrink-0">
-                <ExpPanel compact />
-              </div>
+            <div className="relative z-30 mt-1.5 flex items-end gap-1.5 shrink-0">
+              <ExpPanel compact />
               <CurrentlyPanel layout="mobile" />
             </div>
-            {/* leftover height sits under EXP/CURRENTLY, not between STACK and EXP */}
             <div className="flex-1 min-h-0" aria-hidden />
           </>
         ) : (
-          <div className="relative z-10 mt-auto pt-2 w-[32%] min-w-[150px] max-w-[190px] shrink-0">
+          <div className="relative z-10 mt-auto pt-2 w-fit max-w-[190px] shrink-0">
             <ExpPanel />
           </div>
         )}
