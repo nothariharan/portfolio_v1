@@ -28,6 +28,7 @@ import {
 } from "../portfolio/data";
 import { NounIcon } from "../ui/noun-icon";
 import type { CardLayout } from "./card-layout";
+import { retroSound } from "@/lib/sound";
 
 // pokemon menu palette shared across the back face
 const NAVY = "#33406b";
@@ -237,8 +238,10 @@ function HonorWorldCard({
       type="button"
       onClick={(e) => {
         e.stopPropagation();
+        retroSound.playSelect();
         onSelect();
       }}
+      onMouseEnter={() => retroSound.playCursor()}
       aria-pressed={selected}
       aria-label={honor.cardTitle}
       className={`relative min-w-0 w-full overflow-hidden rounded-[6px] border-[3px] border-[#111] cursor-pointer transition-[box-shadow,filter,opacity] duration-150 ${
@@ -867,10 +870,12 @@ export function CardBack({
       if (e.key === "ArrowLeft") {
         e.preventDefault();
         e.stopPropagation();
+        retroSound.playCursor();
         setHonorSel((i) => (i - 1 + BACK_HONORS.length) % BACK_HONORS.length);
       } else if (e.key === "ArrowRight") {
         e.preventDefault();
         e.stopPropagation();
+        retroSound.playCursor();
         setHonorSel((i) => (i + 1) % BACK_HONORS.length);
       }
     }
@@ -920,8 +925,10 @@ export function CardBack({
               id={`tab-${panel.tab}`}
               onClick={(e) => {
                 e.stopPropagation();
+                retroSound.playSelect();
                 setSel(i);
               }}
+              onMouseEnter={() => retroSound.playCursor()}
               className={`flex-1 min-w-0 font-pixel leading-none rounded-[6px] cursor-pointer border-2 transition-all duration-100 ease-out active:scale-[0.97] ${
                 mobile ? "text-[8px] py-2 px-0.5" : "text-[9px] py-2.5"
               }`}

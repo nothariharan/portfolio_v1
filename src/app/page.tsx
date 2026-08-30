@@ -14,6 +14,7 @@ import { TrainerCard } from "@/components/card/trainer-card";
 import { CARD_MOBILE_MAX_PX } from "@/components/card/card-layout";
 import { useCardMobileLayout } from "@/hooks/use-media-query";
 import { useTransition } from "@/hooks/use-transition";
+import { retroSound } from "@/lib/sound";
 
 const BG_THEMES = [
   { id: "teal", label: "TEAL", color: "#d0e8e0" },
@@ -33,10 +34,12 @@ export default function Home() {
   const { startTransition } = useTransition();
   const [scale, setScale] = useState(1.15);
   const [bgIdx, setBgIdx] = useState(0);
+  const [soundOn, setSoundOn] = useState(true);
   const isMobileLayout = useCardMobileLayout();
 
   useEffect(() => {
     setScale(defaultScale());
+    setSoundOn(retroSound.isEnabled());
   }, []);
 
   // entering mobile layout: ease zoom back to 100% so the portrait card isn't oversized
@@ -48,9 +51,22 @@ export default function Home() {
   const ZOOM_MIN = 0.7;
   const ZOOM_MAX = 2.1;
   const ZOOM_STEP = 0.15;
-  const increaseSize = () => setScale((prev) => Math.min(prev + ZOOM_STEP, ZOOM_MAX));
-  const decreaseSize = () => setScale((prev) => Math.max(prev - ZOOM_STEP, ZOOM_MIN));
-  const cycleBg = () => setBgIdx((i) => (i + 1) % BG_THEMES.length);
+  const increaseSize = () => {
+    retroSound.playBip("high");
+    setScale((prev) => Math.min(prev + ZOOM_STEP, ZOOM_MAX));
+  };
+  const decreaseSize = () => {
+    retroSound.playBip("low");
+    setScale((prev) => Math.max(prev - ZOOM_STEP, ZOOM_MIN));
+  };
+  const cycleBg = () => {
+    retroSound.playBip("high");
+    setBgIdx((i) => (i + 1) % BG_THEMES.length);
+  };
+  const toggleSound = () => {
+    const next = retroSound.toggle();
+    setSoundOn(next);
+  };
 
   const bg = BG_THEMES[bgIdx];
   const atMinZoom = scale <= ZOOM_MIN + 0.001;
@@ -71,7 +87,10 @@ export default function Home() {
         className="fixed top-5 right-5 z-50 flex flex-col items-end gap-2"
       >
         <button
-          onClick={() => startTransition("/portfolio")}
+          onClick={() => {
+            retroSound.playSelect();
+            startTransition("/portfolio");
+          }}
           className="font-pixel text-white text-[11px] leading-none px-4 py-3 rounded-[6px] cursor-pointer transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-[0.97] select-none"
           style={{ background: "#e0524a", boxShadow: "inset 0 0 0 2px #a32f28, 0 3px 0 rgba(0,0,0,0.3)" }}
         >
@@ -85,7 +104,7 @@ export default function Home() {
       {/* floating helper instruction text */}
       <div className="mb-3 text-center select-none z-10">
         <p className="text-[8px] font-pixel text-slate-500 animate-pulse">
-          {isMobileLayout ? "tap to flip" : "click or press A to flip · hover to tilt"}
+          {isMobileLayout ? "tap to flip" : "click or press A to flip · hover a corner to tilt"}
         </p>
       </div>
 
@@ -114,23 +133,39 @@ export default function Home() {
         />
       </motion.div>
 
-      {/* bottom-left: cycle page background color */}
-      <div className="fixed bottom-4 left-4 z-50 flex flex-col items-start gap-1.5">
-        <span className="text-[6px] font-pixel text-slate-500 select-none">
-          BG: {bg.label}
-        </span>
-        <button
-          onClick={cycleBg}
-          className="h-7 px-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-600 text-gba-text-dark font-pixel text-[8px] flex items-center justify-center gap-1.5 cursor-pointer shadow active:scale-90 transition-transform select-none rounded"
-          title="switch background color"
-        >
-          <span
-            className="w-3 h-3 rounded-[2px] border border-slate-600 shrink-0"
-            style={{ background: bg.color }}
-            aria-hidden
-          />
-          COLOR
-        </button>
+      {/* bottom-left: background color and 8-bit sound controls */}
+      <div className="fixed bottom-4 left-4 z-50 flex items-end gap-2">
+        <div className="flex flex-col items-start gap-1.5">
+          <span className="text-[6px] font-pixel text-slate-500 select-none">
+            BG: {bg.label}
+          </span>
+          <button
+            onClick={cycleBg}
+            className="h-7 px-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-600 text-gba-text-dark font-pixel text-[8px] flex items-center justify-center gap-1.5 cursor-pointer shadow active:scale-90 transition-transform select-none rounded"
+            title="switch background color"
+          >
+            <span
+              className="w-3 h-3 rounded-[2px] border border-slate-600 shrink-0"
+              style={{ background: bg.color }}
+              aria-hidden
+            />
+            COLOR
+          </button>
+        </div>
+
+        <div className="flex flex-col items-start gap-1.5">
+          <span className="text-[6px] font-pixel text-slate-500 select-none">
+            SOUND: {soundOn ? "ON" : "OFF"}
+          </span>
+          <button
+            onClick={toggleSound}
+            className="h-7 px-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-600 text-gba-text-dark font-pixel text-[8px] flex items-center justify-center gap-1.5 cursor-pointer shadow active:scale-90 transition-transform select-none rounded"
+            title="toggle 8-bit retro sound"
+          >
+            <span className="text-[9px]">{soundOn ? "🔊" : "🔇"}</span>
+            <span>{soundOn ? "8-BIT" : "MUTED"}</span>
+          </button>
+        </div>
       </div>
 
       {/* zoom sizing button panel */}

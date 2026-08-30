@@ -17,6 +17,7 @@ import {
   CARD_PINK_DIVIDER,
   type CardLayout,
 } from "./card-layout";
+import { retroSound } from "@/lib/sound";
 
 /* ================================================================== */
 /*  Small reusable marks                                              */
@@ -138,7 +139,10 @@ function StackTile({
   const moreText = compact ? "text-[7px]" : "text-[8px]";
 
   return (
-    <div className="group relative shrink-0">
+    <div
+      className="group relative shrink-0"
+      onMouseEnter={() => retroSound.playCursor()}
+    >
       <div
         className={`${box} bg-white flex items-center justify-center transition-all duration-150 shadow-[inset_0_0_0_1.5px_#c5c8d0,0_1px_0_rgba(0,0,0,0.08)] group-hover:-translate-y-0.5 group-hover:shadow-[inset_0_0_0_1.5px_#4a76c9,0_3px_0_rgba(0,0,0,0.12)]`}
       >
@@ -258,6 +262,13 @@ function SlantedSlot({
   return (
     <div
       title={title}
+      onClick={(e) => {
+        if (earned) {
+          e.stopPropagation();
+          retroSound.playSparkle();
+        }
+      }}
+      onMouseEnter={() => retroSound.playCursor()}
       className="relative w-[46px] h-[32px] shrink-0 cursor-help"
       style={{
         transform: "skewX(-10deg)",
@@ -330,6 +341,7 @@ function FocusGrid({ columns }: { columns: 2 | 4 }) {
       {FOCUS.map((f) => (
         <div
           key={f.label}
+          onMouseEnter={() => retroSound.playCursor()}
           className={
             columns === 2
               ? "flex flex-col items-center gap-1"
@@ -338,9 +350,10 @@ function FocusGrid({ columns }: { columns: 2 | 4 }) {
         >
           <div
             className={
-              columns === 2
+              (columns === 2
                 ? "w-full max-w-[78px] aspect-square overflow-hidden flex items-center justify-center"
-                : "w-full aspect-square overflow-hidden flex items-center justify-center"
+                : "w-full aspect-square overflow-hidden flex items-center justify-center") +
+              " cursor-pointer transition-all duration-150 ease-out hover:-translate-y-1 hover:scale-[1.06] hover:brightness-[1.04] hover:[filter:drop-shadow(0_3px_0_rgba(0,0,0,0.28))_drop-shadow(0_0_0_2px_rgba(51,64,107,0.85))] active:translate-y-0 active:scale-[0.98] active:brightness-[0.97] active:[filter:drop-shadow(0_0_0_2px_rgba(51,64,107,0.6))]"
             }
             style={{
               background: f.fill,

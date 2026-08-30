@@ -19,6 +19,7 @@ import { useCardMobileLayout } from "../../hooks/use-media-query";
 import { CardFront } from "./card-front";
 import { CardBack } from "./card-back";
 import { CARD_SHELL, type CardLayout } from "./card-layout";
+import { retroSound } from "@/lib/sound";
 
 import type { TabKey } from "../portfolio/data";
 
@@ -191,6 +192,7 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
     const next = !flippedRef.current;
     flippedRef.current = next;
     setIsFlipped(next);
+    retroSound.playFlip();
 
     if (reduceMotion) {
       await flipControls.set({ rotateY: next ? 180 : 0, scale: 1, y: 0 });
@@ -246,6 +248,7 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
     <motion.div
       className={`w-full max-w-full flex items-center justify-center ${pad}`}
       data-layout={layout}
+      data-card-origin
       initial={false}
       animate={{
         maxWidth: shell.width,
@@ -253,7 +256,7 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
       }}
       transition={reduceMotion ? { duration: 0 } : SHELL_SPRING}
       style={{
-        perspective: isMobileLayout ? 1500 : 1700,
+        perspective: isMobileLayout ? 1200 : 1200,
         perspectiveOrigin: "50% 45%",
       }}
     >
@@ -269,7 +272,10 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
           animate={morphControls}
           style={{ transformOrigin: "center center" }}
         >
-          {/* tilt + idle float */}
+          {/*
+            Hit + float + scale live here — no rotate. Measuring tilt
+            against a foreshortened box is what made the hover feel lagged.
+          */}
           <motion.div
             className="w-full h-full relative cursor-pointer select-none outline-none rounded-lg will-change-transform"
             role="button"
@@ -281,19 +287,16 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
                 ? "Trainer card back. Press A or Enter to flip."
                 : "Trainer card front. Press A or Enter to flip."
             }
-            style={{
-              rotateX: freezeTilt ? 0 : rotateX,
-              rotateY: freezeTilt ? 0 : rotateY,
-              transformStyle: "preserve-3d",
-              transformOrigin: "center center",
-            }}
+            style={{ transformStyle: "preserve-3d", transformOrigin: "center center" }}
             animate={{
               y: pauseFloat ? 0 : [0, -8, 0],
+              scale: isHovered && !freezeTilt ? 1.02 : 1,
             }}
             transition={{
               y: pauseFloat
-                ? { duration: 0.4, ease: "easeOut" }
+                ? { duration: 0.18, ease: "easeOut" }
                 : { duration: 4.2, repeat: Infinity, ease: "easeInOut" },
+              scale: { duration: 0.18, ease: "easeOut" },
             }}
             onMouseMove={freezeTilt ? undefined : handleMouseMove}
             onMouseEnter={() => setIsHovered(true)}
@@ -318,6 +321,16 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
               }
             }}
           >
+            {/* tilt only — spring isn't fighting the hover scale / float */}
+            <motion.div
+              className="w-full h-full will-change-transform"
+              style={{
+                rotateX: freezeTilt ? 0 : rotateX,
+                rotateY: freezeTilt ? 0 : rotateY,
+                transformStyle: "preserve-3d",
+                transformOrigin: "center center",
+              }}
+            >
             {/* flip layer */}
             <motion.div
               className="w-full h-full relative will-change-transform [transform:translateZ(0)]"
@@ -336,6 +349,7 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
                   onOpenHariMd={onOpenHariMd}
                 />
               </CardFace>
+            </motion.div>
             </motion.div>
           </motion.div>
         </motion.div>
