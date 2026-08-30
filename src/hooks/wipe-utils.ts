@@ -151,16 +151,15 @@ function faceHost(): HTMLElement | null {
 export function mountLiveInk(): HTMLElement | null {
   const host = faceHost();
   if (!host) return null;
-  let layer = host.querySelector(`[${LIVE_INK}]`);
-  if (!(layer instanceof HTMLElement)) {
-    layer = document.createElement("div");
-    layer.setAttribute(LIVE_INK, "");
-    layer.setAttribute("aria-hidden", "true");
-    const blob = document.createElement("span");
-    blob.setAttribute("data-card-ink-blob", "");
-    layer.appendChild(blob);
-    host.appendChild(layer);
-  }
+  const existing = host.querySelector(`[${LIVE_INK}]`);
+  if (existing instanceof HTMLElement) return existing;
+  const layer = document.createElement("div");
+  layer.setAttribute(LIVE_INK, "");
+  layer.setAttribute("aria-hidden", "true");
+  const blob = document.createElement("span");
+  blob.setAttribute("data-card-ink-blob", "");
+  layer.appendChild(blob);
+  host.appendChild(layer);
   return layer;
 }
 
