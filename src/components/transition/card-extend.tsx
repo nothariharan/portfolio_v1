@@ -1,17 +1,15 @@
 "use client";
 
 /**
- * Card ↔ portfolio.
+ * Card ↔ portfolio — ink the LIVE face, then grow a black plate.
  *
- * Expand: face irises to black (same size / aspect), then the black card
- * scales from its center until it covers the window, then the portfolio
- * is underneath and the overlay fades.
- *
- * Collapse: screen goes black, the same card shrinks back to origin,
- * face irises back in, live card swaps in. Never two cards at once.
+ * The iris is mounted inside [data-card-visual] so 3D tilt can't put
+ * panels over it (and so we never paint a second trainer card).
+ * The body plate is only a black rectangle for the grow / shrink.
  */
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import {
   FADE_MS,
@@ -19,20 +17,23 @@ import {
   HOLD_MS,
   INK_MS,
   REVEAL_MS,
+  clearLiveInk,
   coverScale,
-  estimateCardOrigin,
+  freezeLiveCard,
   getCardOrigin,
   hideLiveCard,
   isPortfolioPath,
   readStoredOrigin,
+  coverLiveInk,
+  openLiveInk,
+  playLiveInk,
   showLiveCard,
+  storeCardOrigin,
+  unfreezeLiveCard,
   type WipeRect,
   type WipeState,
 } from "@/hooks/wipe-utils";
 
-const CREAM = "#f2e6bc";
-const RING_OUTER = "#1f2a44";
-const RING_INNER = "#33406b";
 const PORTFOLIO_BLACK = "#030712";
 
 type Phase = "idle" | "ink" | "grow" | "shrink" | "reveal" | "fade";
@@ -51,29 +52,8 @@ function wait(ms: number) {
   });
 }
 
-function nextFrame() {
-  return new Promise<void>((resolve) => {
-    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-  });
-}
-
-function cloneFace(slot: HTMLElement) {
-  const src = document.querySelector("[data-card-face-inner]");
-  if (!(src instanceof HTMLElement)) return false;
-  const clone = src.cloneNode(true) as HTMLElement;
-  clone.removeAttribute("data-card-face-inner");
-  clone.setAttribute("aria-hidden", "true");
-  clone.setAttribute("data-card-face-clone", "");
-  clone.style.cssText = [
-    "position:absolute",
-    "inset:0",
-    "width:100%",
-    "height:100%",
-    "pointer-events:none",
-    "margin:0",
-  ].join(";");
-  slot.replaceChildren(clone);
-  return true;
+function measureCard(fallback: WipeRect): WipeRect {
+  return getCardOrigin() ?? readStoredOrigin() ?? fallback;
 }
 
 export function CardExtend({
@@ -87,8 +67,6 @@ export function CardExtend({
 }) {
   const pathname = usePathname();
   const rootRef = useRef<HTMLDivElement>(null);
-  const faceRef = useRef<HTMLDivElement>(null);
-  const inkRef = useRef<HTMLDivElement>(null);
   const veilRef = useRef<HTMLDivElement>(null);
   const commitRef = useRef(onCommit);
   const endRef = useRef(onEnd);
@@ -98,70 +76,105 @@ export function CardExtend({
   const committedRef = useRef(false);
   const endedRef = useRef(false);
   const [phase, setPhase] = useState<Phase>("idle");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useLayoutEffect(() => {
     if (!wipe || !rootRef.current) return;
     applyBox(rootRef.current, wipe.origin);
     rootRef.current.dataset.grown = wipe.dir === "collapse" ? "1" : "";
+    rootRef.current.dataset.hidden = wipe.dir === "expand" ? "1" : "";
   }, [wipe]);
 
+  // Expand: freeze + ink the live card, then swap to a matching black plate and grow.
   useEffect(() => {
     if (!wipe) {
       setPhase("idle");
       committedRef.current = false;
       endedRef.current = false;
+      clearLiveInk();
+      unfreezeLiveCard();
       showLiveCard();
       document.documentElement.style.overflow = "";
       return;
     }
+    if (!mounted || wipe.dir !== "expand") return;
 
     endedRef.current = false;
     committedRef.current = false;
     document.documentElement.style.overflow = "hidden";
 
+    let cancelled = false;
     const root = rootRef.current;
-    const ink = inkRef.current;
-    const veil = veilRef.current;
     if (!root) return;
 
+    const run = async () => {
+      freezeLiveCard();
+      const box = measureCard(wipe.origin);
+      storeCardOrigin(box);
+      applyBox(root, box);
+      root.dataset.grown = "";
+      root.dataset.solid = "";
+      root.dataset.hidden = "1";
+      if (veilRef.current) veilRef.current.dataset.on = "";
+
+      setPhase("ink");
+      playLiveInk();
+      await wait(INK_MS);
+      if (cancelled) return;
+      await wait(HOLD_MS);
+      if (cancelled) return;
+
+      const cover = measureCard(box);
+      storeCardOrigin(cover);
+      applyBox(root, cover);
+      root.dataset.snap = "1";
+      root.dataset.solid = "1";
+      root.dataset.hidden = "";
+      hideLiveCard();
+      clearLiveInk();
+      setPhase("grow");
+      await wait(20);
+      if (cancelled) return;
+      root.dataset.snap = "";
+      root.dataset.grown = "1";
+      await wait(GROW_MS);
+      if (cancelled) return;
+      if (!committedRef.current) {
+        committedRef.current = true;
+        commitRef.current();
+      }
+    };
+
+    void run();
+    return () => {
+      cancelled = true;
+    };
+  }, [mounted, wipe?.dir, wipe?.href]);
+
+  // Collapse start: ink the portfolio, then navigate home.
+  useEffect(() => {
+    if (!wipe || !mounted || wipe.dir !== "collapse") return;
+
+    endedRef.current = false;
+    committedRef.current = false;
+    document.documentElement.style.overflow = "hidden";
+
     let cancelled = false;
+    const root = rootRef.current;
+    if (!root) return;
 
     const run = async () => {
-      if (wipe.dir === "expand") {
-        hideLiveCard();
-        applyBox(root, wipe.origin);
-        root.dataset.grown = "";
-        root.dataset.hidden = "";
-        if (faceRef.current) cloneFace(faceRef.current);
-        if (ink) ink.dataset.on = "";
-        if (veil) veil.dataset.on = "";
-        setPhase("ink");
-        await nextFrame();
-        if (cancelled) return;
-        if (ink) ink.dataset.on = "1";
-        await wait(INK_MS);
-        if (cancelled) return;
-        await wait(HOLD_MS);
-        if (cancelled) return;
-        setPhase("grow");
-        await nextFrame();
-        if (cancelled) return;
-        root.dataset.grown = "1";
-        await wait(GROW_MS);
-        if (cancelled) return;
-        if (!committedRef.current) {
-          committedRef.current = true;
-          commitRef.current();
-        }
-        return;
-      }
-
-      /* collapse — screen goes black first; card overlay stays hidden until shrink */
-      root.dataset.hidden = "1";
+      hideLiveCard();
+      freezeLiveCard();
       applyBox(root, wipe.origin);
+      root.dataset.hidden = "";
+      root.dataset.solid = "1";
       root.dataset.grown = "1";
-      if (ink) ink.dataset.on = "1";
-      if (veil) veil.dataset.on = "1";
+      if (veilRef.current) veilRef.current.dataset.on = "1";
       setPhase("ink");
       await wait(INK_MS);
       if (cancelled) return;
@@ -172,14 +185,12 @@ export function CardExtend({
     };
 
     void run();
-
     return () => {
       cancelled = true;
-      document.documentElement.style.overflow = "";
     };
-  }, [wipe]);
+  }, [mounted, wipe?.dir, wipe?.href]);
 
-  /* collapse: home mounted — hide the live card, shrink, then reveal */
+  // Collapse finish: shrink the plate onto the live card, then iris it open.
   useEffect(() => {
     if (!wipe || wipe.dir !== "collapse") return;
     if (pathname !== "/" && pathname !== "") return;
@@ -188,32 +199,49 @@ export function CardExtend({
 
     const run = async () => {
       hideLiveCard();
-      const card = getCardOrigin() ?? readStoredOrigin() ?? estimateCardOrigin();
-      const root = rootRef.current;
-      if (!root || !card) return;
-      applyBox(root, card);
-      root.dataset.grown = "1";
-      root.dataset.hidden = "";
-      if (inkRef.current) inkRef.current.dataset.on = "1";
-      if (veilRef.current) veilRef.current.dataset.on = "";
-      if (faceRef.current) cloneFace(faceRef.current);
-      setPhase("shrink");
-      await nextFrame();
+      freezeLiveCard();
+      if (veilRef.current) veilRef.current.dataset.on = "1";
+
+      await wait(200);
       if (cancelled) return;
-      root.dataset.grown = "";
+
+      const root = rootRef.current;
+      const card = measureCard(wipe.origin);
+      if (root) {
+        applyBox(root, card);
+        root.dataset.grown = "1";
+        root.dataset.solid = "1";
+        root.dataset.snap = "1";
+        root.dataset.hidden = "";
+      }
+      setPhase("shrink");
+      await wait(20);
+      if (cancelled) return;
+
+      if (veilRef.current) veilRef.current.dataset.on = "";
+      if (root) root.dataset.snap = "";
+      await wait(20);
+      if (cancelled) return;
+
+      if (root) root.dataset.grown = "";
       await wait(GROW_MS);
       if (cancelled) return;
       await wait(HOLD_MS);
       if (cancelled) return;
+
+      coverLiveInk();
+      showLiveCard();
+      if (root) {
+        root.dataset.solid = "";
+        root.dataset.hidden = "1";
+      }
       setPhase("reveal");
-      await nextFrame();
+      await wait(20);
       if (cancelled) return;
-      if (inkRef.current) inkRef.current.dataset.on = "";
+      openLiveInk();
       await wait(REVEAL_MS);
       if (cancelled || endedRef.current) return;
-      endedRef.current = true;
-      endRef.current();
-      showLiveCard();
+      setPhase("fade");
     };
 
     void run();
@@ -222,22 +250,16 @@ export function CardExtend({
     };
   }, [wipe, pathname]);
 
-  /* expand: portfolio mounted under the black card — fade the overlay */
   useEffect(() => {
     if (!wipe || wipe.dir !== "expand") return;
     if (!isPortfolioPath(pathname)) return;
     if (phase !== "grow") return;
     if (!committedRef.current) return;
-
-    let cancelled = false;
     const t = window.setTimeout(() => {
-      if (cancelled || endedRef.current) return;
+      if (endedRef.current) return;
       setPhase("fade");
     }, 40);
-    return () => {
-      cancelled = true;
-      window.clearTimeout(t);
-    };
+    return () => window.clearTimeout(t);
   }, [wipe, pathname, phase]);
 
   useEffect(() => {
@@ -245,6 +267,8 @@ export function CardExtend({
     const t = window.setTimeout(() => {
       if (endedRef.current) return;
       endedRef.current = true;
+      clearLiveInk();
+      unfreezeLiveCard();
       showLiveCard();
       endRef.current();
     }, FADE_MS);
@@ -256,15 +280,17 @@ export function CardExtend({
     const t = window.setTimeout(() => {
       if (endedRef.current) return;
       endedRef.current = true;
-      endRef.current();
+      clearLiveInk();
+      unfreezeLiveCard();
       showLiveCard();
+      endRef.current();
     }, 12000);
     return () => window.clearTimeout(t);
   }, [wipe]);
 
-  if (!wipe) return null;
+  if (!wipe || !mounted) return null;
 
-  return (
+  return createPortal(
     <>
       <div
         ref={veilRef}
@@ -272,70 +298,8 @@ export function CardExtend({
         aria-hidden
         style={{ background: PORTFOLIO_BLACK }}
       />
-      <div
-        ref={rootRef}
-        data-card-extend
-        data-phase={phase}
-        aria-hidden
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: 10,
-            background: RING_OUTER,
-            padding: 3,
-            boxShadow: "0 22px 44px rgba(0,0,0,0.45)",
-          }}
-        >
-          <div
-            style={{
-              height: "100%",
-              width: "100%",
-              borderRadius: 8,
-              background: RING_INNER,
-              padding: 3,
-            }}
-          >
-            <div
-              style={{
-                height: "100%",
-                width: "100%",
-                borderRadius: 6,
-                background: CREAM,
-                padding: 5,
-              }}
-            >
-              <div
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  borderRadius: 5,
-                  background: RING_INNER,
-                  padding: 3,
-                }}
-              >
-                <div
-                  style={{
-                    position: "relative",
-                    height: "100%",
-                    width: "100%",
-                    overflow: "hidden",
-                    borderRadius: 4,
-                    background: CREAM,
-                  }}
-                >
-                  <div
-                    ref={faceRef}
-                    style={{ position: "absolute", inset: 0 }}
-                  />
-                  <div ref={inkRef} data-card-ink aria-hidden />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+      <div ref={rootRef} data-card-extend data-phase={phase} aria-hidden />
+    </>,
+    document.body,
   );
 }

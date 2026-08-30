@@ -95,7 +95,8 @@ function CardFace({
         transform: isBack ? "rotateY(180deg)" : undefined,
         transformStyle: "preserve-3d",
         pointerEvents: show ? "auto" : "none",
-        visibility: inert ? "hidden" : "visible",
+        // inherit — "visible" would punch through html[data-card-extending] hide
+        visibility: inert ? "hidden" : "inherit",
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
       }}
@@ -250,8 +251,13 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
   // padding must cover the -inset-[13px] face + tilt foreshortening
   const pad = isMobileLayout ? "p-3" : "p-5 sm:p-7";
   const busy = isFlipping || isMorphing;
+  const [floatOk, setFloatOk] = useState(false);
+  useEffect(() => {
+    const t = window.setTimeout(() => setFloatOk(true), 480);
+    return () => window.clearTimeout(t);
+  }, []);
   // Back face is a control surface — tilt/float move the tabs off the cursor.
-  const pauseFloat = reduceMotion || isHovered || isMobileLayout || busy || isFlipped;
+  const pauseFloat = reduceMotion || isHovered || isMobileLayout || busy || isFlipped || !floatOk;
   const freezeTilt = reduceMotion || isMobileLayout || busy || isFlipped;
 
   return (

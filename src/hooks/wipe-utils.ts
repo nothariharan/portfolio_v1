@@ -10,12 +10,12 @@ export type WipeState = {
 };
 
 /** Interior iris-to-black, then the card grows. Keep these in sync with CSS. */
-export const INK_MS = 440;
-/** Beat on the black card at original size before it grows / after it lands. */
-export const HOLD_MS = 160;
-export const GROW_MS = 820;
-export const FADE_MS = 260;
-export const REVEAL_MS = 400;
+export const INK_MS = 560;
+/** Short breath on the black card so the grow doesn't kick immediately. */
+export const HOLD_MS = 80;
+export const GROW_MS = 1080;
+export const FADE_MS = 340;
+export const REVEAL_MS = 520;
 
 export function coverScale(origin: WipeRect): number {
   const cx = origin.left + origin.width / 2;
@@ -38,15 +38,31 @@ export function viewportRect(): WipeRect {
   return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
 }
 
+function landingZoom(): number {
+  const el = document.querySelector("[data-card-zoom]");
+  if (el instanceof HTMLElement) {
+    const t = getComputedStyle(el).transform;
+    if (t && t !== "none") {
+      const m = /matrix\(([^)]+)\)/.exec(t);
+      if (m) {
+        const sx = Number(m[1].split(",")[0]);
+        if (Number.isFinite(sx) && sx > 0.2) return sx;
+      }
+    }
+  }
+  return window.innerWidth <= CARD_MOBILE_MAX_PX ? 1 : 1.3;
+}
+
 export function estimateCardOrigin(): WipeRect {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
   const mobile = vw <= CARD_MOBILE_MAX_PX;
   const shell = mobile ? CARD_SHELL.mobile : CARD_SHELL.desktop;
-  // visual face is shell + the -inset-[13px] GBA rings
+  // visual face is shell + the -inset-[13px] GBA rings, then landing zoom
   const ring = 26;
-  const width = Math.min(shell.width + ring, vw - 24);
-  const height = Math.min(shell.height + ring, vh - 24);
+  const zoom = landingZoom();
+  const width = Math.min((shell.width + ring) * zoom, vw - 24);
+  const height = Math.min((shell.height + ring) * zoom, vh - 24);
   return {
     left: (vw - width) / 2,
     top: (vh - height) / 2,
@@ -111,4 +127,82 @@ export function hideLiveCard() {
 
 export function showLiveCard() {
   delete document.documentElement.dataset.cardExtending;
+}
+
+/** Kill tilt / float / 3D so the live card and the black plate share one 2D box. */
+export function freezeLiveCard() {
+  document.documentElement.dataset.cardFrozen = "1";
+}
+
+export function unfreezeLiveCard() {
+  delete document.documentElement.dataset.cardFrozen;
+}
+
+const LIVE_INK = "data-card-live-ink";
+
+function faceHost(): HTMLElement | null {
+  const visual = document.querySelector("[data-card-visual]");
+  if (visual instanceof HTMLElement) return visual;
+  const inner = document.querySelector("[data-card-face-inner]");
+  return inner instanceof HTMLElement ? inner : null;
+}
+
+/** Iris lives inside the live face so 3D stacking can't put panels over it. */
+export function mountLiveInk(): HTMLElement | null {
+  const host = faceHost();
+  if (!host) return null;
+  let layer = host.querySelector(`[${LIVE_INK}]`);
+  if (!(layer instanceof HTMLElement)) {
+    layer = document.createElement("div");
+    layer.setAttribute(LIVE_INK, "");
+    layer.setAttribute("aria-hidden", "true");
+    const blob = document.createElement("span");
+    blob.setAttribute("data-card-ink-blob", "");
+    layer.appendChild(blob);
+    host.appendChild(layer);
+  }
+  return layer;
+}
+
+export function setLiveInk(on: boolean, snap = false) {
+  const layer = mountLiveInk();
+  if (!layer) return false;
+  layer.dataset.on = on ? "1" : "";
+  layer.dataset.snap = snap ? "1" : "";
+  return true;
+}
+
+/** Mount ink at rest, then open it so the CSS scale actually tweens. */
+export function playLiveInk() {
+  const layer = mountLiveInk();
+  if (!layer) return false;
+  layer.dataset.snap = "1";
+  layer.dataset.on = "";
+  void layer.offsetWidth;
+  layer.dataset.snap = "";
+  layer.dataset.on = "1";
+  return true;
+}
+
+/** Cover the live face instantly (no tween) so we can show it under a full iris. */
+export function coverLiveInk() {
+  const layer = mountLiveInk();
+  if (!layer) return false;
+  layer.dataset.snap = "1";
+  layer.dataset.on = "1";
+  void layer.offsetWidth;
+  return true;
+}
+
+/** Open the iris on the live face. */
+export function openLiveInk() {
+  const layer = mountLiveInk();
+  if (!layer) return false;
+  layer.dataset.snap = "";
+  layer.dataset.on = "";
+  return true;
+}
+
+export function clearLiveInk() {
+  document.querySelectorAll(`[${LIVE_INK}]`).forEach((el) => el.remove());
 }

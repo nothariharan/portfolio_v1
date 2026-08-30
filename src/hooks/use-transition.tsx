@@ -18,6 +18,8 @@ import {
   readStoredOrigin,
   showLiveCard,
   storeCardOrigin,
+  unfreezeLiveCard,
+  clearLiveInk,
   type WipeState,
 } from "@/hooks/wipe-utils";
 
@@ -44,6 +46,8 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
   const finish = useCallback(() => {
     hrefRef.current = null;
     busyRef.current = false;
+    clearLiveInk();
+    unfreezeLiveCard();
     showLiveCard();
     setWipe(null);
   }, []);
@@ -91,18 +95,14 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
     if (!wipe) return;
     const t = window.setTimeout(() => {
       const href = hrefRef.current;
-      if (!href) {
-        finish();
-        return;
-      }
+      if (!href) return;
       const landed = isPortfolioPath(href)
         ? isPortfolioPath(pathnameRef.current)
         : pathnameRef.current === "/";
-      if (landed) finish();
-      else router.push(href);
+      if (!landed) router.push(href);
     }, 8000);
     return () => window.clearTimeout(t);
-  }, [wipe, finish, router]);
+  }, [wipe, router]);
 
   return (
     <TransitionContext.Provider
