@@ -49,6 +49,8 @@ const pokemonDS = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://hariharann.me"),
+  // app/favicon.ico + icon.png + apple-icon.png are picked up by the file convention
+  manifest: "/site.webmanifest",
   // browser tab / default <title>
   title: "hariharan - welcome!! :D",
   description:
