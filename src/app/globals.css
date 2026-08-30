@@ -55,6 +55,16 @@ html {
   }
 }
 
+/* real card grows into the portfolio — keep it synced with the navy wash */
+html[data-world-wipe="expand"] [data-card-origin] {
+  transform: scale(var(--card-grow, 1));
+  transform-origin: center center;
+  transition: transform 0.78s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+  position: relative;
+  z-index: 60;
+}
+
 /* custom 3d card transition helpers */
 .perspective-1000 {
   perspective: 1000px;

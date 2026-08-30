@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Press_Start_2P, Inter, DM_Serif_Display, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { TransitionProvider } from "@/hooks/use-transition";
-import { FlashOverlay } from "@/components/transition/flash-overlay";
 import { FunTabTitle } from "@/components/site/fun-tab-title";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
@@ -88,14 +87,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${pressStart2P.variable} ${inter.variable} ${dmSerifDisplay.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${pokemonDS.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-gba-teal transition-colors duration-500">
         <TransitionProvider>
           <FunTabTitle />
           {children}
-          <FlashOverlay />
         </TransitionProvider>
+        <Analytics />
       </body>
     </html>
   );
