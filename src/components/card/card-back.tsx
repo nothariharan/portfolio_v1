@@ -1139,21 +1139,38 @@ export function CardBack({
             </div>
           )}
 
-          {/* experience timeline — desktop side-actions; mobile stacks actions under copy */}
+          {/* experience timeline — one 14px rail so dashes + dots share an axis */}
           {active.tab === "experience" && (
-            <div className={`relative ${mobile ? "pl-5 pr-0" : "pl-6 pr-0.5"}`}>
+            <div className={`relative ${mobile ? "pr-0" : "pr-0.5"}`}>
               <div
-                className={`absolute top-5 bottom-10 w-0 ${mobile ? "left-[6px]" : "left-[8px]"}`}
-                style={{ borderLeft: "2px dashed #c9bc8a" }}
-              />
+                className="pointer-events-none absolute top-5 bottom-8 left-0 w-[14px]"
+                aria-hidden
+              >
+                <span
+                  className="absolute inset-y-0 left-1/2 w-[2px] -translate-x-1/2"
+                  style={{
+                    backgroundImage:
+                      "repeating-linear-gradient(to bottom, #c9bc8a 0 5px, transparent 5px 10px)",
+                  }}
+                />
+              </div>
               {BACK_EXPERIENCE.map((e, i) => (
-                <div key={i} className={`relative ${mobile ? "mb-2.5" : "mb-3"}`}>
+                <div
+                  key={i}
+                  className={`relative ${mobile ? "mb-2.5 pl-[22px]" : "mb-3 pl-[26px]"}`}
+                >
                   <span
-                    className={`absolute top-[22px] rounded-full bg-white z-10 ${
-                      mobile ? "left-[-17px] w-[12px] h-[12px]" : "left-[-20px] top-[26px] w-[14px] h-[14px]"
+                    className={`absolute left-0 z-10 flex items-center justify-center w-[14px] ${
+                      mobile ? "top-[20px] h-[14px]" : "top-[24px] h-[14px]"
                     }`}
-                    style={{ boxShadow: `inset 0 0 0 ${mobile ? 3 : 3.5}px ${e.color}` }}
-                  />
+                  >
+                    <span
+                      className={`rounded-full bg-white ${
+                        mobile ? "w-[12px] h-[12px]" : "w-[14px] h-[14px]"
+                      }`}
+                      style={{ boxShadow: `inset 0 0 0 ${mobile ? 3 : 3.5}px ${e.color}` }}
+                    />
+                  </span>
                   <div
                     className={`group relative rounded-[8px] ${mobile ? "p-2 pl-2.5 pr-2" : "p-2.5 pl-3 pr-2"}`}
                     style={rowStyle(e.color)}
@@ -1247,13 +1264,13 @@ export function CardBack({
                 </div>
               ))}
 
-              <div className="relative">
-                <span
-                  className={`absolute z-10 rounded-full ${
-                    mobile ? "left-[-16px] top-[16px] w-[10px] h-[10px]" : "left-[-19px] top-[20px] w-[12px] h-[12px]"
-                  }`}
-                  style={{ background: PANEL_CREAM, boxShadow: "inset 0 0 0 2px #c9bc8a" }}
-                />
+              <div className={`relative ${mobile ? "pl-[22px]" : "pl-[26px]"}`}>
+                <span className="absolute left-0 top-[16px] z-10 flex w-[14px] h-[14px] items-center justify-center">
+                  <span
+                    className={`rounded-full ${mobile ? "w-[10px] h-[10px]" : "w-[12px] h-[12px]"}`}
+                    style={{ background: PANEL_CREAM, boxShadow: "inset 0 0 0 2px #c9bc8a" }}
+                  />
+                </span>
                 <div
                   className={`flex items-center border-2 border-dashed ${
                     mobile ? "gap-2 rounded-[8px] p-2 pl-2.5" : "gap-2.5 rounded-[10px] p-3 pl-3.5"

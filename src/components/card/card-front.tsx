@@ -26,7 +26,7 @@ import { retroSound } from "@/lib/sound";
 // gray section bullet that precedes every label (aligns down the left edge)
 function Bullet({ size = 16 }: { size?: number }) {
   return (
-    <svg viewBox="0 0 100 100" width={size} height={size} className="shrink-0" aria-hidden>
+    <svg viewBox="0 0 100 100" width={size} height={size} className="block shrink-0" aria-hidden>
       <circle cx="50" cy="50" r="45" fill="#fff" stroke="#8b95b8" strokeWidth="8" />
       <rect x="5" y="45" width="90" height="10" fill="#8b95b8" />
       <circle cx="50" cy="50" r="13" fill="#fff" stroke="#8b95b8" strokeWidth="8" />
@@ -168,9 +168,16 @@ function StackTile({
 /*  Meta icons                                                        */
 /* ================================================================== */
 
-function BarChartIcon() {
+function BarChartIcon({ size = 16 }: { size?: number }) {
   return (
-    <svg viewBox="0 0 24 24" className="w-[14px] h-[14px] shrink-0" fill="#3f9b46">
+    <svg
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      className="block shrink-0"
+      fill="#3f9b46"
+      aria-hidden
+    >
       <rect x="3" y="13" width="4" height="8" />
       <rect x="10" y="8" width="4" height="13" />
       <rect x="17" y="3" width="4" height="18" />
@@ -219,8 +226,8 @@ function GrindMini() {
 }
 
 const CURRENT = [
-  { icon: <BuildMini />, label: "Freelancing (2 ongoing)", accent: "#5a9bd6" },
-  { icon: <GrindMini />, label: "Hackathonmaxxing", accent: "#f0c84a" },
+  { icon: <BuildMini />, label: "Freelancing (2 clients)", accent: "#5a9bd6" },
+  { icon: <GrindMini />, label: "Shipping products", accent: "#f0c84a" },
   { icon: <LearnMini />, label: "Sem 3 @ IIIT", accent: "#8a5bc4" },
 ];
 
@@ -459,19 +466,26 @@ function IdentityPanel({ layout }: { layout: CardLayout }) {
 function ExpPanel({ compact }: { compact?: boolean }) {
   return (
     <div
-      className={`rounded-[7px] flex items-center shrink-0 ${
-        compact ? "gap-1 px-1.5 py-1" : "gap-1.5 px-2 py-1.5"
+      className={`flex items-center shrink-0 ${
+        compact
+          ? "h-[30px] gap-1.5 rounded-[7px] px-2.5"
+          : "h-[42px] gap-2.5 rounded-[8px] px-3.5"
       }`}
       style={CARD_PANEL_STYLE}
     >
-      <Bullet size={compact ? 12 : 14} />
-      <span className={`font-pixel leading-none text-[#56618c] ${compact ? "text-[10px]" : "text-[11px]"}`}>
+      <Bullet size={compact ? 15 : 20} />
+      {/* Press Start sits low in its em box — nudge so it shares a midline with the marks */}
+      <span
+        className={`font-pixel leading-none text-[#56618c] -translate-y-[3px] ${
+          compact ? "text-[11px]" : "text-[14px]"
+        }`}
+      >
         EXP:
       </span>
-      <BarChartIcon />
+      <BarChartIcon size={compact ? 16 : 20} />
       <span
-        className={`font-pixel leading-none text-[#3f9b46] whitespace-nowrap ${
-          compact ? "text-[11px]" : "text-[12px]"
+        className={`font-pixel leading-none text-[#3f9b46] whitespace-nowrap -translate-y-[3px] ${
+          compact ? "text-[12px]" : "text-[16px]"
         }`}
       >
         1+ YEAR
@@ -699,7 +713,7 @@ export function CardFront({ layout = "desktop" }: { layout?: CardLayout }) {
             <div className="flex-1 min-h-0" aria-hidden />
           </>
         ) : (
-          <div className="relative z-10 mt-auto pt-2 w-fit max-w-[190px] shrink-0">
+          <div className="relative z-10 mt-auto pt-2 w-fit max-w-[240px] shrink-0">
             <ExpPanel />
           </div>
         )}

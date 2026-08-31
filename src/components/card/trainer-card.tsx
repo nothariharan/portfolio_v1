@@ -39,13 +39,17 @@ const FLIP_HIT_SLOP_PX = 12;
 
 function shouldIgnoreFlip(target: EventTarget | null, clientX?: number, clientY?: number) {
   if (!(target instanceof Element)) return false;
-  if (target.closest(FLIP_IGNORE_SEL)) return true;
+  const hit = target.closest(FLIP_IGNORE_SEL);
+  // the unused face stays in the DOM (visibility:hidden) so its tabs/links
+  // must not steal hits from the face you're actually looking at
+  if (hit && !hit.closest('[aria-hidden="true"]')) return true;
 
   // taps in the soft margin around buttons / links / stickers
   if (clientX == null || clientY == null) return false;
   const root = target.closest("[data-flip-root]");
   if (!root) return false;
   for (const el of root.querySelectorAll(FLIP_IGNORE_SEL)) {
+    if (el.closest('[aria-hidden="true"]')) continue;
     const r = el.getBoundingClientRect();
     if (
       clientX >= r.left - FLIP_HIT_SLOP_PX &&
