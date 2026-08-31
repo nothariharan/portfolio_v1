@@ -15,6 +15,8 @@ import { CARD_MOBILE_MAX_PX } from "@/components/card/card-layout";
 import { useCardMobileLayout } from "@/hooks/use-media-query";
 import { useTransition } from "@/hooks/use-transition";
 import { retroSound } from "@/lib/sound";
+import { ViewCounter } from "@/components/site/view-counter";
+import { SpriteBtn } from "@/components/site/hud-sprite-button";
 
 const BG_THEMES = [
   { id: "teal", label: "TEAL", color: "#d0e8e0" },
@@ -86,20 +88,27 @@ export default function Home() {
       {/* scanlines overlay */}
       <div className="absolute inset-0 bg-scanlines opacity-5 pointer-events-none" />
 
-      {/* escape hatch button straight to main portfolio */}
+      <ViewCounter />
+
+      {/* escape hatch — cuboidal GBA plaque, not a sprite */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed top-5 right-5 z-50 flex flex-col items-end gap-2 pointer-events-none"
+        className="fixed top-5 right-5 z-50 flex flex-col items-end gap-2 pointer-events-none max-[720px]:top-3 max-[720px]:right-3"
       >
         <button
+          type="button"
           onClick={() => {
             retroSound.playSelect();
             startTransition("/portfolio");
           }}
-          className="pointer-events-auto font-pixel text-white text-[11px] leading-none px-4 py-3 rounded-[6px] cursor-pointer transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-[0.97] select-none"
-          style={{ background: "#e0524a", boxShadow: "inset 0 0 0 2px #a32f28, 0 3px 0 rgba(0,0,0,0.3)" }}
+          aria-label="open main portfolio"
+          className="pointer-events-auto font-pixel text-white text-[11px] leading-none px-4 py-3 rounded-[4px] cursor-pointer transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-110 active:translate-y-[2px] active:scale-[0.97] select-none max-[720px]:text-[9px] max-[720px]:px-3 max-[720px]:py-2.5"
+          style={{
+            background: "#e0524a",
+            boxShadow: "inset 0 0 0 2px #a32f28, 0 4px 0 #8a2420",
+          }}
         >
           ▶ MAIN PORTFOLIO
         </button>
@@ -123,8 +132,8 @@ export default function Home() {
         animate={{
           scale,
           maxWidth: isMobileLayout ? 440 : 900,
-          paddingTop: isMobileLayout ? 24 : 64,
-          paddingBottom: isMobileLayout ? 24 : 64,
+          paddingTop: isMobileLayout ? 28 : 56,
+          paddingBottom: isMobileLayout ? 72 : 80,
         }}
         transition={
           zoomLive
@@ -145,63 +154,71 @@ export default function Home() {
         />
       </motion.div>
 
-      {/* bottom-left: background color and 8-bit sound controls */}
-      <div className="fixed bottom-4 left-4 z-50 flex items-end gap-2">
-        <div className="flex flex-col items-start gap-1.5">
-          <span className="text-[6px] font-pixel text-slate-500 select-none">
+      {/* bottom-left: background color and 8-bit sound */}
+      <div className="fixed bottom-4 left-4 z-50 flex items-end gap-2 max-[720px]:bottom-3 max-[720px]:left-3 max-[720px]:gap-1.5">
+        <div className="flex flex-col items-start gap-1">
+          <span className="text-[8px] font-pixel text-slate-600 select-none max-[720px]:text-[7px]">
             BG: {bg.label}
           </span>
-          <button
+          <SpriteBtn
+            src="/ui/btn-color.webp"
+            label="switch background color"
             onClick={cycleBg}
-            className="h-7 px-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-600 text-gba-text-dark font-pixel text-[8px] flex items-center justify-center gap-1.5 cursor-pointer shadow active:scale-90 transition-transform select-none rounded"
-            title="switch background color"
+            width={240}
+            height={100}
+            className="w-[108px] max-[720px]:w-[88px]"
           >
+            {/* navy swatch window starts after bucket+palette (~38/36/9/35) */}
             <span
-              className="w-3 h-3 rounded-[2px] border border-slate-600 shrink-0"
-              style={{ background: bg.color }}
+              className="absolute left-[42%] top-[38%] right-[9%] bottom-[33%] block rounded-[1px]"
               aria-hidden
+              style={{
+                background: bg.color,
+                boxShadow: "inset 0 0 0 2px #1a1a1a",
+              }}
             />
-            COLOR
-          </button>
+          </SpriteBtn>
         </div>
 
-        <div className="flex flex-col items-start gap-1.5">
-          <span className="text-[6px] font-pixel text-slate-500 select-none">
+        <div className="flex flex-col items-start gap-1">
+          <span className="text-[8px] font-pixel text-slate-600 select-none max-[720px]:text-[7px]">
             SOUND: {soundOn ? "ON" : "OFF"}
           </span>
-          <button
+          <SpriteBtn
+            src={soundOn ? "/ui/btn-sound-on.webp" : "/ui/btn-sound-off.webp"}
+            label={soundOn ? "mute 8-bit sound" : "unmute 8-bit sound"}
             onClick={toggleSound}
-            className="h-7 px-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-600 text-gba-text-dark font-pixel text-[8px] flex items-center justify-center gap-1.5 cursor-pointer shadow active:scale-90 transition-transform select-none rounded"
-            title="toggle 8-bit retro sound"
-          >
-            <span className="text-[9px]">{soundOn ? "🔊" : "🔇"}</span>
-            <span>{soundOn ? "8-BIT" : "MUTED"}</span>
-          </button>
+            width={240}
+            height={soundOn ? 101 : 93}
+            className="w-[108px] max-[720px]:w-[88px]"
+          />
         </div>
       </div>
 
-      {/* zoom sizing button panel */}
-      <div className="fixed bottom-4 right-4 flex flex-col items-end gap-1.5 z-50">
-        <span className="text-[6px] font-pixel text-slate-500 select-none">
+      {/* zoom sizing */}
+      <div className="fixed bottom-4 right-4 flex flex-col items-end gap-1 z-50 max-[720px]:bottom-3 max-[720px]:right-3">
+        <span className="text-[8px] font-pixel text-slate-600 select-none max-[720px]:text-[7px]">
           ZOOM: {Math.round(scale * 100)}%
         </span>
         <div className="flex gap-1.5">
-          <button
+          <SpriteBtn
+            src="/ui/btn-zoom-minus.webp"
+            label="decrease size"
             onClick={decreaseSize}
             disabled={atMinZoom}
-            className="w-6 h-6 bg-slate-100 hover:bg-slate-200 border border-slate-600 text-gba-text-dark font-pixel text-[8px] flex items-center justify-center cursor-pointer shadow active:scale-90 transition-transform select-none rounded disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
-            title="decrease size"
-          >
-            -
-          </button>
-          <button
+            width={96}
+            height={96}
+            className="w-[40px] max-[720px]:w-[34px]"
+          />
+          <SpriteBtn
+            src="/ui/btn-zoom-plus.webp"
+            label="increase size"
             onClick={increaseSize}
             disabled={atMaxZoom}
-            className="w-6 h-6 bg-slate-100 hover:bg-slate-200 border border-slate-600 text-gba-text-dark font-pixel text-[8px] flex items-center justify-center cursor-pointer shadow active:scale-90 transition-transform select-none rounded disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
-            title="increase size"
-          >
-            +
-          </button>
+            width={96}
+            height={96}
+            className="w-[40px] max-[720px]:w-[34px]"
+          />
         </div>
       </div>
     </main>
