@@ -55,6 +55,12 @@ function Cover({ project }: { project: SiteProject }) {
       >
         {project.category}
       </span>
+
+      {project.users && (
+        <span className="absolute bottom-2.5 right-2.5 rounded-md bg-black/70 px-2 py-0.5 font-mono text-[10px] font-medium text-white backdrop-blur-sm ring-1 ring-white/10">
+          {project.users}
+        </span>
+      )}
     </div>
   );
 }

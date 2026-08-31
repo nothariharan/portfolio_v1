@@ -9,8 +9,7 @@ export default function AchievementsPage() {
       <Container>
         <h1 className="font-display text-3xl font-semibold tracking-tight text-portfolio-text">the trophy shelf</h1>
         <p className="mt-2 max-w-xl text-[15px] text-portfolio-muted">
-          9 hackathon wins — four of them in a single day — plus a hacktoberfest golden badge and yc
-          startup school &apos;26. placement, not just participation.
+          merged upstream prs, yc startup school, hacktoberfest gold, and the hackathon circuit if you want the full list.
         </p>
 
         <ol className="mt-8 flex flex-col">

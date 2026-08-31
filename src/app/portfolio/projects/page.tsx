@@ -29,8 +29,7 @@ export default function ProjectsDirectory() {
       <Container>
         <h1 className="font-display text-3xl font-semibold tracking-tight text-portfolio-text">everything i&apos;ve shipped</h1>
         <p className="mt-2 max-w-xl text-[15px] text-portfolio-muted">
-          {PROJECTS.length} projects across ai agents, civic tech, dev tools and ml research — most of
-          them built (and deployed) at 3am.
+          {PROJECTS.length} on this page, 40+ shipped in total. agents, civic tech, tools ppl actually use.
         </p>
 
         <div className="mt-6 flex flex-wrap gap-2">

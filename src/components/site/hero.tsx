@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { SITE } from "./content";
-import { STATS } from "./portfolio-data";
 import { Container, GitHubIcon, LinkedInIcon, MailIcon } from "./ui";
 
 // sitting loop for the portfolio hero — frames are already lined up on the feet
@@ -79,7 +78,7 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
               className="mt-3 font-mono text-[13px] text-portfolio-muted"
             >
-              {SITE.role} · dual-degree cs · {SITE.location} 🇮🇳
+              {SITE.role} · {SITE.location}
             </motion.p>
 
             <motion.p
@@ -121,7 +120,7 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* about + stats */}
+        {/* about */}
         <motion.div
           {...fade}
           transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
@@ -133,19 +132,6 @@ export function Hero() {
             </p>
           ))}
         </motion.div>
-
-        <motion.dl
-          {...fade}
-          transition={{ duration: 0.6, delay: 0.36, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 grid max-w-md grid-cols-3 gap-3"
-        >
-          {STATS.map((s) => (
-            <div key={s.label} className="rounded-lg border border-portfolio-border bg-portfolio-card px-3 py-3">
-              <dt className="font-display text-xl font-semibold text-portfolio-text">{s.value}</dt>
-              <dd className="mt-0.5 font-mono text-[10px] leading-tight text-portfolio-muted">{s.label}</dd>
-            </div>
-          ))}
-        </motion.dl>
       </Container>
     </section>
   );

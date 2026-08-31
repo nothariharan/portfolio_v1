@@ -10,13 +10,13 @@ export function Achievements() {
   return (
     <Section id="achievements">
       <SectionHeading
-        title="recent wins"
+        title="selected"
         action={
           <button
             onClick={() => startTransition("/portfolio/achievements")}
             className="inline-flex items-center gap-1 text-[13px] text-portfolio-muted transition-colors hover:text-portfolio-text cursor-pointer"
           >
-            all {ACHIEVEMENTS.length} achievements <ArrowIcon className="h-3.5 w-3.5" />
+            all {ACHIEVEMENTS.length} <ArrowIcon className="h-3.5 w-3.5" />
           </button>
         }
       />

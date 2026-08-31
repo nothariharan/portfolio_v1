@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Section, SectionHeading, ExpIcon, ArrowIcon } from "./ui";
 import { WORK, EDUCATION, type ExpRow } from "./portfolio-data";
+import { OssOrgList } from "./oss-orgs";
 import { useTransition } from "@/hooks/use-transition";
 
 function RowList({ rows }: { rows: ExpRow[] }) {
@@ -53,8 +54,16 @@ function RowList({ rows }: { rows: ExpRow[] }) {
   );
 }
 
+const TABS = [
+  { id: "work", label: "work" },
+  { id: "education", label: "education" },
+  { id: "oss", label: "oss" },
+] as const;
+
+type Tab = (typeof TABS)[number]["id"];
+
 export function Experience() {
-  const [tab, setTab] = useState<"work" | "education">("work");
+  const [tab, setTab] = useState<Tab>("work");
   const { startTransition } = useTransition();
 
   return (
@@ -71,17 +80,16 @@ export function Experience() {
         }
       />
 
-      {/* work / education toggle */}
       <div className="mb-2 flex items-center gap-1 self-start rounded-lg border border-portfolio-border bg-portfolio-border/40 p-1 w-fit">
-        {(["work", "education"] as const).map((t) => (
+        {TABS.map((t) => (
           <button
-            key={t}
-            onClick={() => setTab(t)}
+            key={t.id}
+            onClick={() => setTab(t.id)}
             className={`rounded-md px-3 py-1 text-[12px] font-medium capitalize transition-colors cursor-pointer ${
-              tab === t ? "bg-portfolio-bg text-portfolio-text" : "text-portfolio-muted hover:text-portfolio-text"
+              tab === t.id ? "bg-portfolio-bg text-portfolio-text" : "text-portfolio-muted hover:text-portfolio-text"
             }`}
           >
-            {t}
+            {t.label}
           </button>
         ))}
       </div>
@@ -95,18 +103,19 @@ export function Experience() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
           >
-            <RowList rows={tab === "work" ? WORK : EDUCATION} />
+            {tab === "work" && <RowList rows={WORK} />}
+            {tab === "education" && <RowList rows={EDUCATION} />}
+            {tab === "oss" && <OssOrgList groups={["upstream"]} />}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* CTA to the full journey breakdown */}
       <button
         onClick={() => startTransition("/portfolio/experience")}
         className="group mt-5 flex w-full items-center justify-between gap-3 rounded-lg border border-portfolio-border bg-portfolio-card px-4 py-3 text-left transition-colors hover:border-white/20 cursor-pointer"
       >
         <span className="text-[13px] text-portfolio-muted">
-          want the full story? see the complete timeline — every ship, win and milestone.
+          want the full story? roles, education, and every upstream pr.
         </span>
         <span className="inline-flex shrink-0 items-center gap-1 text-[13px] font-medium text-portfolio-text">
           the journey <ArrowIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />

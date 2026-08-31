@@ -194,15 +194,15 @@ export const PROJECT_META: Record<string, { icon: string; listDesc: string }> = 
   "006": { icon: "mugen", listDesc: "Audits AI models for bias before the EU AI Act does." },
 };
 
-export const TOTAL_BUILT = "22+";
+export const TOTAL_BUILT = "40+";
 
 // experience data
 
 export const EXP_STATS = [
   { value: "5", label: "EXPERIENCES" },
-  { value: "22+", label: "PROJECTS" },
-  { value: "10+", label: "HACKATHONS" },
-  { value: "9", label: "WINS" },
+  { value: "40+", label: "PROJECTS" },
+  { value: "100+", label: "MCP USERS" },
+  { value: "80+", label: "EXT USERS" },
 ];
 
 export type TimelineItem = {
@@ -215,17 +215,23 @@ export type TimelineItem = {
 
 export const TIMELINE: TimelineItem[] = [
   {
-    current: true,
-    period: "Jun 2026 — Present",
+    period: "Jun — Aug 2026",
     title: "Founding Engineer · Stealth Startup VC backed",
-    desc: "Building a VC-backed stealth startup.",
+    desc: "Built a VC-backed stealth startup. Role ended Aug 2026.",
     icon: "laptop",
   },
   {
     current: true,
+    period: "May 2026 — Present",
+    title: "Webmaster · IEEE ITSS",
+    desc: "Chapter site for IIIT Sri City — iiits-itss.vercel.app.",
+    icon: "globe",
+  },
+  {
+    current: true,
     period: "Jan 2026 — Present",
-    title: "Freelancing",
-    desc: "Client work and side products — shipping what needs to go live.",
+    title: "Freelance · 2 client projects",
+    desc: "Full-stack and agent work, shipped and handed off.",
     icon: "code",
   },
   {
@@ -235,21 +241,9 @@ export const TIMELINE: TimelineItem[] = [
     icon: "brain",
   },
   {
-    period: "OCT 2025",
-    title: "Hacktoberfest Golden Contributor",
-    desc: "Top-tier open-source contributor — 4+ PRs merged.",
-    icon: "globe",
-  },
-  {
-    period: "2026",
-    title: "Hackathon Circuit",
-    desc: "Wins at VahanLive, AMUHACKS 5.0 & Cosmix.",
-    icon: "code",
-  },
-  {
     period: "AUG 2025 — NOW",
-    title: "Dual-Degree CS Student",
-    desc: "IIIT SriCity × IIT Patna — building while learning.",
+    title: "CS Student · IIIT SriCity × IIT Patna",
+    desc: "Building while learning.",
     icon: "hands",
   },
 ];
@@ -269,9 +263,9 @@ export const CURRENT_ROLE = {
 };
 
 export const KEY_ACHIEVEMENTS = [
-  "Shipped 22+ projects across AI & web",
-  "Won 9 hackathons (AMUHACKS, Cosmix, Abhisarga & more)",
-  "Hacktoberfest Golden Contributor '25",
+  "Shipped 40+ projects across AI & web",
+  "100+ MCP users on image-gen · 80+ on Tecora",
+  "Merged PRs into OpenAI Agents SDK & Google ADK JS",
   "YC Startup School India '26 participant",
 ];
 
@@ -285,7 +279,7 @@ export const SKILLS_GAINED = [
 ];
 
 // education background
-export const EDUCATION = "B.Tech CS · IIIT SriCity × IIT Patna (dual degree, since Aug 2025)";
+export const EDUCATION = "B.Tech CS · IIIT SriCity × IIT Patna (since Aug 2025)";
 
 // honors data
 
@@ -332,7 +326,7 @@ export const FEATURED_HONOR = {
 export const SKILL_STATS = [
   { value: "30+", label: "TECHNOLOGIES", icon: "code" },
   { value: "6", label: "DOMAINS", icon: "tools" },
-  { value: "22+", label: "PROJECTS", icon: "book" },
+  { value: "40+", label: "PROJECTS", icon: "book" },
   { value: "9", label: "HACK WINS", icon: "bolt" },
 ];
 
@@ -381,7 +375,7 @@ export const SKILL_RADAR = [
 export const SKILL_STATS_FOOTER = [
   { label: "LeetCode Rating", value: "1700+", icon: "trophy" },
   { label: "Hackathon Wins", value: "9", icon: "lines" },
-  { label: "Projects Built", value: "22+", icon: "code" },
+  { label: "Projects Built", value: "40+", icon: "code" },
   { label: "Public Repos", value: "13+", icon: "github" },
 ];
 
@@ -402,18 +396,18 @@ export const BACK_SUMMARY: Record<
   projects: {
     tagline: "things i've shipped",
     lines: [
-      "CoFound — multi-agent Founder OS",
-      "VahanLive — realtime transit (winner)",
-      "Visor — visual OS for codebases",
+      "Phyla — household safety watchdog",
+      "Continuum — temporal company memory",
+      "Tecora — 80+ active on chrome web store",
     ],
-    stat: "22+ BUILT · 9 HACKATHON WINS",
+    stat: "40+ BUILT · 100+ MCP USERS",
     link: { label: "LIVE DEMO", url: "https://cofounder-alpha.vercel.app" },
   },
   experience: {
     tagline: "the journey so far",
     lines: [
-      "Stealth Startup VC backed · Jun — Present",
-      "Freelancing · Jan — Present",
+      "Stealth Startup · Jun — Aug '26",
+      "IEEE ITSS Webmaster · May — Present",
       "Rinexis Internship · May — Jul '26",
     ],
     stat: "5 ROLES · BUILDING SINCE 2025",
@@ -422,7 +416,7 @@ export const BACK_SUMMARY: Record<
   honors: {
     tagline: "milestones earned",
     lines: [
-      "9 hackathon wins — AMUHACKS, Cosmix, Abhisarga & more",
+      "merged openai agents sdk #4298 + google adk js #644",
       "Hacktoberfest Golden Contributor '25",
       "YC Startup School India '26",
     ],
@@ -470,15 +464,27 @@ export type BackExperience = {
 
 export const BACK_EXPERIENCE: BackExperience[] = [
   {
-    year: "2026 — NOW",
+    year: "JUN — AUG 2026",
     title: "Stealth Startup VC backed",
-    sub: "Founding engineer — cloud-infrastructure product",
+    sub: "Founding engineer — role ended Aug 2026",
     icon: "cloud",
     tag: "STARTUP",
     color: "#e8913a",
-    status: "IN PROGRESS",
+    status: "COMPLETED",
     badge: "rocket",
     url: "https://www.linkedin.com/in/nmhariharan/",
+    github: "https://github.com/nothariharan",
+  },
+  {
+    year: "MAY 2026 — NOW",
+    title: "Webmaster — IEEE ITSS",
+    sub: "IIIT Sri City chapter site",
+    icon: "globe",
+    tag: "CAMPUS",
+    color: "#4a76c9",
+    status: "ACTIVE",
+    badge: "star",
+    url: "https://iiits-itss.vercel.app",
     github: "https://github.com/nothariharan",
   },
   {
@@ -495,8 +501,8 @@ export const BACK_EXPERIENCE: BackExperience[] = [
   },
   {
     year: "JAN 2026 — NOW",
-    title: "Freelancing",
-    sub: "Client work & side products",
+    title: "Freelance — 2 client projects",
+    sub: "Full-stack & agent work, handed off",
     icon: "code",
     tag: "WORK",
     color: "#5a9bd6",
@@ -507,20 +513,8 @@ export const BACK_EXPERIENCE: BackExperience[] = [
   },
   {
     year: "AUG 2025 — NOW",
-    title: "BS — IIT Patna",
-    sub: "Dual-degree programme",
-    icon: "grad",
-    tag: "EDUCATION",
-    color: "#4a76c9",
-    status: "IN PROGRESS",
-    badge: "star",
-    url: "https://www.linkedin.com/in/nmhariharan/",
-    github: "https://github.com/nothariharan",
-  },
-  {
-    year: "AUG 2025 — NOW",
     title: "B.Tech CS — IIIT SriCity",
-    sub: "Dual degree begins",
+    sub: "dual degree with IIT Patna",
     icon: "grad",
     tag: "EDUCATION",
     color: "#4a76c9",

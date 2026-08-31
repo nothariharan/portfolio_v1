@@ -13,6 +13,8 @@ export type Category =
   | "ML / Research"
   | "Mobile / Creative";
 
+export type FeaturedLane = "people" | "systems" | "civic";
+
 export type SiteProject = {
   slug: string;
   name: string;
@@ -24,8 +26,12 @@ export type SiteProject = {
   repo?: string;
   live?: string;
   award?: string; // e.g. "🥇 1st · AMUHACKS 5.0"
-  shot?: string; // /shots/<slug>.png — real screenshot of the live app
+  shot?: string; // /shots/<slug>.webp — real screenshot of the live app
   featured?: boolean;
+  /** shown on the cover, e.g. "100+ users" */
+  users?: string;
+  /** featured-grid filter on /portfolio */
+  lane?: FeaturedLane;
 };
 
 export const CATEGORIES: Category[] = [
@@ -47,6 +53,67 @@ export const CATEGORY_META: Record<Category, { color: string; glyph: string }> =
 
 export const PROJECTS: SiteProject[] = [
   {
+    slug: "phyla",
+    name: "Phyla",
+    tagline: "know when something you own becomes dangerous.",
+    description:
+      "household safety watchdog — ingest what you own, match it against cpsc / fda / usda / nhtsa recalls, then alert with a real remedy. never turns a bad amazon review into a fake federal recall.",
+    category: "Civic Tech",
+    tech: ["nextjs", "typescript", "supabase", "fireworks"],
+    date: "Aug 2026",
+    repo: "https://github.com/nothariharan/phyla",
+    live: "https://phyla.vercel.app",
+    shot: "/shots/phyla.png",
+    featured: true,
+    lane: "systems",
+  },
+  {
+    slug: "continuum",
+    name: "Continuum",
+    tagline: "company memory that stays true over time.",
+    description:
+      "temporal knowledge graph on hydradb — slack and gmail claims fuse into one timeline, so 'who owns acme now?' is reconstructed state, not the highest-ranked chunk. 476 tests, same answer on web / slack / mcp.",
+    category: "Dev Tools",
+    tech: ["python", "fastapi", "nextjs", "hydradb"],
+    date: "Aug 2026",
+    repo: "https://github.com/nothariharan/continuum",
+    live: "https://continuum-web-xi.vercel.app",
+    shot: "/shots/continuum.png",
+    featured: true,
+    lane: "systems",
+  },
+  {
+    slug: "raksha",
+    name: "Raksha",
+    tagline: "one freeze packet, four doors — web, whatsapp, phone, agents.",
+    description:
+      "civic action protocol for financial cyber-fraud in india. one deterministic freeze packet reachable from web, whatsapp, phone, and mcp — banks and 1930 stay simulated on purpose.",
+    category: "Civic Tech",
+    tech: ["nextjs", "typescript", "python", "twilio"],
+    date: "Aug 2026",
+    repo: "https://github.com/nothariharan/raksha",
+    live: "https://raksha-theta.vercel.app",
+    shot: "/shots/raksha.png",
+    featured: true,
+    lane: "civic",
+  },
+  {
+    slug: "image-gen",
+    name: "image-gen",
+    tagline: "mcp image gen for coding agents. no api key.",
+    description:
+      "open-source mcp server that drives a real chatgpt session over cdp so cursor / claude code can generate images into the project. 100+ people actually use it.",
+    category: "Dev Tools",
+    tech: ["nodejs", "typescript", "playwright"],
+    date: "Aug 2026",
+    repo: "https://github.com/nothariharan/image-gen",
+    live: "https://web-2b3c-3000.prg1.zerops.app/",
+    shot: "/shots/image-gen.png",
+    featured: true,
+    users: "100+ mcp users",
+    lane: "people",
+  },
+  {
     slug: "scout",
     name: "Scout",
     tagline: "an autonomous voice buyer that haggles for you.",
@@ -59,7 +126,6 @@ export const PROJECTS: SiteProject[] = [
     live: "https://scout-dusky-six.vercel.app",
     award: "⏳ Hack-Nation #6 · results Jul 25",
     shot: "/shots/scout.webp",
-    featured: true,
   },
   {
     slug: "slopmark",
@@ -73,7 +139,6 @@ export const PROJECTS: SiteProject[] = [
     repo: "https://github.com/nothariharan/slopmark",
     live: "https://slopmark.vercel.app",
     shot: "/shots/slopmark.webp",
-    featured: true,
   },
   {
     slug: "crux",
@@ -87,7 +152,6 @@ export const PROJECTS: SiteProject[] = [
     repo: "https://github.com/nothariharan/crux",
     live: "https://crux-snowy.vercel.app",
     shot: "/shots/crux.webp",
-    featured: true,
   },
   {
     slug: "tecora",
@@ -99,6 +163,11 @@ export const PROJECTS: SiteProject[] = [
     tech: ["typescript", "react", "wxt"],
     date: "Jul 2026",
     repo: "https://github.com/nothariharan/Tecora",
+    live: "https://chromewebstore.google.com/detail/tecora/ihagfljacjognebfcmcmcbddjlonpifn",
+    shot: "/shots/tecora.png",
+    featured: true,
+    users: "80+ active",
+    lane: "people",
   },
   {
     slug: "certamen",
@@ -112,7 +181,6 @@ export const PROJECTS: SiteProject[] = [
     repo: "https://github.com/nothariharan/certamen",
     live: "https://web-theta-khaki-90.vercel.app",
     shot: "/shots/certamen.webp",
-    featured: true,
   },
   {
     slug: "cofound",
@@ -127,6 +195,7 @@ export const PROJECTS: SiteProject[] = [
     live: "https://cofounder-alpha.vercel.app",
     shot: "/shots/cofound.webp",
     featured: true,
+    lane: "systems",
   },
   {
     slug: "justask",
@@ -359,14 +428,33 @@ export type Achievement = {
 
 export const ACHIEVEMENTS: Achievement[] = [
   {
+    title: "OpenAI Agents SDK + Google ADK JS",
+    event: "openai/openai-agents-python · google/adk-js",
+    result: "Selected",
+    icon: "⌥",
+    date: "Aug 2026",
+    note: "merged #4298 into openai agents sdk (session history on cancelled compaction) and #644 into google adk js (binary skill assets as Buffer).",
+    live: "https://github.com/openai/openai-agents-python/pull/4298",
+    featured: true,
+  },
+  {
     title: "YC Startup School India '26",
     event: "Y Combinator · Bangalore",
     result: "Selected",
     icon: "🚀",
     date: "Apr 2026",
-    note: "yc founder education for india — serious startup intent, not just hackathon projects.",
+    note: "yc founder education for india. selected from 100k+ applicants.",
     project: "CoFound",
     live: "https://cofounder-alpha.vercel.app",
+    featured: true,
+  },
+  {
+    title: "Hacktoberfest 2025 — Golden Contributor",
+    event: "DigitalOcean × GitHub",
+    result: "Golden",
+    icon: "🎖️",
+    date: "Oct 2025",
+    note: "highest tier — 4+ meaningful prs merged across open-source repos in october.",
     featured: true,
   },
   {
@@ -382,7 +470,6 @@ export const ACHIEVEMENTS: Achievement[] = [
       { label: "Ideaverse", project: "Yui", result: "🏆 Won" },
       { label: "Agentica", project: "Veda", result: "🏆 Won" },
     ],
-    featured: true,
   },
   {
     title: "AMUHACKS 5.0 — 1st place",
@@ -393,7 +480,6 @@ export const ACHIEVEMENTS: Achievement[] = [
     note: "built JustAsk — a brutalist career roadmap generator with a subway-style metro map.",
     project: "JustAsk",
     live: "https://justask-one.vercel.app",
-    featured: true,
   },
   {
     title: "Global Game Jam '26 — 2nd place",
@@ -434,14 +520,6 @@ export const ACHIEVEMENTS: Achievement[] = [
     project: "Synergia",
   },
   {
-    title: "Hacktoberfest 2025 — Golden Contributor",
-    event: "DigitalOcean × GitHub",
-    result: "Golden",
-    icon: "🎖️",
-    date: "Oct 2025",
-    note: "highest tier — 4+ meaningful prs merged across open-source repos in october.",
-  },
-  {
     title: "Lean In Hacks 5.0 — Flash Rescue",
     event: "Lean In Hacks",
     result: "Participant",
@@ -472,16 +550,23 @@ export type ExpRow = {
 export const WORK: ExpRow[] = [
   {
     title: "Founding Engineer",
-    org: "Stealth Startup VC backed",
-    period: "Jun 2026 — Present",
-    desc: "building a vc-backed stealth startup — shipping the product in quiet mode for now.",
+    org: "Stealth Startup (VC-backed)",
+    period: "Jun 2026 — Aug 2026",
+    desc: "shipped the product in quiet mode. role ended this month.",
     icon: "laptop",
   },
   {
-    title: "Freelancing",
+    title: "Webmaster",
+    org: "IEEE ITSS · IIIT Sri City",
+    period: "May 2026 — Present",
+    desc: "run the chapter site — live at iiits-itss.vercel.app.",
+    icon: "globe",
+  },
+  {
+    title: "Freelance",
     org: "Independent",
     period: "Jan 2026 — Present",
-    desc: "shipping client work and side products — agents, full-stack apps, and whatever needs to go live.",
+    desc: "two client builds — full-stack products and agent work, shipped and handed off.",
     icon: "code",
   },
   {
@@ -503,24 +588,311 @@ export const EDUCATION: ExpRow[] = [
     title: "B.Tech, Computer Science",
     org: "IIIT Sri City",
     period: "Aug 2025 — Present",
-    desc: "dual-degree programme — building products in parallel with coursework.",
+    desc: "dual degree with iit patna · cgpa 9.6/10.",
     icon: "grad",
   },
   {
-    title: "Dual Degree (CS)",
+    title: "B.Sc, AI & Cybersecurity",
     org: "IIT Patna",
     period: "Aug 2025 — Present",
-    desc: "the second half of the dual degree with iiit sri city.",
+    desc: "cpi 9.53/10.",
     icon: "grad",
   },
 ];
 
-// small headline stats
-export const STATS = [
-  { value: "22+", label: "projects shipped" },
-  { value: "9", label: "hackathon wins" },
-  { value: "1700+", label: "leetcode rating" },
+// ------------------------------------------------------------------
+// Upstream OSS — org-grouped PRs (own-repo PRs excluded).
+// Facts from wiki/life/open-source-activity + HF export 2026-08-06.
+// Graphify #2422 landed via cherry-pick (shipped, not GitHub-merged).
+// ------------------------------------------------------------------
+
+export type OssPrState = "merged" | "shipped" | "open";
+
+export type OssPr = {
+  number: number;
+  title: string;
+  url: string;
+  state: OssPrState;
+  note?: string;
+};
+
+export type OssGroup = "upstream" | "hacktoberfest" | "other";
+
+export type OssOrg = {
+  id: string;
+  name: string;
+  /** shown as owner/repo under the org name */
+  repo: string;
+  logo: string;
+  /** invert dark SVGs so they read on the black tile */
+  invert?: boolean;
+  note?: string;
+  group: OssGroup;
+  prs: OssPr[];
+};
+
+export const OSS_ORGS: OssOrg[] = [
+  {
+    id: "openai",
+    name: "OpenAI",
+    repo: "openai/openai-agents-python",
+    logo: "/logos/openai.svg",
+    invert: true,
+    note: "Agents SDK",
+    group: "upstream",
+    prs: [
+      {
+        number: 4298,
+        title: "fix(sessions): restore session history when compaction replacement is cancelled",
+        url: "https://github.com/openai/openai-agents-python/pull/4298",
+        state: "merged",
+      },
+    ],
+  },
+  {
+    id: "google",
+    name: "Google",
+    repo: "google/adk-js",
+    logo: "/logos/google.svg",
+    note: "ADK JS",
+    group: "upstream",
+    prs: [
+      {
+        number: 644,
+        title: "fix(skills): preserve binary skill assets as Buffer",
+        url: "https://github.com/google/adk-js/pull/644",
+        state: "merged",
+      },
+    ],
+  },
+  {
+    id: "graphify",
+    name: "Graphify Labs",
+    repo: "Graphify-Labs/graphify",
+    logo: "/oss/graphify-labs.png",
+    note: "YC S26",
+    group: "upstream",
+    prs: [
+      {
+        number: 2422,
+        title: "fix(hooks): skip post-checkout rebuild when PREV_HEAD equals NEW_HEAD",
+        url: "https://github.com/Graphify-Labs/graphify/pull/2422",
+        state: "shipped",
+        note: "v0.9.46",
+      },
+      {
+        number: 2423,
+        title: "fix(cli): point explain truncation at affected for full blast-radius",
+        url: "https://github.com/Graphify-Labs/graphify/pull/2423",
+        state: "open",
+      },
+    ],
+  },
+  {
+    id: "mem0",
+    name: "Mem0",
+    repo: "mem0ai/mem0",
+    logo: "/oss/mem0ai.png",
+    note: "YC S24",
+    group: "upstream",
+    prs: [
+      {
+        number: 6851,
+        title: "fix(vector_stores/azure_ai_search): raise on failed IndexingResult",
+        url: "https://github.com/mem0ai/mem0/pull/6851",
+        state: "open",
+      },
+    ],
+  },
+  {
+    id: "foss42",
+    name: "foss42",
+    repo: "foss42/apidash",
+    logo: "/oss/foss42.png",
+    note: "APIDash",
+    group: "upstream",
+    prs: [
+      {
+        number: 1742,
+        title: "fix: prevent AI JSON parse from leaving request stuck in isWorking",
+        url: "https://github.com/foss42/apidash/pull/1742",
+        state: "open",
+      },
+      {
+        number: 1738,
+        title: "Clear expired history via isolate",
+        url: "https://github.com/foss42/apidash/pull/1738",
+        state: "open",
+      },
+    ],
+  },
+  {
+    id: "foodie",
+    name: "Foodie",
+    repo: "janavipandole/Foodie",
+    logo: "/oss/janavipandole.png",
+    group: "hacktoberfest",
+    prs: [
+      {
+        number: 131,
+        title: "Updated Filter Bar",
+        url: "https://github.com/janavipandole/Foodie/pull/131",
+        state: "merged",
+      },
+      {
+        number: 114,
+        title: "Add feature: Added Items into the menu",
+        url: "https://github.com/janavipandole/Foodie/pull/114",
+        state: "merged",
+      },
+    ],
+  },
+  {
+    id: "opensauce",
+    name: "OpenSauce",
+    repo: "xthxr/OpenSauce",
+    logo: "/oss/xthxr.png",
+    group: "hacktoberfest",
+    prs: [
+      {
+        number: 260,
+        title: "Added Searching and Sorting algorithms on Scala and Swift",
+        url: "https://github.com/xthxr/OpenSauce/pull/260",
+        state: "merged",
+      },
+      {
+        number: 231,
+        title: "Add DynamicProgramming and Linked List Cycles in JavaScript",
+        url: "https://github.com/xthxr/OpenSauce/pull/231",
+        state: "merged",
+      },
+    ],
+  },
+  {
+    id: "css-art-museum",
+    name: "css-art-museum",
+    repo: "pixel-museum/css-art-museum",
+    logo: "/oss/pixel-museum.png",
+    group: "hacktoberfest",
+    prs: [
+      {
+        number: 314,
+        title: "feat: Create Animated Halloween Scene with CSS Art",
+        url: "https://github.com/pixel-museum/css-art-museum/pull/314",
+        state: "merged",
+      },
+    ],
+  },
+  {
+    id: "leetcode2024",
+    name: "LeetCode 6Companies30Days",
+    repo: "abhisek247767/LeetCode2024-6Companies30Days",
+    logo: "/oss/abhisek247767.png",
+    group: "hacktoberfest",
+    prs: [
+      {
+        number: 211,
+        title: "Added solution to Trapping Rain Water Problem and LRU Cache in JS",
+        url: "https://github.com/abhisek247767/LeetCode2024-6Companies30Days/pull/211",
+        state: "merged",
+      },
+    ],
+  },
+  {
+    id: "student-portfolio",
+    name: "Student-Portfolio",
+    repo: "Sbiswas001/Student-Portfolio",
+    logo: "/oss/sbiswas001.png",
+    group: "hacktoberfest",
+    prs: [
+      {
+        number: 68,
+        title: "Add My Portfolio",
+        url: "https://github.com/Sbiswas001/Student-Portfolio/pull/68",
+        state: "merged",
+      },
+    ],
+  },
+  {
+    id: "beginner-python",
+    name: "beginner-python-mini-projects",
+    repo: "arya2004/beginner-python-mini-projects-hacktoberfest-2025",
+    logo: "/oss/arya2004.png",
+    group: "hacktoberfest",
+    prs: [
+      {
+        number: 87,
+        title: "Added Typing Speed Test with Documentation",
+        url: "https://github.com/arya2004/beginner-python-mini-projects-hacktoberfest-2025/pull/87",
+        state: "merged",
+      },
+    ],
+  },
+  {
+    id: "hf-2k25",
+    name: "Hacktoberfest-2k25",
+    repo: "mohamedammar27/Hacktoberfest-2k25",
+    logo: "/oss/mohamedammar27.png",
+    group: "hacktoberfest",
+    prs: [
+      {
+        number: 19,
+        title: "Added My Portfolio",
+        url: "https://github.com/mohamedammar27/Hacktoberfest-2k25/pull/19",
+        state: "merged",
+      },
+    ],
+  },
+  {
+    id: "ai-tools-manager",
+    name: "ai-tools-manager",
+    repo: "ArshdeepGrover/ai-tools-manager",
+    logo: "/oss/arshdeepgrover.png",
+    group: "hacktoberfest",
+    prs: [
+      {
+        number: 121,
+        title: "Add 2 new AI Tools",
+        url: "https://github.com/ArshdeepGrover/ai-tools-manager/pull/121",
+        state: "merged",
+      },
+    ],
+  },
+  {
+    id: "hf-python",
+    name: "HACKTOBERFEST_25_Python",
+    repo: "A-K-0/HACKTOBERFEST_25_Python",
+    logo: "/oss/a-k-0.png",
+    group: "hacktoberfest",
+    prs: [
+      {
+        number: 51,
+        title: "Add: Create command-line Blackjack game and documentation",
+        url: "https://github.com/A-K-0/HACKTOBERFEST_25_Python/pull/51",
+        state: "merged",
+      },
+    ],
+  },
+  {
+    id: "hackathon-tools",
+    name: "Hackathon-Tools",
+    repo: "rahavshukla/Hackathon-Tools",
+    logo: "/oss/rahavshukla.png",
+    group: "other",
+    prs: [
+      {
+        number: 2,
+        title: "README techs",
+        url: "https://github.com/rahavshukla/Hackathon-Tools/pull/2",
+        state: "open",
+      },
+    ],
+  },
 ];
+
+export const OSS_UPSTREAM = OSS_ORGS.filter((o) => o.group === "upstream");
+export const OSS_HACKTOBERFEST = OSS_ORGS.filter((o) => o.group === "hacktoberfest");
+export const OSS_OTHER = OSS_ORGS.filter((o) => o.group === "other");
 
 // ------------------------------------------------------------------
 // Journey timeline — the full "so far", newest first
@@ -547,102 +919,67 @@ export const JOURNEY_KIND_META: Record<JourneyKind, { color: string; label: stri
 
 export const JOURNEY: JourneyEntry[] = [
   {
-    date: "Jun 2026 — Present",
-    title: "Founding Eng @ Stealth Startup VC backed",
-    desc: "building the product in quiet mode — vc-backed stealth.",
+    date: "Jun 2026 — Aug 2026",
+    title: "Founding Eng @ Stealth (VC-backed)",
+    desc: "shipped the product in quiet mode. role ended this month.",
     kind: "work",
     icon: "🚀",
   },
   {
+    date: "Aug 2026",
+    title: "Phyla + Continuum + Raksha shipped",
+    desc: "household safety watchdog, temporal company memory on hydradb, and a civic freeze protocol. all live.",
+    kind: "ship",
+    icon: "🚀",
+  },
+  {
+    date: "Aug 2026",
+    title: "OpenAI Agents SDK + Google ADK JS",
+    desc: "merged #4298 and #644 upstream. also 100+ users on image-gen mcp, tecora on the chrome web store.",
+    kind: "milestone",
+    icon: "⌥",
+  },
+  {
+    date: "May 2026 — Present",
+    title: "Webmaster @ IEEE ITSS",
+    desc: "chapter site for iiit sri city — live at iiits-itss.vercel.app.",
+    kind: "work",
+    icon: "🌐",
+  },
+  {
     date: "May 2026 — Jul 2026",
     title: "SAP Security Intern @ Rinexis",
-    desc: "built a multi-tenant sap security saas — segregation-of-duties analysis and itgc audit tooling.",
+    desc: "built a multi-tenant sap security saas — sod analysis and itgc audit tooling.",
     kind: "work",
     icon: "💼",
   },
   {
     date: "Jan 2026 — Present",
-    title: "Freelancing",
-    desc: "client work and side products — shipping agents and full-stack apps.",
+    title: "Freelance · 2 client projects",
+    desc: "full-stack and agent work, shipped and handed off.",
     kind: "work",
     icon: "💻",
   },
   {
     date: "Jul 2026",
-    title: "Scout + Slopmark shipped",
-    desc: "scout — autonomous voice buyer for hack-nation #6 (results jul 25). slopmark — honest ai-slop benchmarks with rule-based verifiers. also cooking crux (openai build week) and tecora.",
+    title: "Scout, Crux, Tecora",
+    desc: "voice buyer, deadline-first study os, and a local-first extension now in chrome web store.",
     kind: "ship",
     icon: "🚀",
   },
   {
     date: "Jun 2026",
     title: "Building CoFound",
-    desc: "multi-agent founder OS — still a main product. also shipped monkeyspeak (voice wpm benchmark) and SlopOS (a fake OS made of slop, on purpose).",
+    desc: "multi-agent founder OS — still a main product. also shipped monkeyspeak and SlopOS.",
     kind: "ship",
     icon: "🚀",
-  },
-  {
-    date: "May 2026",
-    title: "gurren shipped",
-    desc: "a local-first windows dev overlay with on-device rag — press a hotkey, ask your codebase anything.",
-    kind: "ship",
-    icon: "⌘",
   },
   {
     date: "Apr 2026",
     title: "YC Startup School India '26",
-    desc: "selected for y combinator's founder programme in bangalore. startup thinking, baked in.",
+    desc: "selected for y combinator's founder programme in bangalore.",
     kind: "milestone",
     icon: "🚀",
-  },
-  {
-    date: "Apr 2026",
-    title: "Four hackathon wins in a single day",
-    desc: "swept four tracks at abhisarga '26 — bepop (🥇 cosmix), team rocket (replicate), yui (ideaverse) and veda (agentica).",
-    kind: "win",
-    icon: "🏆",
-  },
-  {
-    date: "Apr 2026",
-    title: "Mugen shipped",
-    desc: "an explainable ai bias auditor that maps findings to the eu ai act, eeoc and ecoa.",
-    kind: "ship",
-    icon: "🧪",
-  },
-  {
-    date: "Mar 2026",
-    title: "The prolific month",
-    desc: "shipped stitch n sense, bharat seva, justask, visor, team rocket, bepop, yui and veda — eight projects in one month.",
-    kind: "ship",
-    icon: "⚡",
-  },
-  {
-    date: "Feb 2026",
-    title: "AMUHACKS 5.0 — 1st place",
-    desc: "won with justask, a brutalist career roadmap drawn as a subway metro map.",
-    kind: "win",
-    icon: "🥇",
-  },
-  {
-    date: "Feb 2026",
-    title: "Two 2nd places in one weekend",
-    desc: "global game jam (visage, a host-switching platformer) and gdg techsprint (lensfix, campus maintenance).",
-    kind: "win",
-    icon: "🥈",
-  },
-  {
-    date: "Jan 2026",
-    title: "First hackathon win",
-    desc: "vahanlive took the mvp sprint challenge — real-time bus tracking with driver phones as gps beacons.",
-    kind: "win",
-    icon: "🏆",
-  },
-  {
-    date: "Nov 2025",
-    title: "Synergia Hackathon win",
-    desc: "real-time underwater computer vision with yolov8 — detection, tracking and risk scoring.",
-    kind: "win",
-    icon: "🏆",
   },
   {
     date: "Oct 2025",
@@ -650,12 +987,5 @@ export const JOURNEY: JourneyEntry[] = [
     desc: "highest-tier open-source contributor for 2025 — meaningful prs merged across repos.",
     kind: "milestone",
     icon: "🎖️",
-  },
-  {
-    date: "Aug 2025",
-    title: "Started dual-degree CS",
-    desc: "iiit sri city × iit patna — building in parallel with coursework from day one.",
-    kind: "education",
-    icon: "🎓",
   },
 ];
