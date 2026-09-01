@@ -124,8 +124,10 @@ export const PROJECTS: SiteProject[] = [
     date: "Jul 2026",
     repo: "https://github.com/nothariharan/scout",
     live: "https://scout-dusky-six.vercel.app",
-    award: "⏳ Hack-Nation #6 · results Jul 25",
+    award: "🏅 Finalist · Hack-Nation #6",
     shot: "/shots/scout.webp",
+    featured: true,
+    lane: "systems",
   },
   {
     slug: "slopmark",
@@ -194,8 +196,6 @@ export const PROJECTS: SiteProject[] = [
     repo: "https://github.com/nothariharan/CoFound",
     live: "https://cofounder-alpha.vercel.app",
     shot: "/shots/cofound.webp",
-    featured: true,
-    lane: "systems",
   },
   {
     slug: "justask",
@@ -415,7 +415,7 @@ export const FEATURED_PROJECTS = PROJECTS.filter((p) => p.featured);
 export type Achievement = {
   title: string;
   event: string;
-  result: "1st" | "2nd" | "Winner" | "Golden" | "Participant" | "Selected";
+  result: "1st" | "2nd" | "Winner" | "Golden" | "Participant" | "Selected" | "Best UI/UX" | "Finalist";
   /** Emoji mark for the list row */
   icon: string;
   date: string;
@@ -427,6 +427,28 @@ export type Achievement = {
 };
 
 export const ACHIEVEMENTS: Achievement[] = [
+  {
+    title: "Agentic Commerce — Best UI/UX",
+    event: "Agentic Commerce Hackathon",
+    result: "Best UI/UX",
+    icon: "✦",
+    date: "Aug 2026",
+    note: "compasso won best ui/ux — a shopping agent that actually felt like a product, not a demo.",
+    project: "Compasso",
+    live: "https://compasso-lime.vercel.app/",
+    featured: true,
+  },
+  {
+    title: "Hack-Nation #6 — Finalist Winner",
+    event: "Hack-Nation · The Negotiator",
+    result: "Finalist",
+    icon: "🏅",
+    date: "Jul 2026",
+    note: "scout made the finalist cut — a voice buyer that calls vendors, haggles, and only trusts verified quotes.",
+    project: "Scout",
+    live: "https://scout-dusky-six.vercel.app",
+    featured: true,
+  },
   {
     title: "OpenAI Agents SDK + Google ADK JS",
     event: "openai/openai-agents-python · google/adk-js",

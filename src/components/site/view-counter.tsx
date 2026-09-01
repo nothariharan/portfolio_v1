@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { retroSound } from "@/lib/sound";
 import { SpriteBtn } from "@/components/site/hud-sprite-button";
 
+const CACHE_KEY = "hari-views";
+
 function formatViews(n: number) {
   if (n < 10_000) return n.toLocaleString("en-US");
   if (n < 1_000_000) {
@@ -13,19 +15,40 @@ function formatViews(n: number) {
   return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, "")}m`;
 }
 
+function readCachedViews() {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const n = Number(raw);
+    return Number.isFinite(n) && n > 0 ? n : null;
+  } catch {
+    return null;
+  }
+}
+
 export function ViewCounter() {
   const [views, setViews] = useState<number | null>(null);
 
   useEffect(() => {
+    const cached = readCachedViews();
+    if (cached != null) setViews(cached);
+
     let alive = true;
-    fetch("/api/views")
+    fetch("/api/views", { cache: "no-store" })
       .then((r) => r.json())
       .then((data: { views?: number | null }) => {
         if (!alive) return;
-        if (typeof data.views === "number") setViews(data.views);
+        if (typeof data.views === "number") {
+          setViews(data.views);
+          try {
+            sessionStorage.setItem(CACHE_KEY, String(data.views));
+          } catch {
+            /* ignore quota */
+          }
+        }
       })
       .catch(() => {
-        /* window stays empty */
+        /* keep cache / empty window */
       });
     return () => {
       alive = false;
@@ -45,12 +68,12 @@ export function ViewCounter() {
       >
         {/* navy score window starts after the eye (~35/33/10/30) */}
         <span
-          className="absolute left-[36%] top-[32%] right-[11%] bottom-[33%] flex items-center justify-center font-pixel leading-none text-white tabular-nums text-[13px] max-[720px]:text-[10px] -translate-y-px"
+          className="absolute left-[36%] top-[32%] right-[11%] bottom-[33%] flex items-center justify-center font-pixel leading-none text-white tabular-nums text-[13px] max-[720px]:text-[10px] translate-y-[2px]"
           style={{
             textShadow: "2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 2px 2px #000",
           }}
         >
-          {views == null ? "—" : formatViews(views)}
+          {views == null ? "" : formatViews(views)}
         </span>
       </SpriteBtn>
     </div>
