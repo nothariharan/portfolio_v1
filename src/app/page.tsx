@@ -90,28 +90,24 @@ export default function Home() {
 
       <ViewCounter />
 
-      {/* escape hatch — cuboidal GBA plaque, not a sprite */}
+      {/* escape hatch — cuboidal Mario plaque */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className="fixed top-5 right-5 z-50 flex flex-col items-end gap-2 pointer-events-none max-[720px]:top-3 max-[720px]:right-3"
       >
-        <button
-          type="button"
+        <SpriteBtn
+          src="/ui/btn-main-portfolio.webp"
+          label="open main portfolio"
           onClick={() => {
             retroSound.playSelect();
             startTransition("/portfolio");
           }}
-          aria-label="open main portfolio"
-          className="pointer-events-auto font-pixel text-white text-[11px] leading-none px-4 py-3 rounded-[4px] cursor-pointer transition-all duration-150 ease-out hover:-translate-y-0.5 hover:brightness-110 active:translate-y-[2px] active:scale-[0.97] select-none max-[720px]:text-[9px] max-[720px]:px-3 max-[720px]:py-2.5"
-          style={{
-            background: "#e0524a",
-            boxShadow: "inset 0 0 0 2px #a32f28, 0 4px 0 #8a2420",
-          }}
-        >
-          ▶ MAIN PORTFOLIO
-        </button>
+          width={428}
+          height={89}
+          className="pointer-events-auto w-[220px] max-[720px]:w-[168px]"
+        />
         <p className="font-card text-[13px] leading-snug text-slate-500 text-right max-w-[210px] select-none max-[720px]:hidden">
           not a big fan of cards? then go to my main portfolio :)
         </p>
@@ -133,7 +129,7 @@ export default function Home() {
           scale,
           maxWidth: isMobileLayout ? 440 : 900,
           paddingTop: isMobileLayout ? 28 : 56,
-          paddingBottom: isMobileLayout ? 72 : 80,
+          paddingBottom: isMobileLayout ? 80 : 88,
         }}
         transition={
           zoomLive
@@ -166,7 +162,7 @@ export default function Home() {
             onClick={cycleBg}
             width={240}
             height={100}
-            className="w-[108px] max-[720px]:w-[88px]"
+            className="w-[124px] max-[720px]:w-[100px]"
           >
             {/* navy swatch window starts after bucket+palette (~38/36/9/35) */}
             <span
@@ -190,7 +186,7 @@ export default function Home() {
             onClick={toggleSound}
             width={240}
             height={soundOn ? 101 : 93}
-            className="w-[108px] max-[720px]:w-[88px]"
+            className="w-[124px] max-[720px]:w-[100px]"
           />
         </div>
       </div>
@@ -208,7 +204,7 @@ export default function Home() {
             disabled={atMinZoom}
             width={96}
             height={96}
-            className="w-[40px] max-[720px]:w-[34px]"
+            className="w-[48px] max-[720px]:w-[40px]"
           />
           <SpriteBtn
             src="/ui/btn-zoom-plus.webp"
@@ -217,7 +213,7 @@ export default function Home() {
             disabled={atMaxZoom}
             width={96}
             height={96}
-            className="w-[40px] max-[720px]:w-[34px]"
+            className="w-[48px] max-[720px]:w-[40px]"
           />
         </div>
       </div>
