@@ -429,13 +429,6 @@ function IdentityPanel({ layout }: { layout: CardLayout }) {
             HARIHARAN
           </span>
         </div>
-        <div
-          className={`font-card leading-none text-[#56618c] ${
-            mobile ? "text-[12px] pl-[22px] mt-1" : "text-[14px] pl-[26px] mt-1.5"
-          }`}
-        >
-          AKA: Hari
-        </div>
         <div className="h-px mt-1.5" style={{ background: CARD_PINK_DIVIDER }} />
       </div>
 
@@ -466,26 +459,26 @@ function IdentityPanel({ layout }: { layout: CardLayout }) {
 function ExpPanel({ compact }: { compact?: boolean }) {
   return (
     <div
-      className={`flex items-center shrink-0 ${
+      className={`flex items-center w-full min-w-0 overflow-hidden ${
         compact
-          ? "h-[30px] gap-1.5 rounded-[7px] px-2.5"
-          : "h-[42px] gap-2.5 rounded-[8px] px-3.5"
+          ? "h-[28px] gap-1 rounded-[7px] px-2"
+          : "h-[32px] gap-1.5 rounded-[7px] px-2.5"
       }`}
       style={CARD_PANEL_STYLE}
     >
-      <Bullet size={compact ? 15 : 20} />
+      <Bullet size={compact ? 13 : 14} />
       {/* Press Start sits low in its em box — nudge so it shares a midline with the marks */}
       <span
-        className={`font-pixel leading-none text-[#56618c] -translate-y-[3px] ${
-          compact ? "text-[11px]" : "text-[14px]"
+        className={`font-pixel leading-none text-[#56618c] -translate-y-[2px] shrink-0 ${
+          compact ? "text-[10px]" : "text-[11px]"
         }`}
       >
         EXP:
       </span>
-      <BarChartIcon size={compact ? 16 : 20} />
+      <BarChartIcon size={compact ? 13 : 14} />
       <span
-        className={`font-pixel leading-none text-[#3f9b46] whitespace-nowrap -translate-y-[3px] ${
-          compact ? "text-[12px]" : "text-[16px]"
+        className={`font-pixel leading-none text-[#3f9b46] whitespace-nowrap -translate-y-[2px] ${
+          compact ? "text-[11px]" : "text-[12px]"
         }`}
       >
         1+ YEAR
@@ -502,7 +495,7 @@ function CurrentlyPanel({ layout }: { layout: CardLayout }) {
       className={
         mobile
           ? "relative z-10 flex-1 min-w-0 h-[118px] rounded-[8px] overflow-hidden pointer-events-none"
-          : "absolute right-3 bottom-[2px] z-50 w-[62%] max-w-[420px] h-[120px] rounded-[8px] overflow-hidden pointer-events-none"
+          : "absolute right-3 bottom-[2px] z-20 w-[62%] max-w-[420px] h-[120px] rounded-[8px] overflow-hidden pointer-events-none"
       }
       style={{
         boxShadow:
@@ -713,7 +706,7 @@ export function CardFront({ layout = "desktop" }: { layout?: CardLayout }) {
             <div className="flex-1 min-h-0" aria-hidden />
           </>
         ) : (
-          <div className="relative z-10 mt-auto pt-2 w-fit max-w-[240px] shrink-0">
+          <div className="relative z-30 mt-auto pt-1.5 w-[34%] max-w-[168px] min-w-0 shrink-0">
             <ExpPanel />
           </div>
         )}
