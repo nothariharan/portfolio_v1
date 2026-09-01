@@ -78,69 +78,44 @@
   background-size: 200% 200%;
 }
 
-/* GBA / Pokédex cream panel scrollbar */
+/* cream-panel scrollbar — thin pill, inset so it doesn't run edge-to-edge */
 .gba-scroll {
   scrollbar-width: thin;
-  scrollbar-color: #5d6b7a #efe6c4;
+  scrollbar-color: #6a7684 transparent;
 }
 
 .gba-scroll::-webkit-scrollbar {
-  width: 14px;
-  height: 14px;
+  width: 7px;
+  height: 7px;
 }
 
 .gba-scroll::-webkit-scrollbar-track {
-  background: #efe6c4;
-  border-left: 2px solid #33406b;
-  box-shadow: inset 1px 0 0 #fff8d8;
+  background: transparent;
+  margin-block: 18px;
+  margin-inline: 2px;
 }
 
 .gba-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #7a8696 0%, #5d6b7a 45%, #4a5564 100%);
-  border: 2px solid #33406b;
-  border-radius: 2px;
-  box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.35),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.25);
-  min-height: 36px;
+  background: #6a7684;
+  border: none;
+  border-radius: 99px;
+  min-height: 28px;
 }
 
 .gba-scroll::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #8a96a6 0%, #6a7888 45%, #556070 100%);
+  background: #556070;
 }
 
 .gba-scroll::-webkit-scrollbar-thumb:active {
-  background: #4a5564;
+  background: #434c58;
 }
 
-.gba-scroll::-webkit-scrollbar-button:single-button {
-  display: block;
-  height: 14px;
-  width: 14px;
-  background-color: #e8dfb8;
-  border: 2px solid #33406b;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.gba-scroll::-webkit-scrollbar-button:single-button:vertical:decrement {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%2333406b' d='M4 1L1 6h6z'/%3E%3C/svg%3E");
-}
-
-.gba-scroll::-webkit-scrollbar-button:single-button:vertical:increment {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%2333406b' d='M1 2h6L4 7z'/%3E%3C/svg%3E");
-}
-
-.gba-scroll::-webkit-scrollbar-button:single-button:horizontal:decrement {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%2333406b' d='M6 1v6L1 4z'/%3E%3C/svg%3E");
-}
-
-.gba-scroll::-webkit-scrollbar-button:single-button:horizontal:increment {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%2333406b' d='M2 1v6l5-3z'/%3E%3C/svg%3E");
+.gba-scroll::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .gba-scroll::-webkit-scrollbar-corner {
-  background: #efe6c4;
-  border-left: 2px solid #33406b;
-  border-top: 2px solid #33406b;
+  background: transparent;
 }
