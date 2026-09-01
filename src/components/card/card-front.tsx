@@ -459,29 +459,31 @@ function IdentityPanel({ layout }: { layout: CardLayout }) {
 function ExpPanel({ compact }: { compact?: boolean }) {
   return (
     <div
-      className={`flex items-center w-full min-w-0 overflow-hidden ${
+      className={`flex items-center justify-center w-fit max-w-full ${
         compact
-          ? "h-[28px] gap-1 rounded-[7px] px-2"
-          : "h-[32px] gap-1.5 rounded-[7px] px-2.5"
+          ? "h-[32px] gap-1.5 rounded-[7px] px-2.5"
+          : "h-[40px] gap-2 rounded-[8px] px-3"
       }`}
       style={CARD_PANEL_STYLE}
     >
-      <Bullet size={compact ? 13 : 14} />
-      {/* Press Start sits low in its em box — nudge so it shares a midline with the marks */}
-      <span
-        className={`font-pixel leading-none text-[#56618c] -translate-y-[2px] shrink-0 ${
-          compact ? "text-[10px]" : "text-[11px]"
-        }`}
-      >
-        EXP:
-      </span>
-      <BarChartIcon size={compact ? 13 : 14} />
-      <span
-        className={`font-pixel leading-none text-[#3f9b46] whitespace-nowrap -translate-y-[2px] ${
-          compact ? "text-[11px]" : "text-[12px]"
-        }`}
-      >
-        1+ YEAR
+      {/* Press Start glyphs sit high in the em box — drop the whole row onto the visual midline */}
+      <span className={`flex items-center ${compact ? "gap-1.5 translate-y-px" : "gap-2 translate-y-px"}`}>
+        <Bullet size={compact ? 14 : 17} />
+        <span
+          className={`font-pixel leading-none text-[#56618c] shrink-0 ${
+            compact ? "text-[11px]" : "text-[13px]"
+          }`}
+        >
+          EXP:
+        </span>
+        <BarChartIcon size={compact ? 14 : 17} />
+        <span
+          className={`font-pixel leading-none text-[#3f9b46] whitespace-nowrap shrink-0 ${
+            compact ? "text-[12px]" : "text-[14px]"
+          }`}
+        >
+          1+ YEAR
+        </span>
       </span>
     </div>
   );
@@ -495,7 +497,7 @@ function CurrentlyPanel({ layout }: { layout: CardLayout }) {
       className={
         mobile
           ? "relative z-10 flex-1 min-w-0 h-[118px] rounded-[8px] overflow-hidden pointer-events-none"
-          : "absolute right-3 bottom-[2px] z-20 w-[62%] max-w-[420px] h-[120px] rounded-[8px] overflow-hidden pointer-events-none"
+          : "absolute right-0 bottom-0 z-20 w-[62%] max-w-[420px] h-[120px] rounded-[8px] overflow-hidden pointer-events-none"
       }
       style={{
         boxShadow:
@@ -637,7 +639,7 @@ function CardHeader({ id, layout }: { id: string; layout: CardLayout }) {
 function BadgeFooter() {
   return (
     <div
-      className="relative z-20 h-[40px] flex items-center gap-0 px-4 py-1 shrink-0 overflow-visible"
+      className="relative z-10 h-[40px] flex items-center gap-0 px-4 py-1 shrink-0 overflow-visible"
       style={{
         background: "#ead9a8",
         boxShadow: "inset 0 2px 0 #33406b, inset 0 -1px 0 rgba(0,0,0,0.08)",
@@ -692,7 +694,7 @@ export function CardFront({ layout = "desktop" }: { layout?: CardLayout }) {
       <CardHeader id={id} layout={layout} />
 
       <div
-        className={`relative flex-1 min-h-0 flex flex-col ${mobile ? "px-2 pt-1.5 pb-1.5" : "px-4 pt-2 pb-2"}`}
+        className={`relative z-10 flex-1 min-h-0 flex flex-col ${mobile ? "px-2 pt-1.5 pb-1.5" : "px-4 pt-2 pb-2"}`}
       >
         <CardAvatar layout={layout} />
         <IdentityPanel layout={layout} />
@@ -706,13 +708,15 @@ export function CardFront({ layout = "desktop" }: { layout?: CardLayout }) {
             <div className="flex-1 min-h-0" aria-hidden />
           </>
         ) : (
-          <div className="relative z-30 mt-auto pt-1.5 w-[34%] max-w-[168px] min-w-0 shrink-0">
-            <ExpPanel />
-          </div>
+          <>
+            <CurrentlyPanel layout="desktop" />
+            <div className="relative z-30 mt-auto mb-3 -ml-2 pt-1.5 w-fit max-w-[220px] shrink-0">
+              <ExpPanel />
+            </div>
+          </>
         )}
       </div>
 
-      {!mobile && <CurrentlyPanel layout="desktop" />}
       {mobile ? <MobileFlipBar /> : <BadgeFooter />}
     </div>
   );
