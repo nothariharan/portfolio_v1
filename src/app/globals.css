@@ -37,6 +37,20 @@ body {
   overflow-x: hidden;
 }
 
+/* landing stage — no document scrollbar fighting the Mario HUD */
+html.landing-home,
+html.landing-home body {
+  overflow: hidden;
+  height: 100%;
+  overscroll-behavior: none;
+  scrollbar-width: none;
+}
+
+html.landing-home::-webkit-scrollbar,
+html.landing-home body::-webkit-scrollbar {
+  display: none;
+}
+
 /* general layout tweaks */
 html, body {
   margin: 0;

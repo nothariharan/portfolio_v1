@@ -51,6 +51,12 @@ export default function Home() {
     setSoundOn(retroSound.isEnabled());
   }, []);
 
+  // landing is a stage, not a document — hide the page scrollbar so it doesn't sit on the HUD
+  useEffect(() => {
+    document.documentElement.classList.add("landing-home");
+    return () => document.documentElement.classList.remove("landing-home");
+  }, []);
+
   // entering mobile layout: ease zoom back to 100% so the portrait card isn't oversized
   useEffect(() => {
     if (isMobileLayout) setScale(1);
@@ -82,7 +88,7 @@ export default function Home() {
   const atMaxZoom = scale >= ZOOM_MAX - 0.001;
   return (
     <main
-      className="flex-1 flex flex-col items-center justify-center p-4 min-h-screen relative overflow-x-hidden overflow-y-auto transition-colors duration-300"
+      className="flex-1 flex flex-col items-center justify-center p-4 h-dvh relative overflow-hidden transition-colors duration-300"
       style={{ background: bg.color }}
     >
       {/* scanlines overlay */}
@@ -162,7 +168,7 @@ export default function Home() {
             onClick={cycleBg}
             width={240}
             height={100}
-            className="w-[124px] max-[720px]:w-[100px]"
+            className="w-[148px] max-[720px]:w-[118px]"
           >
             {/* navy swatch window starts after bucket+palette (~38/36/9/35) */}
             <span
@@ -186,7 +192,7 @@ export default function Home() {
             onClick={toggleSound}
             width={240}
             height={soundOn ? 101 : 93}
-            className="w-[124px] max-[720px]:w-[100px]"
+            className="w-[148px] max-[720px]:w-[118px]"
           />
         </div>
       </div>
@@ -204,7 +210,7 @@ export default function Home() {
             disabled={atMinZoom}
             width={96}
             height={96}
-            className="w-[48px] max-[720px]:w-[40px]"
+            className="w-[58px] max-[720px]:w-[48px]"
           />
           <SpriteBtn
             src="/ui/btn-zoom-plus.webp"
@@ -213,7 +219,7 @@ export default function Home() {
             disabled={atMaxZoom}
             width={96}
             height={96}
-            className="w-[48px] max-[720px]:w-[40px]"
+            className="w-[58px] max-[720px]:w-[48px]"
           />
         </div>
       </div>
