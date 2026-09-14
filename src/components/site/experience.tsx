@@ -4,7 +4,6 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Section, SectionHeading, ExpIcon, ArrowIcon } from "./ui";
 import { WORK, EDUCATION, type ExpRow } from "./portfolio-data";
-import { OssOrgList } from "./oss-orgs";
 import { useTransition } from "@/hooks/use-transition";
 
 function RowList({ rows }: { rows: ExpRow[] }) {
@@ -57,7 +56,6 @@ function RowList({ rows }: { rows: ExpRow[] }) {
 const TABS = [
   { id: "work", label: "work" },
   { id: "education", label: "education" },
-  { id: "oss", label: "oss" },
 ] as const;
 
 type Tab = (typeof TABS)[number]["id"];
@@ -105,7 +103,6 @@ export function Experience() {
           >
             {tab === "work" && <RowList rows={WORK} />}
             {tab === "education" && <RowList rows={EDUCATION} />}
-            {tab === "oss" && <OssOrgList groups={["upstream"]} />}
           </motion.div>
         </AnimatePresence>
       </div>
