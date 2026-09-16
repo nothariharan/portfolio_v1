@@ -94,6 +94,7 @@ export const PROJECTS: SiteProject[] = [
     repo: "https://github.com/nothariharan/raksha",
     live: "https://raksha-theta.vercel.app",
     shot: "/shots/raksha.png",
+    award: "🏅 Finalist · Build What Moves India · Maya",
     featured: true,
     lane: "civic",
   },
@@ -427,6 +428,17 @@ export type Achievement = {
 };
 
 export const ACHIEVEMENTS: Achievement[] = [
+  {
+    title: "Build What Moves India — Finalist",
+    event: "Maya · Build What Moves India",
+    result: "Finalist",
+    icon: "🏅",
+    date: "2026",
+    note: "raksha made the finalist cut from ~13,000 entries — a civic freeze protocol for financial cyber-fraud in india.",
+    project: "Raksha",
+    live: "https://raksha-theta.vercel.app",
+    featured: true,
+  },
   {
     title: "Agentic Commerce — Best UI/UX",
     event: "Agentic Commerce Hackathon",
