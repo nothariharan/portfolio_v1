@@ -440,9 +440,9 @@ export const BACK_SUMMARY: Record<
 // high-level projects summaries for the back face — tag + color give each row its own identity
 export const BACK_PROJECTS = [
   { name: "Scout", icon: "scout", desc: "Voice buyer agent — haggles with verified quotes only.", tag: "VOICE AGENT", color: "#5b87d6", live: "https://scout-dusky-six.vercel.app", repo: "https://github.com/nothariharan/scout" },
-  { name: "Slopmark", icon: "slopmark", desc: "Honest AI slop benchmarks — rule-based verifiers.", tag: "AI EVAL", color: "#d99a2c", live: "https://slopmark.vercel.app", repo: "https://github.com/nothariharan/slopmark" },
-  { name: "CoFound", icon: "cofound", desc: "Multi-agent founder OS — plan, build & ship.", tag: "AI AGENTS", color: "#9b6cc4", live: "https://cofounder-alpha.vercel.app", repo: "https://github.com/nothariharan/CoFound" },
-  { name: "Certamen", icon: "certamen", desc: "Open arena where AI models battle & the crowd bets.", tag: "AI ARENA", color: "#d4524a", live: "https://web-theta-khaki-90.vercel.app", repo: "https://github.com/nothariharan/certamen" },
+  { name: "Continuum", icon: "continuum", desc: "Company memory that stays true over time.", tag: "COMPANY MEMORY", color: "#3d8a9a", live: "https://continuum-web-xi.vercel.app", repo: "https://github.com/nothariharan/continuum" },
+  { name: "Phyla", icon: "phyla", desc: "Household safety watchdog — know when something you own becomes dangerous.", tag: "SAFETY", color: "#c4a04a", live: "https://phyla.vercel.app", repo: "https://github.com/nothariharan/phyla" },
+  { name: "Raksha", icon: "raksha", desc: "Freeze packet for India — Maya finalist from ~13k entries.", tag: "FINALIST", color: "#2f8f6e", live: "https://raksha-theta.vercel.app", repo: "https://github.com/nothariharan/raksha" },
 ];
 
 // experience highlights — work / internships first, education last (newest → oldest)
