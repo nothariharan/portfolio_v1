@@ -14,7 +14,7 @@ import { TrainerCard } from "@/components/card/trainer-card";
 import { CARD_MOBILE_MAX_PX } from "@/components/card/card-layout";
 import { useCardMobileLayout } from "@/hooks/use-media-query";
 import { useTransition } from "@/hooks/use-transition";
-import { retroSound } from "@/lib/sound";
+import { retroSound, type MusicTrackId } from "@/lib/sound";
 import { ViewCounter } from "@/components/site/view-counter";
 import { SpriteBtn } from "@/components/site/hud-sprite-button";
 
@@ -38,7 +38,7 @@ export default function Home() {
   const { startTransition } = useTransition();
   const [scale, setScale] = useState(SSR_SCALE);
   const [bgIdx, setBgIdx] = useState(0);
-  const [soundOn, setSoundOn] = useState(true);
+  const [musicTrack, setMusicTrack] = useState<MusicTrackId>("off");
   const [zoomLive, setZoomLive] = useState(false);
   const isMobileLayout = useCardMobileLayout();
 
@@ -48,7 +48,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    setSoundOn(retroSound.isEnabled());
+    setMusicTrack(retroSound.getMusicTrack());
   }, []);
 
   // landing is a stage, not a document — hide the page scrollbar so it doesn't sit on the HUD
@@ -67,22 +67,27 @@ export default function Home() {
   const ZOOM_MAX = 2.1;
   const ZOOM_STEP = 0.15;
   const increaseSize = () => {
+    retroSound.unlockAudio();
     retroSound.playBip("high");
     setScale((prev) => Math.min(prev + ZOOM_STEP, ZOOM_MAX));
   };
   const decreaseSize = () => {
+    retroSound.unlockAudio();
     retroSound.playBip("low");
     setScale((prev) => Math.max(prev - ZOOM_STEP, ZOOM_MIN));
   };
   const cycleBg = () => {
+    retroSound.unlockAudio();
     retroSound.playBip("high");
     setBgIdx((i) => (i + 1) % BG_THEMES.length);
   };
-  const toggleSound = () => {
-    const next = retroSound.toggle();
-    setSoundOn(next);
+  const cycleMusic = () => {
+    const next = retroSound.cycleMusic();
+    setMusicTrack(next);
   };
 
+  const musicOn = musicTrack !== "off";
+  const musicLabel = musicTrack === "off" ? "OFF" : musicTrack.toUpperCase();
   const bg = BG_THEMES[bgIdx];
   const atMinZoom = scale <= ZOOM_MIN + 0.001;
   const atMaxZoom = scale >= ZOOM_MAX - 0.001;
@@ -184,14 +189,14 @@ export default function Home() {
 
         <div className="flex flex-col items-start gap-1">
           <span className="text-[8px] font-pixel text-slate-600 select-none max-[720px]:text-[7px]">
-            SOUND: {soundOn ? "ON" : "OFF"}
+            MUSIC: {musicLabel}
           </span>
           <SpriteBtn
-            src={soundOn ? "/ui/btn-sound-on.webp" : "/ui/btn-sound-off.webp"}
-            label={soundOn ? "mute 8-bit sound" : "unmute 8-bit sound"}
-            onClick={toggleSound}
+            src={musicOn ? "/ui/btn-sound-on.webp" : "/ui/btn-sound-off.webp"}
+            label={`cycle music — currently ${musicLabel}`}
+            onClick={cycleMusic}
             width={240}
-            height={soundOn ? 101 : 93}
+            height={musicOn ? 101 : 93}
             className="w-[148px] max-[720px]:w-[118px]"
           />
         </div>
