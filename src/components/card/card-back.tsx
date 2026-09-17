@@ -818,15 +818,30 @@ function TypePill({ label, color }: { label: string; color: string }) {
 }
 
 // project thumb — uses sprite if we have one, otherwise a letter tile
-function ProjectThumb({ icon, name, color }: { icon: string; name: string; color: string }) {
+function ProjectThumb({
+  icon,
+  name,
+  color,
+  size,
+}: {
+  icon: string;
+  name: string;
+  color: string;
+  size: number;
+}) {
   const [ok, setOk] = useState(true);
   if (!ok) {
     return (
       <span
-        className="font-pixel text-[11px] leading-none text-white"
-        style={{ textShadow: "1px 1px 0 rgba(0,0,0,0.35)" }}
+        className="rounded-[6px] flex items-center justify-center shrink-0"
+        style={{ width: size, height: size, background: color }}
       >
-        {name.slice(0, 1).toUpperCase()}
+        <span
+          className="font-pixel text-[11px] leading-none text-white"
+          style={{ textShadow: "1px 1px 0 rgba(0,0,0,0.35)" }}
+        >
+          {name.slice(0, 1).toUpperCase()}
+        </span>
       </span>
     );
   }
@@ -834,9 +849,11 @@ function ProjectThumb({ icon, name, color }: { icon: string; name: string; color
     <img
       src={`/sprites/proj_${icon}.webp`}
       alt={name}
-      className="w-full h-full pixelated"
+      width={size}
+      height={size}
+      className="pixelated shrink-0 object-contain"
+      style={{ width: size, height: size }}
       onError={() => setOk(false)}
-      style={{ background: color }}
       decoding="async"
     />
   );
@@ -1082,9 +1099,12 @@ export function CardBack({
                     style={rowStyle(p.color)}
                   >
                     {!mobile && <RedCursor />}
-                    <IconTile color={p.color} size={mobile ? 44 : 36}>
-                      <ProjectThumb icon={p.icon} name={p.name} color={p.color} />
-                    </IconTile>
+                    <ProjectThumb
+                      icon={p.icon}
+                      name={p.name}
+                      color={p.color}
+                      size={mobile ? 52 : 42}
+                    />
                     <span className="min-w-0 flex-1">
                       <span className={`flex items-center gap-1.5 ${mobile ? "mb-1" : "mb-[3px]"}`}>
                         <span
