@@ -1094,7 +1094,7 @@ export function CardBack({
                   <div
                     key={p.name}
                     className={`group flex items-center rounded-[6px] ${
-                      mobile ? "gap-2.5 p-2.5 pl-3 flex-1 min-h-[72px]" : "gap-2 p-1.5 pl-2.5"
+                      mobile ? "gap-2 p-2.5 pl-1.5 flex-1 min-h-[72px]" : "gap-1.5 p-1.5 pl-1"
                     }`}
                     style={rowStyle(p.color)}
                   >
@@ -1103,7 +1103,7 @@ export function CardBack({
                       icon={p.icon}
                       name={p.name}
                       color={p.color}
-                      size={mobile ? 52 : 42}
+                      size={mobile ? 60 : 50}
                     />
                     <span className="min-w-0 flex-1">
                       <span className={`flex items-center gap-1.5 ${mobile ? "mb-1" : "mb-[3px]"}`}>
