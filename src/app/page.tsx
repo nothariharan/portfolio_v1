@@ -14,7 +14,7 @@ import { TrainerCard } from "@/components/card/trainer-card";
 import { CARD_MOBILE_MAX_PX } from "@/components/card/card-layout";
 import { useCardMobileLayout } from "@/hooks/use-media-query";
 import { useTransition } from "@/hooks/use-transition";
-import { retroSound, type MusicTrackId } from "@/lib/sound";
+import { retroSound } from "@/lib/sound";
 import { ViewCounter } from "@/components/site/view-counter";
 import { SpriteBtn } from "@/components/site/hud-sprite-button";
 
@@ -38,7 +38,7 @@ export default function Home() {
   const { startTransition } = useTransition();
   const [scale, setScale] = useState(SSR_SCALE);
   const [bgIdx, setBgIdx] = useState(0);
-  const [musicTrack, setMusicTrack] = useState<MusicTrackId>("off");
+  const [musicTrack, setMusicTrack] = useState("off");
   const [zoomLive, setZoomLive] = useState(false);
   const isMobileLayout = useCardMobileLayout();
 
@@ -87,7 +87,7 @@ export default function Home() {
   };
 
   const musicOn = musicTrack !== "off";
-  const musicLabel = musicTrack === "off" ? "OFF" : musicTrack.toUpperCase();
+  const musicLabel = retroSound.getMusicLabel();
   const bg = BG_THEMES[bgIdx];
   const atMinZoom = scale <= ZOOM_MIN + 0.001;
   const atMaxZoom = scale >= ZOOM_MAX - 0.001;
@@ -192,12 +192,12 @@ export default function Home() {
             MUSIC: {musicLabel}
           </span>
           <SpriteBtn
-            src={musicOn ? "/ui/btn-sound-on.webp" : "/ui/btn-sound-off.webp"}
-            label={`cycle music — currently ${musicLabel}`}
+            src="/ui/btn-music.webp"
+            label={`cycle music pool — currently ${musicLabel}`}
             onClick={cycleMusic}
             width={240}
-            height={musicOn ? 101 : 93}
-            className="w-[148px] max-[720px]:w-[118px]"
+            height={88}
+            className={`w-[148px] max-[720px]:w-[118px] ${musicOn ? "" : "opacity-70"}`}
           />
         </div>
       </div>

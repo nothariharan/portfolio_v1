@@ -63,6 +63,11 @@ Thumbs.db
 /card2.webp
 /card3.png
 
+# copyrighted / local-only soundtrack dumps — never ship in public/
+/*.mp3
+/public/audio/*.mp3
+/public/audio/local/
+
 # scratch sprite dumps + honor art intermediates (only ship final /honors/*-card + *-diorama)
 /public/hari1.png
 /public/hari2sprite.png

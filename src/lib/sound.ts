@@ -1,26 +1,35 @@
 /**
- * 8-Bit Web Audio Sound Synthesizer + looping BGM
+ * 8-Bit Web Audio Sound Synthesizer + looping BGM pool
  *
  * SFX emulates classic GBA / Pokemon menu beeps with Web Audio
- * (square / pulse waveforms). BGM uses original chiptune loops in
- * /public/audio — not ripped from any game OST.
+ * (square / pulse waveforms). BGM uses original loops in /public/audio —
+ * not ripped game OSTs.
  */
 
-export type MusicTrackId = "off" | "town" | "route" | "title";
+export type MusicTrackId = "off" | (string & {});
 
-const MUSIC_ORDER: MusicTrackId[] = ["off", "town", "route", "title"];
-
-const MUSIC_SRC: Record<Exclude<MusicTrackId, "off">, string> = {
-  town: "/audio/bgm-town.ogg",
-  route: "/audio/bgm-route.ogg",
-  title: "/audio/bgm-title.ogg",
+export type MusicTrack = {
+  id: string;
+  label: string;
+  src: string;
 };
 
-const MUSIC_LABEL: Record<MusicTrackId, string> = {
+/** Expand this list when you drop original / licensed loops into /public/audio. */
+export const MUSIC_POOL: MusicTrack[] = [
+  { id: "town", label: "TOWN", src: "/audio/bgm-town.ogg" },
+  { id: "route", label: "ROUTE", src: "/audio/bgm-route.ogg" },
+  { id: "title", label: "TITLE", src: "/audio/bgm-title.ogg" },
+];
+
+const MUSIC_ORDER: string[] = ["off", ...MUSIC_POOL.map((t) => t.id)];
+
+const MUSIC_SRC: Record<string, string> = Object.fromEntries(
+  MUSIC_POOL.map((t) => [t.id, t.src]),
+);
+
+const MUSIC_LABEL: Record<string, string> = {
   off: "OFF",
-  town: "TOWN",
-  route: "ROUTE",
-  title: "TITLE",
+  ...Object.fromEntries(MUSIC_POOL.map((t) => [t.id, t.label])),
 };
 
 const MUSIC_STORAGE_KEY = "trainer_card_music";
@@ -30,7 +39,7 @@ class RetroAudioEngine {
   private ctx: AudioContext | null = null;
   private enabled: boolean = true;
   private masterGain: GainNode | null = null;
-  private musicTrack: MusicTrackId = "off";
+  private musicTrack: string = "off";
   private musicEl: HTMLAudioElement | null = null;
   private musicUnlocked = false;
 
@@ -40,7 +49,7 @@ class RetroAudioEngine {
       if (saved !== null) {
         this.enabled = saved === "true";
       }
-      const music = localStorage.getItem(MUSIC_STORAGE_KEY) as MusicTrackId | null;
+      const music = localStorage.getItem(MUSIC_STORAGE_KEY);
       if (music && MUSIC_ORDER.includes(music)) {
         this.musicTrack = music;
       }
@@ -87,20 +96,24 @@ class RetroAudioEngine {
     return this.enabled;
   }
 
-  public getMusicTrack(): MusicTrackId {
+  public getMusicTrack(): string {
     return this.musicTrack;
   }
 
   public getMusicLabel(): string {
-    return MUSIC_LABEL[this.musicTrack];
+    return MUSIC_LABEL[this.musicTrack] ?? this.musicTrack.toUpperCase();
   }
 
-  /** SOUND plaque: OFF → TOWN → ROUTE → TITLE → OFF */
-  public cycleMusic(): MusicTrackId {
+  public getPoolSize(): number {
+    return MUSIC_POOL.length;
+  }
+
+  /** MUSIC plaque: OFF → each pool track → OFF */
+  public cycleMusic(): string {
     this.musicUnlocked = true;
     this.initContext();
     const idx = MUSIC_ORDER.indexOf(this.musicTrack);
-    const next = MUSIC_ORDER[(idx + 1) % MUSIC_ORDER.length];
+    const next = MUSIC_ORDER[(Math.max(0, idx) + 1) % MUSIC_ORDER.length];
     this.setMusicTrack(next);
     if (next !== "off") {
       this.playSelect();
@@ -110,7 +123,7 @@ class RetroAudioEngine {
     return next;
   }
 
-  public setMusicTrack(track: MusicTrackId) {
+  public setMusicTrack(track: string) {
     this.musicTrack = track;
     if (typeof window !== "undefined") {
       localStorage.setItem(MUSIC_STORAGE_KEY, track);
@@ -136,16 +149,16 @@ class RetroAudioEngine {
       this.musicEl = new Audio();
       this.musicEl.loop = true;
       this.musicEl.preload = "auto";
-      // ducked under SFX — soft stage bed
       this.musicEl.volume = 0.22;
     }
     return this.musicEl;
   }
 
-  private playMusic(track: Exclude<MusicTrackId, "off">) {
+  private playMusic(track: string) {
     const el = this.ensureMusicEl();
     if (!el) return;
     const src = MUSIC_SRC[track];
+    if (!src) return;
     if (!el.src.endsWith(src)) {
       el.src = src;
     }
@@ -171,8 +184,59 @@ class RetroAudioEngine {
   }
 
   /**
-   * Pokemon Menu Confirm / Select (Classic A-button chirping beep)
+   * Short original character fanfare when tapping the trainer portrait.
+   * (Not a Nintendo sample — just a playful chiptune “hey it’s me” sting.)
    */
+  public playCharacterFanfare() {
+    this.musicUnlocked = true;
+    const ctx = this.initContext();
+    if (!ctx || !this.masterGain) return;
+
+    // briefly enable SFX path even if BGM is off
+    const wasEnabled = this.enabled;
+    this.enabled = true;
+
+    const t = ctx.currentTime;
+    // jaunty rising “hello” arpeggio + sparkle
+    const melody = [
+      { f: 523.25, at: 0, dur: 0.09 }, // C5
+      { f: 659.25, at: 0.08, dur: 0.09 }, // E5
+      { f: 783.99, at: 0.16, dur: 0.09 }, // G5
+      { f: 1046.5, at: 0.26, dur: 0.18 }, // C6
+      { f: 1318.51, at: 0.4, dur: 0.12 }, // E6
+    ];
+    melody.forEach(({ f, at, dur }) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "square";
+      osc.frequency.setValueAtTime(f, t + at);
+      gain.gain.setValueAtTime(0.055, t + at);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + at + dur);
+      osc.connect(gain);
+      gain.connect(this.masterGain!);
+      osc.start(t + at);
+      osc.stop(t + at + dur + 0.02);
+    });
+
+    // tiny triangle sparkle after the peak
+    const sparkle = [1567.98, 2093.0];
+    sparkle.forEach((freq, i) => {
+      const start = t + 0.48 + i * 0.04;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, start);
+      gain.gain.setValueAtTime(0.035, start);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.1);
+      osc.connect(gain);
+      gain.connect(this.masterGain!);
+      osc.start(start);
+      osc.stop(start + 0.11);
+    });
+
+    this.enabled = wasEnabled;
+  }
+
   public playSelect() {
     if (!this.enabled) return;
     const ctx = this.initContext();
@@ -183,9 +247,8 @@ class RetroAudioEngine {
     const gain = ctx.createGain();
 
     osc.type = "square";
-    // Quick two-step frequency jump (GBA menu tone)
-    osc.frequency.setValueAtTime(587.33, t); // D5
-    osc.frequency.setValueAtTime(880.0, t + 0.04); // A5
+    osc.frequency.setValueAtTime(587.33, t);
+    osc.frequency.setValueAtTime(880.0, t + 0.04);
 
     gain.gain.setValueAtTime(0.06, t);
     gain.gain.linearRampToValueAtTime(0.05, t + 0.04);
@@ -198,9 +261,6 @@ class RetroAudioEngine {
     osc.stop(t + 0.13);
   }
 
-  /**
-   * Card Flip Whoosh (Retro ascending arpeggio sweep)
-   */
   public playFlip() {
     if (!this.enabled) return;
     const ctx = this.initContext();
@@ -211,8 +271,8 @@ class RetroAudioEngine {
     const gain = ctx.createGain();
 
     osc.type = "triangle";
-    osc.frequency.setValueAtTime(261.63, t); // C4
-    osc.frequency.exponentialRampToValueAtTime(783.99, t + 0.12); // G5
+    osc.frequency.setValueAtTime(261.63, t);
+    osc.frequency.exponentialRampToValueAtTime(783.99, t + 0.12);
 
     gain.gain.setValueAtTime(0.07, t);
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
@@ -224,9 +284,6 @@ class RetroAudioEngine {
     osc.stop(t + 0.17);
   }
 
-  /**
-   * Menu Hover / Cursor Navigation Tick (Subtle 8-bit blip)
-   */
   public playCursor() {
     if (!this.enabled) return;
     const ctx = this.initContext();
@@ -237,8 +294,8 @@ class RetroAudioEngine {
     const gain = ctx.createGain();
 
     osc.type = "square";
-    osc.frequency.setValueAtTime(987.77, t); // B5
-    osc.frequency.setValueAtTime(1318.51, t + 0.015); // E6
+    osc.frequency.setValueAtTime(987.77, t);
+    osc.frequency.setValueAtTime(1318.51, t + 0.015);
 
     gain.gain.setValueAtTime(0.025, t);
     gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.04);
@@ -250,9 +307,6 @@ class RetroAudioEngine {
     osc.stop(t + 0.045);
   }
 
-  /**
-   * Button / Color Cycle / Zoom Blip
-   */
   public playBip(pitch: "high" | "low" = "high") {
     if (!this.enabled) return;
     const ctx = this.initContext();
@@ -263,7 +317,7 @@ class RetroAudioEngine {
     const gain = ctx.createGain();
 
     osc.type = "square";
-    osc.frequency.setValueAtTime(pitch === "high" ? 659.25 : 440.0, t); // E5 or A4
+    osc.frequency.setValueAtTime(pitch === "high" ? 659.25 : 440.0, t);
 
     gain.gain.setValueAtTime(0.04, t);
     gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
@@ -275,16 +329,13 @@ class RetroAudioEngine {
     osc.stop(t + 0.055);
   }
 
-  /**
-   * Badge / Achievement Sparkle Chime (GBA level-up / item sparkle)
-   */
   public playSparkle() {
     if (!this.enabled) return;
     const ctx = this.initContext();
     if (!ctx || !this.masterGain) return;
 
     const t = ctx.currentTime;
-    const notes = [1046.5, 1318.51, 1567.98, 2093.0]; // C6, E6, G6, C7
+    const notes = [1046.5, 1318.51, 1567.98, 2093.0];
     notes.forEach((freq, idx) => {
       const start = t + idx * 0.035;
       const osc = ctx.createOscillator();
