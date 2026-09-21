@@ -7,6 +7,7 @@ import { Hero } from "@/components/site/hero";
 import { Experience } from "@/components/site/experience";
 import { Projects } from "@/components/site/projects";
 import { Achievements } from "@/components/site/achievements";
+import { NowPlaying } from "@/components/site/now-playing";
 
 // deep links from the trainer card now route to their dedicated pages
 const TAB_ROUTE: Record<string, string> = {
@@ -35,11 +36,12 @@ function PortfolioInner() {
   }, [tab, startTransition]);
 
   return (
-    <main>
+    <main className="pb-24">
       <Hero />
       <Experience />
       <Projects />
       <Achievements />
+      <NowPlaying />
     </main>
   );
 }

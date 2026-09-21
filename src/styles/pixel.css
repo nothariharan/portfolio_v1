@@ -119,3 +119,47 @@
 .gba-scroll::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+@keyframes now-eq {
+  0%,
+  100% {
+    transform: scaleY(0.28);
+  }
+  40% {
+    transform: scaleY(1);
+  }
+  70% {
+    transform: scaleY(0.52);
+  }
+}
+
+.now-eq-bar {
+  display: block;
+  transform-origin: bottom;
+  animation: now-eq 0.85s ease-in-out infinite;
+}
+
+.now-eq-bar:nth-child(1) {
+  animation-delay: 0ms;
+}
+.now-eq-bar:nth-child(2) {
+  animation-delay: 140ms;
+}
+.now-eq-bar:nth-child(3) {
+  animation-delay: 70ms;
+}
+.now-eq-bar:nth-child(4) {
+  animation-delay: 210ms;
+}
+
+.now-eq-bar.is-idle {
+  animation: none;
+  transform: scaleY(0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .now-eq-bar {
+    animation: none;
+    transform: scaleY(0.5);
+  }
+}

@@ -30,7 +30,11 @@ export default function PortfolioLayout({ children }: { children: React.ReactNod
   }, []);
 
   return (
-    <div className="min-h-screen bg-portfolio-bg font-sans text-portfolio-text antialiased selection:bg-white/15">
+    <div
+      className={`min-h-screen bg-portfolio-bg font-sans text-portfolio-text antialiased selection:bg-white/15 ${
+        pathname === "/portfolio" ? "pb-20" : ""
+      }`}
+    >
       <SiteNav onBack={backToCard} active={activeFromPath(pathname)} />
       {children}
       <Footer onBack={backToCard} />
