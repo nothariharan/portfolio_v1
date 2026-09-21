@@ -14,12 +14,10 @@ export type MusicTrack = {
   src: string;
 };
 
-/** Expand this list when you drop original / licensed loops into /public/audio. */
+/** Looping BGM only. Wipe uses a synthesized whoosh, not a music sting. */
 export const MUSIC_POOL: MusicTrack[] = [
-  { id: "theme-1", label: "THEME 1", src: "/audio/theme-1.mp3" },
   { id: "theme-2", label: "THEME 2", src: "/audio/theme-2.mp3" },
   { id: "theme-3", label: "THEME 3", src: "/audio/theme-3.mp3" },
-  { id: "theme-4", label: "THEME 4", src: "/audio/theme-4.mp3" },
   { id: "theme-5", label: "THEME 5", src: "/audio/theme-5.mp3" },
   { id: "theme-6", label: "THEME 6", src: "/audio/theme-6.mp3" },
   { id: "theme-7", label: "THEME 7", src: "/audio/theme-7.mp3" },
@@ -46,8 +44,15 @@ export type MusicSnapshot = {
   title: string;
   muted: boolean;
   playing: boolean;
+  paused: boolean;
   currentTime: number;
   duration: number;
+};
+
+type MusicElHost = Window & {
+  __hariRetroMusicEl?: HTMLAudioElement;
+  __hariRetroMusicBound?: boolean;
+  __hariRetroMusicEngine?: RetroAudioEngine;
 };
 
 class RetroAudioEngine {
@@ -58,6 +63,9 @@ class RetroAudioEngine {
   private musicEl: HTMLAudioElement | null = null;
   private musicUnlocked = false;
   private muted = false;
+  private ignoreEnded = false;
+  private loadGen = 0;
+  private noiseBuf: AudioBuffer | null = null;
   private musicListeners: Set<(track: string) => void> = new Set();
   private listeners = new Set<() => void>();
 
@@ -72,6 +80,8 @@ class RetroAudioEngine {
         this.musicTrack = music;
       }
       this.muted = localStorage.getItem(MUTE_STORAGE_KEY) === "true";
+      this.adoptSharedMusicEl();
+      (window as MusicElHost).__hariRetroMusicEngine = this;
     }
   }
 
@@ -153,12 +163,13 @@ class RetroAudioEngine {
   public snapshot(): MusicSnapshot {
     const el = this.musicEl;
     const duration = el && Number.isFinite(el.duration) ? el.duration : 0;
-    const paused = !el || el.paused;
+    const elPlaying = !!el && !el.paused && !el.ended && el.src !== "";
     return {
       track: this.musicTrack,
       title: this.getDisplayTitle(),
       muted: this.muted,
-      playing: this.musicTrack !== "off" && !this.muted && !paused,
+      paused: !elPlaying,
+      playing: elPlaying,
       currentTime: el?.currentTime ?? 0,
       duration,
     };
@@ -185,13 +196,8 @@ class RetroAudioEngine {
     if (typeof window !== "undefined") {
       localStorage.setItem(MUTE_STORAGE_KEY, val ? "true" : "false");
     }
-    if (val) {
-      this.pauseMusic();
-    } else if (this.musicTrack !== "off") {
-      this.musicUnlocked = true;
-      this.initContext();
-      this.playMusic(this.musicTrack);
-    }
+    const el = this.ensureMusicEl();
+    if (el) el.volume = val ? 0 : 0.22;
     this.notify();
   }
 
@@ -205,7 +211,37 @@ class RetroAudioEngine {
     return this.muted;
   }
 
-  /** Next pool track, never OFF. First tap from OFF starts theme 1 audibly. */
+  /** Pause / resume. From OFF, starts the first pool track. */
+  public togglePlay(): boolean {
+    this.musicUnlocked = true;
+    this.initContext();
+    if (this.musicTrack === "off") {
+      this.skipTrack();
+      return true;
+    }
+    const el = this.ensureMusicEl();
+    if (!el) return false;
+    if (el.paused) {
+      const src = MUSIC_SRC[this.musicTrack];
+      if (src && this.currentSrcPath(el) !== src) {
+        this.playMusic(this.musicTrack);
+      } else {
+        el.volume = this.muted ? 0 : 0.22;
+        void el.play().catch(() => {
+          /* autoplay blocked until another gesture */
+        });
+      }
+      this.playSelect();
+      this.notify();
+      return true;
+    }
+    this.pauseMusic();
+    this.playBip("low");
+    this.notify();
+    return false;
+  }
+
+  /** Next pool track, never OFF. First tap from OFF starts the first loop. */
   public skipTrack(): string {
     this.musicUnlocked = true;
     this.initContext();
@@ -218,6 +254,28 @@ class RetroAudioEngine {
       this.playSelect();
     }
     return next;
+  }
+
+  /** Restart if past 3s, else previous pool track. */
+  public prevTrack(): string {
+    this.musicUnlocked = true;
+    this.initContext();
+    const el = this.musicEl;
+    if (this.musicTrack !== "off" && el && el.currentTime > 3) {
+      el.currentTime = 0;
+      this.notify();
+      this.playBip("low");
+      return this.musicTrack;
+    }
+    const wasOff = this.musicTrack === "off";
+    const pool = MUSIC_POOL.map((t) => t.id);
+    const idx = pool.indexOf(this.musicTrack);
+    const prev = idx <= 0 ? pool[pool.length - 1] : pool[idx - 1];
+    this.setMusicTrack(prev ?? pool[0], { keepMute: !wasOff && this.muted });
+    if (!this.muted) {
+      this.playSelect();
+    }
+    return this.musicTrack;
   }
 
   public getPoolSize(): number {
@@ -258,8 +316,10 @@ class RetroAudioEngine {
 
   /** Automatically advance to the next track in the pool when one track ends */
   private advanceNextTrack() {
+    if (this.ignoreEnded) return;
     if (this.musicTrack === "off" || !this.enabled) return;
     const poolIds = MUSIC_POOL.map((t) => t.id);
+    if (poolIds.length === 0) return;
     const currIdx = poolIds.indexOf(this.musicTrack);
     const nextIdx = currIdx >= 0 ? (currIdx + 1) % poolIds.length : 0;
     const nextTrack = poolIds[nextIdx];
@@ -295,21 +355,56 @@ class RetroAudioEngine {
     this.notify();
   }
 
+  /** Keep one HTMLAudioElement across HMR so a leftover loop isn't "playing" while the new engine says OFF. */
+  private adoptSharedMusicEl() {
+    if (typeof window === "undefined") return;
+    const host = window as MusicElHost;
+    const el = host.__hariRetroMusicEl;
+    if (!el) return;
+    this.musicEl = el;
+    this.bindMusicEl(el);
+    if (el.paused || !el.src) return;
+    const path = this.currentSrcPath(el);
+    const found = MUSIC_POOL.find((t) => path === t.src || path.endsWith(t.src));
+    if (found) {
+      this.musicTrack = found.id;
+      this.enabled = true;
+    }
+  }
+
+  private bindMusicEl(el: HTMLAudioElement) {
+    const host = window as MusicElHost;
+    host.__hariRetroMusicEngine = this;
+    if (host.__hariRetroMusicBound) return;
+    host.__hariRetroMusicBound = true;
+    el.addEventListener("ended", () => host.__hariRetroMusicEngine?.advanceNextTrack());
+    el.addEventListener("play", () => host.__hariRetroMusicEngine?.notify());
+    el.addEventListener("pause", () => host.__hariRetroMusicEngine?.notify());
+    el.addEventListener("loadedmetadata", () => host.__hariRetroMusicEngine?.notify());
+  }
+
   private ensureMusicEl() {
     if (typeof window === "undefined") return null;
+    const host = window as MusicElHost;
     if (!this.musicEl) {
-      this.musicEl = new Audio();
+      this.musicEl = host.__hariRetroMusicEl ?? new Audio();
+      host.__hariRetroMusicEl = this.musicEl;
       this.musicEl.loop = false;
       this.musicEl.preload = "auto";
-      this.musicEl.volume = 0.22;
-      this.musicEl.addEventListener("ended", () => {
-        this.advanceNextTrack();
-      });
-      this.musicEl.addEventListener("play", () => this.notify());
-      this.musicEl.addEventListener("pause", () => this.notify());
-      this.musicEl.addEventListener("loadedmetadata", () => this.notify());
+      this.musicEl.volume = this.muted ? 0 : 0.22;
+      this.bindMusicEl(this.musicEl);
+    } else {
+      host.__hariRetroMusicEngine = this;
     }
     return this.musicEl;
+  }
+
+  private currentSrcPath(el: HTMLAudioElement): string {
+    try {
+      return new URL(el.src, window.location.href).pathname;
+    } catch {
+      return el.src;
+    }
   }
 
   private playMusic(track: string) {
@@ -317,16 +412,114 @@ class RetroAudioEngine {
     if (!el) return;
     const src = MUSIC_SRC[track];
     if (!src) return;
-    if (!el.src.endsWith(src)) {
+
+    const gen = ++this.loadGen;
+    this.ignoreEnded = true;
+
+    const start = () => {
+      if (gen !== this.loadGen) return;
+      this.ignoreEnded = false;
+      if (this.musicTrack !== track) return;
+      el.volume = this.muted ? 0 : 0.22;
+      void el.play().catch(() => {
+        /* autoplay blocked until another gesture — next cycle will retry */
+      });
+    };
+
+    if (this.currentSrcPath(el) !== src) {
       el.src = src;
-    }
-    if (this.muted) {
-      el.pause();
+      el.addEventListener("canplay", start, { once: true });
+      el.load();
       return;
     }
-    void el.play().catch(() => {
-      /* autoplay blocked until another gesture — next cycle will retry */
-    });
+
+    try {
+      el.currentTime = 0;
+    } catch {
+      /* ignore */
+    }
+    start();
+  }
+
+  private noiseBuffer(ctx: AudioContext) {
+    if (this.noiseBuf && this.noiseBuf.sampleRate === ctx.sampleRate) return this.noiseBuf;
+    const length = Math.floor(ctx.sampleRate * 0.9);
+    const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    let pink = 0;
+    for (let i = 0; i < length; i++) {
+      const white = Math.random() * 2 - 1;
+      pink = Math.max(-1, Math.min(1, pink * 0.86 + white * 0.14));
+      data[i] = white * 0.55 + pink * 0.45;
+    }
+    this.noiseBuf = buffer;
+    return buffer;
+  }
+
+  /** Airy whoosh for the trainer-card ↔ /portfolio wipe. Not a music sting. */
+  public playWipeWhoosh(dir: "expand" | "collapse" = "expand") {
+    if (typeof window === "undefined") return;
+    this.musicUnlocked = true;
+    const ctx = this.initContext();
+    if (!ctx) return;
+
+    const t = ctx.currentTime;
+    const dur = dir === "expand" ? 0.62 : 0.5;
+    const expand = dir === "expand";
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = this.noiseBuffer(ctx);
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.Q.setValueAtTime(0.85, t);
+    if (expand) {
+      filter.frequency.setValueAtTime(420, t);
+      filter.frequency.exponentialRampToValueAtTime(3800, t + 0.18);
+      filter.frequency.exponentialRampToValueAtTime(900, t + dur);
+    } else {
+      filter.frequency.setValueAtTime(3200, t);
+      filter.frequency.exponentialRampToValueAtTime(240, t + dur);
+    }
+
+    const air = ctx.createGain();
+    air.gain.setValueAtTime(0.0001, t);
+    air.gain.exponentialRampToValueAtTime(expand ? 0.28 : 0.22, t + 0.045);
+    air.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+
+    noise.connect(filter);
+    filter.connect(air);
+    air.connect(ctx.destination);
+
+    const body = ctx.createOscillator();
+    const bodyGain = ctx.createGain();
+    body.type = "sine";
+    if (expand) {
+      body.frequency.setValueAtTime(168, t);
+      body.frequency.exponentialRampToValueAtTime(52, t + dur);
+    } else {
+      body.frequency.setValueAtTime(70, t);
+      body.frequency.exponentialRampToValueAtTime(150, t + dur * 0.85);
+    }
+    bodyGain.gain.setValueAtTime(0.0001, t);
+    bodyGain.gain.exponentialRampToValueAtTime(0.07, t + 0.03);
+    bodyGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    body.connect(bodyGain);
+    bodyGain.connect(ctx.destination);
+
+    noise.start(t);
+    noise.stop(t + dur + 0.02);
+    body.start(t);
+    body.stop(t + dur + 0.02);
+
+    const bg = this.musicEl;
+    if (bg && !bg.paused && !this.muted) {
+      const prev = bg.volume;
+      bg.volume = Math.min(prev, 0.06);
+      window.setTimeout(() => {
+        if (bg) bg.volume = this.muted ? 0 : prev;
+      }, Math.round(dur * 1000) + 40);
+    }
   }
 
   private pauseMusic() {

@@ -11,6 +11,7 @@ import {
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { CardExtend } from "@/components/transition/card-extend";
+import { retroSound } from "@/lib/sound";
 import {
   estimateCardOrigin,
   getCardOrigin,
@@ -68,12 +69,14 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
       }
       if (busyRef.current) return;
 
+      const goingToPortfolio = isPortfolioPath(url);
+      retroSound.playWipeWhoosh(goingToPortfolio ? "expand" : "collapse");
+
       if (prefersReducedMotion()) {
         router.push(url);
         return;
       }
 
-      const goingToPortfolio = isPortfolioPath(url);
       const origin = goingToPortfolio
         ? (getCardOrigin() ?? readStoredOrigin() ?? estimateCardOrigin())
         : (readStoredOrigin() ?? getCardOrigin() ?? estimateCardOrigin());
