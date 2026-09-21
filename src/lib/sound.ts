@@ -16,9 +16,14 @@ export type MusicTrack = {
 
 /** Expand this list when you drop original / licensed loops into /public/audio. */
 export const MUSIC_POOL: MusicTrack[] = [
-  { id: "town", label: "TOWN", src: "/audio/bgm-town.ogg" },
-  { id: "route", label: "ROUTE", src: "/audio/bgm-route.ogg" },
-  { id: "title", label: "TITLE", src: "/audio/bgm-title.ogg" },
+  { id: "theme-1", label: "THEME 1", src: "/audio/theme-1.mp3" },
+  { id: "theme-2", label: "THEME 2", src: "/audio/theme-2.mp3" },
+  { id: "theme-3", label: "THEME 3", src: "/audio/theme-3.mp3" },
+  { id: "theme-4", label: "THEME 4", src: "/audio/theme-4.mp3" },
+  { id: "theme-5", label: "THEME 5", src: "/audio/theme-5.mp3" },
+  { id: "theme-6", label: "THEME 6", src: "/audio/theme-6.mp3" },
+  { id: "theme-7", label: "THEME 7", src: "/audio/theme-7.mp3" },
+  { id: "theme-8", label: "THEME 8", src: "/audio/theme-8.mp3" },
 ];
 
 const MUSIC_ORDER: string[] = ["off", ...MUSIC_POOL.map((t) => t.id)];
@@ -101,7 +106,7 @@ class RetroAudioEngine {
   }
 
   public getMusicLabel(): string {
-    return MUSIC_LABEL[this.musicTrack] ?? this.musicTrack.toUpperCase();
+    return MUSIC_LABEL[this.musicTrack] ?? this.musicTrack.replace("-", " ").toUpperCase();
   }
 
   public getPoolSize(): number {

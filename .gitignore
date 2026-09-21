@@ -65,7 +65,6 @@ Thumbs.db
 
 # copyrighted / local-only soundtrack dumps — never ship in public/
 /*.mp3
-/public/audio/*.mp3
 /public/audio/local/
 
 # scratch sprite dumps + honor art intermediates (only ship final /honors/*-card + *-diorama)
