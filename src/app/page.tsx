@@ -49,6 +49,9 @@ export default function Home() {
 
   useEffect(() => {
     setMusicTrack(retroSound.getMusicTrack());
+    return retroSound.subscribeMusicTrack((track) => {
+      setMusicTrack(track);
+    });
   }, []);
 
   // landing is a stage, not a document — hide the page scrollbar so it doesn't sit on the HUD

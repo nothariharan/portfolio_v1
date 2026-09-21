@@ -47,6 +47,7 @@ class RetroAudioEngine {
   private musicTrack: string = "off";
   private musicEl: HTMLAudioElement | null = null;
   private musicUnlocked = false;
+  private musicListeners: Set<(track: string) => void> = new Set();
 
   constructor() {
     if (typeof window !== "undefined") {
@@ -128,11 +129,39 @@ class RetroAudioEngine {
     return next;
   }
 
+  public subscribeMusicTrack(listener: (track: string) => void): () => void {
+    this.musicListeners.add(listener);
+    return () => {
+      this.musicListeners.delete(listener);
+    };
+  }
+
+  private notifyMusicTrack(track: string) {
+    this.musicListeners.forEach((fn) => {
+      try {
+        fn(track);
+      } catch {
+        /* no-op */
+      }
+    });
+  }
+
+  /** Automatically advance to the next track in the pool when one track ends */
+  private advanceNextTrack() {
+    if (this.musicTrack === "off" || !this.enabled) return;
+    const poolIds = MUSIC_POOL.map((t) => t.id);
+    const currIdx = poolIds.indexOf(this.musicTrack);
+    const nextIdx = currIdx >= 0 ? (currIdx + 1) % poolIds.length : 0;
+    const nextTrack = poolIds[nextIdx];
+    this.setMusicTrack(nextTrack);
+  }
+
   public setMusicTrack(track: string) {
     this.musicTrack = track;
     if (typeof window !== "undefined") {
       localStorage.setItem(MUSIC_STORAGE_KEY, track);
     }
+    this.notifyMusicTrack(track);
     if (track === "off") {
       this.enabled = false;
       if (typeof window !== "undefined") {
@@ -152,9 +181,12 @@ class RetroAudioEngine {
     if (typeof window === "undefined") return null;
     if (!this.musicEl) {
       this.musicEl = new Audio();
-      this.musicEl.loop = true;
+      this.musicEl.loop = false;
       this.musicEl.preload = "auto";
       this.musicEl.volume = 0.22;
+      this.musicEl.addEventListener("ended", () => {
+        this.advanceNextTrack();
+      });
     }
     return this.musicEl;
   }
