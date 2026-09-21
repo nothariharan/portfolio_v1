@@ -36,7 +36,7 @@ function PortfolioInner() {
   }, [tab, startTransition]);
 
   return (
-    <main className="pb-24">
+    <main className="pb-52">
       <Hero />
       <Experience />
       <Projects />
