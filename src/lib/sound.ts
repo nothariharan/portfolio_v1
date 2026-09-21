@@ -39,6 +39,16 @@ const MUSIC_LABEL: Record<string, string> = {
 
 const MUSIC_STORAGE_KEY = "trainer_card_music";
 const SOUND_STORAGE_KEY = "trainer_card_sound";
+const MUTE_STORAGE_KEY = "trainer_card_muted";
+
+export type MusicSnapshot = {
+  track: string;
+  title: string;
+  muted: boolean;
+  playing: boolean;
+  currentTime: number;
+  duration: number;
+};
 
 class RetroAudioEngine {
   private ctx: AudioContext | null = null;
@@ -47,7 +57,9 @@ class RetroAudioEngine {
   private musicTrack: string = "off";
   private musicEl: HTMLAudioElement | null = null;
   private musicUnlocked = false;
+  private muted = false;
   private musicListeners: Set<(track: string) => void> = new Set();
+  private listeners = new Set<() => void>();
 
   constructor() {
     if (typeof window !== "undefined") {
@@ -59,7 +71,25 @@ class RetroAudioEngine {
       if (music && MUSIC_ORDER.includes(music)) {
         this.musicTrack = music;
       }
+      this.muted = localStorage.getItem(MUTE_STORAGE_KEY) === "true";
     }
+  }
+
+  private notify() {
+    this.listeners.forEach((fn) => {
+      try {
+        fn();
+      } catch {
+        /* no-op */
+      }
+    });
+  }
+
+  public subscribe(fn: () => void): () => void {
+    this.listeners.add(fn);
+    return () => {
+      this.listeners.delete(fn);
+    };
   }
 
   private initContext() {
@@ -92,6 +122,7 @@ class RetroAudioEngine {
     if (!val) {
       this.stopMusic();
     }
+    this.notify();
   }
 
   public toggle(): boolean {
@@ -108,6 +139,85 @@ class RetroAudioEngine {
 
   public getMusicLabel(): string {
     return MUSIC_LABEL[this.musicTrack] ?? this.musicTrack.replace("-", " ").toUpperCase();
+  }
+
+  public getDisplayTitle(): string {
+    if (this.musicTrack === "off") return "nothing playing";
+    return this.getMusicLabel().toLowerCase();
+  }
+
+  public isMuted(): boolean {
+    return this.muted;
+  }
+
+  public snapshot(): MusicSnapshot {
+    const el = this.musicEl;
+    const duration = el && Number.isFinite(el.duration) ? el.duration : 0;
+    const paused = !el || el.paused;
+    return {
+      track: this.musicTrack,
+      title: this.getDisplayTitle(),
+      muted: this.muted,
+      playing: this.musicTrack !== "off" && !this.muted && !paused,
+      currentTime: el?.currentTime ?? 0,
+      duration,
+    };
+  }
+
+  public getCurrentTime(): number {
+    return this.musicEl?.currentTime ?? 0;
+  }
+
+  public getDuration(): number {
+    const d = this.musicEl?.duration;
+    return d && Number.isFinite(d) ? d : 0;
+  }
+
+  public seek(seconds: number) {
+    const el = this.musicEl;
+    if (!el || !Number.isFinite(el.duration) || el.duration <= 0) return;
+    el.currentTime = Math.max(0, Math.min(seconds, el.duration));
+    this.notify();
+  }
+
+  public setMuted(val: boolean) {
+    this.muted = val;
+    if (typeof window !== "undefined") {
+      localStorage.setItem(MUTE_STORAGE_KEY, val ? "true" : "false");
+    }
+    if (val) {
+      this.pauseMusic();
+    } else if (this.musicTrack !== "off") {
+      this.musicUnlocked = true;
+      this.initContext();
+      this.playMusic(this.musicTrack);
+    }
+    this.notify();
+  }
+
+  public toggleMute(): boolean {
+    this.setMuted(!this.muted);
+    if (!this.muted) {
+      this.playSelect();
+    } else {
+      this.playBip("low");
+    }
+    return this.muted;
+  }
+
+  /** Next pool track, never OFF. First tap from OFF starts theme 1 audibly. */
+  public skipTrack(): string {
+    this.musicUnlocked = true;
+    this.initContext();
+    const wasOff = this.musicTrack === "off";
+    const pool = MUSIC_POOL.map((t) => t.id);
+    const idx = pool.indexOf(this.musicTrack);
+    const next = pool[(idx + 1) % pool.length] ?? pool[0];
+    this.setMusicTrack(next, { keepMute: !wasOff && this.muted });
+    if (!this.muted) {
+      this.playSelect();
+    }
+    return next;
   }
 
   public getPoolSize(): number {
@@ -153,10 +263,10 @@ class RetroAudioEngine {
     const currIdx = poolIds.indexOf(this.musicTrack);
     const nextIdx = currIdx >= 0 ? (currIdx + 1) % poolIds.length : 0;
     const nextTrack = poolIds[nextIdx];
-    this.setMusicTrack(nextTrack);
+    this.setMusicTrack(nextTrack, { keepMute: this.muted });
   }
 
-  public setMusicTrack(track: string) {
+  public setMusicTrack(track: string, opts?: { keepMute?: boolean }) {
     this.musicTrack = track;
     if (typeof window !== "undefined") {
       localStorage.setItem(MUSIC_STORAGE_KEY, track);
@@ -168,13 +278,21 @@ class RetroAudioEngine {
         localStorage.setItem(SOUND_STORAGE_KEY, "false");
       }
       this.stopMusic();
+      this.notify();
       return;
     }
     this.enabled = true;
     if (typeof window !== "undefined") {
       localStorage.setItem(SOUND_STORAGE_KEY, "true");
     }
+    if (!opts?.keepMute && this.muted) {
+      this.muted = false;
+      if (typeof window !== "undefined") {
+        localStorage.setItem(MUTE_STORAGE_KEY, "false");
+      }
+    }
     this.playMusic(track);
+    this.notify();
   }
 
   private ensureMusicEl() {
@@ -187,6 +305,9 @@ class RetroAudioEngine {
       this.musicEl.addEventListener("ended", () => {
         this.advanceNextTrack();
       });
+      this.musicEl.addEventListener("play", () => this.notify());
+      this.musicEl.addEventListener("pause", () => this.notify());
+      this.musicEl.addEventListener("loadedmetadata", () => this.notify());
     }
     return this.musicEl;
   }
@@ -199,9 +320,17 @@ class RetroAudioEngine {
     if (!el.src.endsWith(src)) {
       el.src = src;
     }
+    if (this.muted) {
+      el.pause();
+      return;
+    }
     void el.play().catch(() => {
       /* autoplay blocked until another gesture — next cycle will retry */
     });
+  }
+
+  private pauseMusic() {
+    this.musicEl?.pause();
   }
 
   private stopMusic() {
@@ -215,7 +344,7 @@ class RetroAudioEngine {
     if (this.musicUnlocked) return;
     this.musicUnlocked = true;
     this.initContext();
-    if (this.musicTrack !== "off" && this.enabled) {
+    if (this.musicTrack !== "off" && this.enabled && !this.muted) {
       this.playMusic(this.musicTrack);
     }
   }
