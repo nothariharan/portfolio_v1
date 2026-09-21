@@ -14,7 +14,7 @@ import { TrainerCard } from "@/components/card/trainer-card";
 import { CARD_MOBILE_MAX_PX } from "@/components/card/card-layout";
 import { useCardMobileLayout } from "@/hooks/use-media-query";
 import { useTransition } from "@/hooks/use-transition";
-import { retroSound } from "@/lib/sound";
+import { retroSound, type MusicSnapshot } from "@/lib/sound";
 import { ViewCounter } from "@/components/site/view-counter";
 import { SpriteBtn } from "@/components/site/hud-sprite-button";
 
@@ -38,7 +38,15 @@ export default function Home() {
   const { startTransition } = useTransition();
   const [scale, setScale] = useState(SSR_SCALE);
   const [bgIdx, setBgIdx] = useState(0);
-  const [musicTrack, setMusicTrack] = useState("off");
+  const [music, setMusic] = useState<MusicSnapshot>({
+    track: "off",
+    title: "nothing playing",
+    muted: false,
+    playing: false,
+    paused: true,
+    currentTime: 0,
+    duration: 0,
+  });
   const [zoomLive, setZoomLive] = useState(false);
   const isMobileLayout = useCardMobileLayout();
 
@@ -48,10 +56,9 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    setMusicTrack(retroSound.getMusicTrack());
-    return retroSound.subscribeMusicTrack((track) => {
-      setMusicTrack(track);
-    });
+    const sync = () => setMusic(retroSound.snapshot());
+    sync();
+    return retroSound.subscribe(sync);
   }, []);
 
   // landing is a stage, not a document — hide the page scrollbar so it doesn't sit on the HUD
@@ -85,12 +92,18 @@ export default function Home() {
     setBgIdx((i) => (i + 1) % BG_THEMES.length);
   };
   const cycleMusic = () => {
-    const next = retroSound.cycleMusic();
-    setMusicTrack(next);
+    retroSound.skipTrack();
+  };
+  const toggleMute = () => {
+    if (music.track === "off" && !music.playing) {
+      retroSound.skipTrack();
+      return;
+    }
+    retroSound.toggleMute();
   };
 
-  const musicOn = musicTrack !== "off";
-  const musicLabel = retroSound.getMusicLabel();
+  const musicOn = music.playing || music.track !== "off";
+  const musicHud = music.muted && musicOn ? "MUSIC: MUTED" : music.playing ? "MUSIC PLAYING" : "MUSIC: OFF";
   const bg = BG_THEMES[bgIdx];
   const atMinZoom = scale <= ZOOM_MIN + 0.001;
   const atMaxZoom = scale >= ZOOM_MAX - 0.001;
@@ -115,7 +128,6 @@ export default function Home() {
           src="/ui/btn-main-portfolio.webp"
           label="open main portfolio"
           onClick={() => {
-            retroSound.playSelect();
             startTransition("/portfolio");
           }}
           width={428}
@@ -192,15 +204,15 @@ export default function Home() {
 
         <div className="flex flex-col items-start gap-1">
           <span className="text-[8px] font-pixel text-slate-600 select-none max-[720px]:text-[7px]">
-            MUSIC: {musicLabel}
+            {musicHud}
           </span>
           <SpriteBtn
-            src="/ui/btn-music.webp"
-            label={`cycle music pool — currently ${musicLabel}`}
+            src="/ui/btn-change-music.webp"
+            label={`change music — currently ${musicHud}`}
             onClick={cycleMusic}
-            width={240}
-            height={88}
-            className={`w-[148px] max-[720px]:w-[118px] ${musicOn ? "" : "opacity-70"}`}
+            width={256}
+            height={256}
+            className={`w-[62px] max-[720px]:w-[52px] ${music.playing && !music.muted ? "" : "opacity-70"}`}
           />
         </div>
       </div>
@@ -211,6 +223,14 @@ export default function Home() {
           ZOOM: {Math.round(scale * 100)}%
         </span>
         <div className="flex gap-1.5">
+          <SpriteBtn
+            src={music.muted ? "/ui/btn-mute.webp" : "/ui/btn-unmute.webp"}
+            label={music.track === "off" && !music.playing ? "start music" : music.muted ? "unmute music" : "mute music"}
+            onClick={toggleMute}
+            width={256}
+            height={256}
+            className="w-[58px] max-[720px]:w-[48px]"
+          />
           <SpriteBtn
             src="/ui/btn-zoom-minus.webp"
             label="decrease size"
