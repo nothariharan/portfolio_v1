@@ -11,6 +11,7 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { TrainerCard } from "@/components/card/trainer-card";
+import { BootScreen } from "@/components/card/boot-screen";
 import { CARD_MOBILE_MAX_PX } from "@/components/card/card-layout";
 import { useCardMobileLayout } from "@/hooks/use-media-query";
 import { useTransition } from "@/hooks/use-transition";
@@ -48,6 +49,7 @@ export default function Home() {
     duration: 0,
   });
   const [zoomLive, setZoomLive] = useState(false);
+  const [booting, setBooting] = useState(true);
   const isMobileLayout = useCardMobileLayout();
 
   useLayoutEffect(() => {
@@ -112,6 +114,8 @@ export default function Home() {
       className="flex-1 flex flex-col items-center justify-center p-4 h-dvh relative overflow-hidden transition-colors duration-300"
       style={{ background: bg.color }}
     >
+      {booting ? <BootScreen onDone={() => setBooting(false)} /> : null}
+
       {/* scanlines overlay */}
       <div className="absolute inset-0 bg-scanlines opacity-5 pointer-events-none" />
 

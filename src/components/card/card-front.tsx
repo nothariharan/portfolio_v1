@@ -551,32 +551,24 @@ function CurrentlyPanel({ layout }: { layout: CardLayout }) {
 function CardAvatar({ layout }: { layout: CardLayout }) {
   const mobile = layout === "mobile";
   return (
-    <button
-      type="button"
-      data-no-flip
-      aria-label="Play character fanfare"
-      title="tap me :)"
-      onClick={(e) => {
-        e.stopPropagation();
-        retroSound.unlockAudio();
-        retroSound.playCharacterFanfare();
-      }}
+    <div
+      aria-hidden
       className={
         mobile
-          ? "absolute right-0 top-1 z-20 h-[280px] w-[118px] cursor-pointer bg-transparent border-0 p-0"
-          : "absolute right-[12px] top-[-8px] z-20 h-[290px] w-[170px] cursor-pointer bg-transparent border-0 p-0"
+          ? "absolute right-0 top-1 z-20 h-[280px] w-[118px] pointer-events-none"
+          : "absolute right-[12px] top-[-8px] z-20 h-[290px] w-[170px] pointer-events-none"
       }
     >
-      <span className="absolute inset-0 drop-shadow-[2px_4px_4px_rgba(0,0,0,0.22)] pointer-events-none">
+      <span className="absolute inset-0 drop-shadow-[2px_4px_4px_rgba(0,0,0,0.22)]">
         <img
           src="/harifinal.webp"
-          alt="Hariharan"
+          alt=""
           className="h-full w-full object-contain object-bottom pixelated select-none"
           draggable={false}
           decoding="async"
         />
       </span>
-    </button>
+    </div>
   );
 }
 
