@@ -713,6 +713,84 @@ class RetroAudioEngine {
       osc.stop(start + 0.09);
     });
   }
+
+  /** Short pew when a boot-fight laser fires. Plays even if BGM is off. */
+  public playLaser() {
+    this.musicUnlocked = true;
+    const ctx = this.initContext();
+    if (!ctx || !this.masterGain) return;
+
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(1680, t);
+    osc.frequency.exponentialRampToValueAtTime(280, t + 0.11);
+    gain.gain.setValueAtTime(0.07, t);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+    osc.connect(gain);
+    gain.connect(this.masterGain);
+    osc.start(t);
+    osc.stop(t + 0.13);
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = this.noiseBuffer(ctx);
+    const filter = ctx.createBiquadFilter();
+    filter.type = "highpass";
+    filter.frequency.setValueAtTime(1800, t);
+    const nGain = ctx.createGain();
+    nGain.gain.setValueAtTime(0.045, t);
+    nGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
+    noise.connect(filter);
+    filter.connect(nGain);
+    nGain.connect(this.masterGain);
+    noise.start(t);
+    noise.stop(t + 0.07);
+  }
+
+  /** SUCCESS sting — rising arpeggio + sparkle. Plays even if BGM is off. */
+  public playWin() {
+    this.musicUnlocked = true;
+    const ctx = this.initContext();
+    if (!ctx || !this.masterGain) return;
+
+    const t = ctx.currentTime;
+    const melody = [
+      { f: 523.25, at: 0, dur: 0.1 },
+      { f: 659.25, at: 0.08, dur: 0.1 },
+      { f: 783.99, at: 0.16, dur: 0.1 },
+      { f: 1046.5, at: 0.26, dur: 0.22 },
+      { f: 1318.51, at: 0.42, dur: 0.16 },
+      { f: 1567.98, at: 0.54, dur: 0.2 },
+    ];
+    melody.forEach(({ f, at, dur }) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "square";
+      osc.frequency.setValueAtTime(f, t + at);
+      gain.gain.setValueAtTime(0.06, t + at);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + at + dur);
+      osc.connect(gain);
+      gain.connect(this.masterGain!);
+      osc.start(t + at);
+      osc.stop(t + at + dur + 0.02);
+    });
+
+    const sparkle = [1760, 2093, 2637];
+    sparkle.forEach((freq, i) => {
+      const start = t + 0.62 + i * 0.045;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, start);
+      gain.gain.setValueAtTime(0.04, start);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.12);
+      osc.connect(gain);
+      gain.connect(this.masterGain!);
+      osc.start(start);
+      osc.stop(start + 0.13);
+    });
+  }
 }
 
 export const retroSound = new RetroAudioEngine();
