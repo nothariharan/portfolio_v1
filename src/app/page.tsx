@@ -211,12 +211,12 @@ export default function Home() {
             {musicHud}
           </span>
           <SpriteBtn
-            src="/ui/btn-change-music.webp"
-            label={`change music — currently ${musicHud}`}
+            src="/ui/btn-skip-song.png"
+            label={`skip song — currently ${musicHud}`}
             onClick={cycleMusic}
-            width={256}
-            height={256}
-            className={`w-[62px] max-[720px]:w-[52px] ${music.playing && !music.muted ? "" : "opacity-70"}`}
+            width={360}
+            height={120}
+            className="w-[148px] max-[720px]:w-[118px]"
           />
         </div>
       </div>
