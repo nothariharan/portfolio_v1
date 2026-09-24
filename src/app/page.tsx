@@ -30,6 +30,7 @@ const BG_THEMES = [
 
 /** Same on the server and the first client paint — never read `window` here. */
 const SSR_SCALE = 1.15;
+const BOOT_SEEN_KEY = "hari_boot_seen";
 
 function readLandingScale() {
   return window.matchMedia(`(max-width: ${CARD_MOBILE_MAX_PX}px)`).matches ? 1 : 1.3;
@@ -55,7 +56,25 @@ export default function Home() {
   useLayoutEffect(() => {
     setScale(readLandingScale());
     setZoomLive(true);
+    try {
+      const hold = new URLSearchParams(window.location.search).get("bootHold");
+      if (!hold && sessionStorage.getItem(BOOT_SEEN_KEY) === "1") {
+        setBooting(false);
+      }
+    } catch {
+      /* private mode — still show boot */
+    }
   }, []);
+
+  const finishBoot = () => {
+    try {
+      sessionStorage.setItem(BOOT_SEEN_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    setBooting(false);
+    retroSound.ensureBgm();
+  };
 
   useEffect(() => {
     const sync = () => setMusic(retroSound.snapshot());
@@ -114,7 +133,7 @@ export default function Home() {
       className="flex-1 flex flex-col items-center justify-center p-4 h-dvh relative overflow-hidden transition-colors duration-300"
       style={{ background: bg.color }}
     >
-      {booting ? <BootScreen onDone={() => setBooting(false)} /> : null}
+      {booting ? <BootScreen onDone={finishBoot} /> : null}
 
       {/* scanlines overlay */}
       <div className="absolute inset-0 bg-scanlines opacity-5 pointer-events-none" />
