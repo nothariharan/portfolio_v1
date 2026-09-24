@@ -95,6 +95,17 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
+    retroSound.ensureBgm();
+    const kick = () => retroSound.ensureBgm();
+    window.addEventListener("pointerdown", kick, { capture: true });
+    window.addEventListener("keydown", kick, { capture: true });
+    return () => {
+      window.removeEventListener("pointerdown", kick, { capture: true });
+      window.removeEventListener("keydown", kick, { capture: true });
+    };
+  }, []);
+
+  useEffect(() => {
     if (!wipe) return;
     const t = window.setTimeout(() => {
       const href = hrefRef.current;

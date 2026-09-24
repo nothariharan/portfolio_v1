@@ -215,7 +215,7 @@ export function BootScreen({ onDone }: { onDone: () => void }) {
       }
     };
     const unlock = () => {
-      retroSound.unlockAudio();
+      retroSound.ensureBgm();
     };
     window.addEventListener("keydown", onKey);
     window.addEventListener("pointerdown", unlock, { capture: true });

@@ -532,14 +532,44 @@ class RetroAudioEngine {
     this.musicEl.currentTime = 0;
   }
 
-  /** Resume remembered track after first user gesture (autoplay policy). */
-  public unlockAudio() {
-    if (this.musicUnlocked) return;
+  /**
+   * Start or resume BGM. First visit (no saved OFF) kicks the first theme.
+   * Safe to call on every gesture — no-ops if already playing.
+   */
+  public ensureBgm() {
     this.musicUnlocked = true;
     this.initContext();
-    if (this.musicTrack !== "off" && this.enabled && !this.muted) {
-      this.playMusic(this.musicTrack);
+    if (this.muted) return;
+
+    if (this.musicTrack === "off") {
+      if (typeof window !== "undefined" && localStorage.getItem(MUSIC_STORAGE_KEY) === "off") {
+        return;
+      }
+      const first = MUSIC_POOL[0]?.id;
+      if (first) this.setMusicTrack(first);
+      return;
     }
+
+    const el = this.ensureMusicEl();
+    if (!el) return;
+    if (!el.paused && !el.ended && el.src !== "") {
+      return;
+    }
+    const src = MUSIC_SRC[this.musicTrack];
+    if (src && this.currentSrcPath(el) !== src) {
+      this.playMusic(this.musicTrack);
+      return;
+    }
+    el.volume = this.muted ? 0 : 0.22;
+    void el.play().catch(() => {
+      /* autoplay blocked until a gesture */
+    });
+    this.notify();
+  }
+
+  /** Resume / start BGM after a user gesture (autoplay policy). */
+  public unlockAudio() {
+    this.ensureBgm();
   }
 
   /**
