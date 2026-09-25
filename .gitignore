@@ -33,6 +33,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -55,6 +56,11 @@ Thumbs.db
 .back.png
 .front.png
 .tilt-honors-check.png
+
+# agent / local boot scratch — generation refs + verification dumps, not the site
+/tmp/
+/public/boot/boot-ref-*.png
+/public/boot/boot-hari-idle.png
 
 # local working files & design references (not part of the app)
 /plan/

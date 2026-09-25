@@ -2,9 +2,11 @@
 
 this is my personal portfolio site and it's a bit different from the usual scroll-down-resume thing
 
-you land on a **pokemon-style developer card** first — gba vibes, pixel fonts, the whole trainer card energy — and if you flip it and dig in you get to a **clean minimal portfolio** behind a white flash transition like you're walking into a battle
+you land on a **pokemon-style developer card** first — gba vibes, pixel fonts, the whole trainer card energy — first visit plays a short boot fight then the card, and if you flip it and dig in you get to a **clean minimal portfolio** behind a card wipe
 
 one site, two moods. menu screen and then the actual game
+
+the boot only plays once per tab. coming back from `/portfolio` doesnt replay it. music starts on the first tap, skip song just changes the loop
 
 ---
 
@@ -64,8 +66,14 @@ deploy target is **vercel** — push to main and it goes live
 
 ```text
 public/
-  sprites/          pixel art for the card (mascot, focus icons, panel art)
-  logos/            tech stack svg logos (thesvg.org via npm run sync:icons)
+  audio/            original looping themes (not ripped osts)
+  boot/             fight sprites for the first-visit loader
+  fonts/            pixel type
+  honors/           honor tiles + cards
+  logos/            tech stack svgs (thesvg.org via npm run sync:icons)
+  shots/            live project screenshots
+  sprites/          card mascot, focus icons, panel art
+  ui/               SNES HUD plaques (skip, mute, color, zoom)
 
 src/
   app/
@@ -73,13 +81,18 @@ src/
     portfolio/page.tsx          main portfolio
     portfolio/projects/page.tsx all projects view
   components/
-    card/                       card front, back, badges, slots
-    site/                       portfolio sections (hero, projects, skills...)
-    transition/                 white flash overlay
+    card/                       card front, back, badges, boot screen
+    site/                       portfolio sections + now-playing HUD
+    transition/                 card wipe overlay
   hooks/
     use-card-tilt.ts            mouse tracking for holographic tilt
-    use-transition.tsx          flash animation + navigation
+    use-transition.tsx          wipe + navigation
+  lib/
+    sound.ts                    chiptune sfx + bgm pool
+    boot-scene.ts               canvas fight playhead
 ```
+
+scratch stays out of git — `tmp/`, boot refs, unused idle, `*.preview.png`, `.env*`. copy `.env.example` if you want the view chip locally.
 
 ---
 
@@ -116,7 +129,10 @@ the **borders** on focus cards and footer badge slots use a stacked pixel border
 
 - pokemon firered/leafgreen/emerald trainer card ui — the whole card concept
 - [ratneshc.com](https://ratneshc.com/) and [abhiishekrathore.com](https://www.abhiishekrathore.com/) — minimal portfolio energy
+- noun project pixel icons — see `public/icons/noun/ATTRIBUTION.txt`
 - my obsidian second brain for the actual content about me
+
+bgm in `/public/audio` is original loops. the card typeface is a ds-style pixel font for the look, not an official nintendo dump
 
 ---
 
