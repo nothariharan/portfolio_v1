@@ -1,13 +1,7 @@
 import { NextResponse } from "next/server";
 
-/**
- * Public view count for the landing eye chip.
- * Official Web Analytics count API:
- * https://vercel.com/docs/analytics/web-analytics-api
- *
- * Needs ANALYTICS_READ_TOKEN — a valid Vercel access token
- * (Account → Tokens, team or project scope). Token stays server-side.
- */
+// view count for the eye chip
+// vercel analytics count api token stays on the server
 
 const PROJECT_ID =
   process.env.VERCEL_PROJECT_ID ?? "prj_HfGSkftsNVZUnTcKC7Ygj3qNvTWg";

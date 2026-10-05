@@ -1,5 +1,9 @@
 "use client";
 
+// wipe from the card into portfolio
+// whoosh is homemade not a music sting
+// first tap also kicks bgm if nothing is playing yet
+
 import {
   createContext,
   useCallback,

@@ -3,12 +3,8 @@
 import { useEffect, useState } from "react";
 import { CARD_MOBILE_MAX_PX } from "@/components/card/card-layout";
 
-/**
- * Subscribe to a CSS media query. Starts false on the server / first paint
- * so hydration stays stable, then updates after mount.
- * Short debounce coalesces rapid resize / orientation flips so layout morph
- * doesn't thrash mid-gesture.
- */
+// media query after mount so ssr doesnt flicker
+// debounce so resize and rotate dont thrash
 export function useMediaQuery(query: string, debounceMs = 80) {
   const [matches, setMatches] = useState(false);
 
@@ -35,7 +31,6 @@ export function useMediaQuery(query: string, debounceMs = 80) {
   return matches;
 }
 
-/** Trainer card compact / phone layout — single source in card-layout.ts */
 export const CARD_MOBILE_QUERY = `(max-width: ${CARD_MOBILE_MAX_PX}px)`;
 
 export function useCardMobileLayout() {

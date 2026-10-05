@@ -1,10 +1,8 @@
 "use client";
 
-/**
- * Test boot — canvas fight using generated pixel sprites on a short bar.
- * Playhead t 0→1 on a fixed ~2.2s clock so phones and desktops match.
- * ?bootHold=35|67|85|100 freezes t.
- */
+// first visit canvas fight
+// clock is fixed so phones and desktops match
+// bootHold query freezes t if u wanna screenshot a frame
 
 import { useEffect, useRef } from "react";
 import { retroSound } from "@/lib/sound";

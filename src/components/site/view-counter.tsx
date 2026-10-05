@@ -64,7 +64,7 @@ export function ViewCounter() {
         label={label}
         width={360}
         height={132}
-        className="w-[156px] max-[720px]:w-[124px]"
+        className="w-[156px] max-[720px]:w-[108px]"
       >
         {/* navy score window starts after the eye (~35/33/10/30) */}
         <span

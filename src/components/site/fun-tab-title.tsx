@@ -1,17 +1,13 @@
 "use client";
 
-/**
- * Playful document.title — welcome while focused, a nudge on tab switch,
- * then a short rotating loop if they stay away 30s+. Titles stay terse so
- * chrome tabs don't ellipsize into mush.
- */
+// tab title is welcome then a nudge if they leave
+// loop kicks in after 30s keep the strings short
 
 import { useEffect } from "react";
 
 const ACTIVE = "hariharan - welcome!! :D";
 const AWAY = "sure u saw everything?";
 
-/** Rotates after 30s away. Keep ≤ ~28 chars. */
 const AWAY_LOOP = [
   "hey... still there?",
   "miss u already :(",

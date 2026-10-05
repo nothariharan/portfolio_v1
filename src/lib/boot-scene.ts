@@ -1,4 +1,6 @@
-/** Logical buffer. Display is an integer scale of this. */
+// canvas fight for the first visit loader
+// playhead is a fixed clock so phones and desktops finish the same
+// this buffer gets integer scaled on the real canvas
 export const BOOT_W = 480;
 export const BOOT_H = 220;
 
@@ -200,7 +202,6 @@ function pix(
   ctx.fillRect(Math.round(x), Math.round(y), Math.max(1, Math.round(w)), Math.max(1, Math.round(h)));
 }
 
-/** Grey → yellow (~35%) → lime → green. Whole fill shifts with t. */
 const BAR_STOPS: [number, [number, number, number]][] = [
   [0, [143, 154, 166]],
   [0.2, [168, 164, 142]],
@@ -254,7 +255,6 @@ function stepCycle(u: number, frames: number) {
   return { frame, phase };
 }
 
-/** Contact → air → contact, like the 8-frame walk/run sheet. */
 function gait(u: number, frames: number, hopPx: number) {
   const { frame, phase } = stepCycle(u, frames);
   const air = Math.sin(phase * Math.PI);
@@ -329,7 +329,6 @@ function drawBurst(ctx: CanvasRenderingContext2D, x: number, y: number, u: numbe
   }
 }
 
-/** Fight volleys: t 0.30 → 0.78, one shot every 0.12. */
 export function bootShotIndex(t: number): number | null {
   if (t < 0.3 || t >= 0.78) return null;
   return Math.floor((t - 0.3) / 0.12);

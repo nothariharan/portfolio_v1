@@ -1,16 +1,8 @@
 "use client";
 
-/**
- * Trainer card shell — flip / tilt / float / layout-morph live here.
- *
- * CardFace paints the GBA rings as nested padded borders INSIDE the face box
- * (outer box-shadow rings used to vanish when tilt foreshortened the top edge).
- * press A / Enter / Space / click to flip. prefers-reduced-motion kills tilt + float.
- *
- * Layout mode (desktop | mobile) is driven by CARD_MOBILE_QUERY and applied to
- * both shell size and CardFront. Crossing the breakpoint morphs shell size with
- * a soft spring + brief depth pulse so device rotate / resize doesn't hard-cut.
- */
+// flip tilt and float live here
+// press a or tap to flip
+// mobile uses the short shell so the hud doesnt sit on the card
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useAnimationControls, useReducedMotion } from "framer-motion";
@@ -28,13 +20,11 @@ interface TrainerCardProps {
   onOpenHariMd: () => void;
 }
 
-/** Shared flip curve — identical both directions, soft mid-turn lift. */
 const FLIP_EASE: [number, number, number, number] = [0.33, 0.0, 0.2, 1];
 const FLIP_MS = 0.78;
 
-/** Controls / links must not arm a flip (pointerup bubbles past stopPropagation on click). */
+// links and buttons should not flip the card
 const FLIP_IGNORE_SEL = "a, button, input, textarea, select, label, [data-no-flip]";
-/** Near-miss padding so taps just outside a control don't flip. */
 const FLIP_HIT_SLOP_PX = 12;
 
 function shouldIgnoreFlip(target: EventTarget | null, clientX?: number, clientY?: number) {
@@ -63,16 +53,11 @@ function shouldIgnoreFlip(target: EventTarget | null, clientX?: number, clientY?
   return false;
 }
 
-/** Shell resize when crossing mobile ↔ desktop. */
 const SHELL_SPRING = { type: "spring" as const, stiffness: 260, damping: 28, mass: 0.85 };
 const LAYOUT_MORPH_MS = 0.52;
 const LAYOUT_MORPH_EASE: [number, number, number, number] = [0.4, 0.0, 0.2, 1];
 
-/**
- * Face is slightly larger than the card so the GBA frame rings live inside the
- * backface-visibility box. Outer box-shadow rings used to get clipped when the
- * card tilted forward — nested in-box borders do not.
- */
+// rings sit inside the face so tilt doesnt clip them
 function CardFace({
   children,
   flipped,
@@ -83,9 +68,7 @@ function CardFace({
   children: ReactNode;
   flipped: boolean;
   isBack?: boolean;
-  /** Mid-flip / morph: deepen the drop shadow so the lift reads. */
   lifting?: boolean;
-  /** Past ~90° — hide the outgoing face so it can't ghost through. */
   crossed?: boolean;
 }) {
   const show = flipped === !!isBack;
@@ -151,7 +134,6 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
   const [isMorphing, setIsMorphing] = useState(false);
   const flippingRef = useRef(false);
   const flippedRef = useRef(false);
-  /** Hard cooldown so click+ghost-click / Enter+click can't arm two flips. */
   const lockUntilRef = useRef(0);
   const layoutRef = useRef<CardLayout | null>(null);
   const flipControls = useAnimationControls();
@@ -271,7 +253,7 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
   }, [reduceMotion]);
 
   // padding must cover the -inset-[13px] face + tilt foreshortening
-  const pad = isMobileLayout ? "p-3" : "p-5 sm:p-7";
+  const pad = isMobileLayout ? "p-2" : "p-5 sm:p-7";
   const busy = isFlipping || isMorphing;
   const [floatOk, setFloatOk] = useState(false);
   useEffect(() => {

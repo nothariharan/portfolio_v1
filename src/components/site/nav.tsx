@@ -1,10 +1,7 @@
 "use client";
 
-/**
- * Portfolio site nav — desktop is a quiet link row, phone gets a hamburger
- * drawer (sm:hidden). Escape closes it. going to a route always collapses first
- * so ppl dont get stuck with the menu open over the next page.
- */
+// desktop is a quiet row phone gets a hamburger
+// close the drawer before we leave so ppl dont get stuck on the next page
 
 import { useEffect, useState } from "react";
 import { SITE } from "./content";

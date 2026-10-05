@@ -1,10 +1,6 @@
-/**
- * 8-Bit Web Audio Sound Synthesizer + looping BGM pool
- *
- * SFX emulates classic GBA / Pokemon menu beeps with Web Audio
- * (square / pulse waveforms). BGM uses original loops in /public/audio —
- * not ripped game OSTs.
- */
+// chiptune beeps plus looping themes from public audio
+// these loops are original not ripped osts
+// first tap starts music skip just changes the track
 
 export type MusicTrackId = "off" | (string & {});
 
@@ -14,7 +10,6 @@ export type MusicTrack = {
   src: string;
 };
 
-/** Looping BGM only. Wipe uses a synthesized whoosh, not a music sting. */
 export const MUSIC_POOL: MusicTrack[] = [
   { id: "theme-2", label: "THEME 2", src: "/audio/theme-2.mp3" },
   { id: "theme-3", label: "THEME 3", src: "/audio/theme-3.mp3" },
@@ -211,7 +206,6 @@ class RetroAudioEngine {
     return this.muted;
   }
 
-  /** Pause / resume. From OFF, starts the first pool track. */
   public togglePlay(): boolean {
     this.musicUnlocked = true;
     this.initContext();
@@ -241,7 +235,6 @@ class RetroAudioEngine {
     return false;
   }
 
-  /** Next pool track, never OFF. First tap from OFF starts the first loop. */
   public skipTrack(): string {
     this.musicUnlocked = true;
     this.initContext();
@@ -256,7 +249,6 @@ class RetroAudioEngine {
     return next;
   }
 
-  /** Restart if past 3s, else previous pool track. */
   public prevTrack(): string {
     this.musicUnlocked = true;
     this.initContext();
@@ -282,7 +274,6 @@ class RetroAudioEngine {
     return MUSIC_POOL.length;
   }
 
-  /** MUSIC plaque: OFF → each pool track → OFF */
   public cycleMusic(): string {
     this.musicUnlocked = true;
     this.initContext();
@@ -314,7 +305,6 @@ class RetroAudioEngine {
     });
   }
 
-  /** Automatically advance to the next track in the pool when one track ends */
   private advanceNextTrack() {
     if (this.ignoreEnded) return;
     if (this.musicTrack === "off" || !this.enabled) return;
@@ -355,7 +345,6 @@ class RetroAudioEngine {
     this.notify();
   }
 
-  /** Keep one HTMLAudioElement across HMR so a leftover loop isn't "playing" while the new engine says OFF. */
   private adoptSharedMusicEl() {
     if (typeof window === "undefined") return;
     const host = window as MusicElHost;
@@ -456,7 +445,6 @@ class RetroAudioEngine {
     return buffer;
   }
 
-  /** Airy whoosh for the trainer-card ↔ /portfolio wipe. Not a music sting. */
   public playWipeWhoosh(dir: "expand" | "collapse" = "expand") {
     if (typeof window === "undefined") return;
     this.musicUnlocked = true;
@@ -532,10 +520,9 @@ class RetroAudioEngine {
     this.musicEl.currentTime = 0;
   }
 
-  /**
-   * Start or resume BGM. First visit (no saved OFF) kicks the first theme.
-   * Safe to call on every gesture — no-ops if already playing.
-   */
+  // start or resume bgm
+  // first visit kicks the first theme
+  // safe to call again if its already playing
   public ensureBgm() {
     this.musicUnlocked = true;
     this.initContext();
@@ -567,15 +554,10 @@ class RetroAudioEngine {
     this.notify();
   }
 
-  /** Resume / start BGM after a user gesture (autoplay policy). */
   public unlockAudio() {
     this.ensureBgm();
   }
 
-  /**
-   * Short original character fanfare when tapping the trainer portrait.
-   * (Not a Nintendo sample — just a playful chiptune “hey it’s me” sting.)
-   */
   public playCharacterFanfare() {
     this.musicUnlocked = true;
     const ctx = this.initContext();
@@ -744,7 +726,6 @@ class RetroAudioEngine {
     });
   }
 
-  /** Short pew when a boot-fight laser fires. Plays even if BGM is off. */
   public playLaser() {
     this.musicUnlocked = true;
     const ctx = this.initContext();
@@ -778,7 +759,6 @@ class RetroAudioEngine {
     noise.stop(t + 0.07);
   }
 
-  /** SUCCESS sting — rising arpeggio + sparkle. Plays even if BGM is off. */
   public playWin() {
     this.musicUnlocked = true;
     const ctx = this.initContext();

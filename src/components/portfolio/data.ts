@@ -1,14 +1,6 @@
-/**
- * real portfolio content for n. hariharan (hari)
- *
- * this file is basically the whole brain of the trainer card + the short lists
- * that live on the DATA FILE back face. if u change copy / ranks / card art
- * paths, change it here — the UI just renders whatever BACK_* exports.
- *
- * honors note: each honor is a "world" (forest / garage / arena / furnace) with
- * its own sticker cardArt + diorama + a layout key that morphs the detail panel.
- * art lives under /public/honors. dont regenerate just to fix fit — fix CSS.
- */
+// copy and ranks live here
+// ui just renders whatever BACK_* exports
+// honors art is under public/honors fix css dont regen the pngs
 
 export const TRAINER_ID = "67420";
 

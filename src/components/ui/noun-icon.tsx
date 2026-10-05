@@ -1,9 +1,5 @@
-/**
- * Noun Project icons from /public/icons/noun
- *
- * Prefer pixel PNGs (mask-tinted) when present — those match the mock better.
- * Falls back to public-domain SVGs. One file, any accent color via CSS mask.
- */
+// noun icons from public/icons/noun
+// pixel pngs when we have them svg otherwise
 
 import type { NounIconName } from "@/components/portfolio/data";
 
@@ -12,7 +8,6 @@ type NounIconProps = {
   color?: string;
   size?: number;
   className?: string;
-  /** force png (pixel) or svg — default prefers png */
   prefer?: "png" | "svg";
 };
 

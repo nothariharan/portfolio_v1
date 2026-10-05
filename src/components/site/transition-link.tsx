@@ -3,7 +3,6 @@
 import type { ReactNode, MouseEvent } from "react";
 import { useTransition } from "@/hooks/use-transition";
 
-/** Internal nav that keeps the portfolio flash transition. */
 export function TransitionLink({
   href,
   children,

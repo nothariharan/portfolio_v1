@@ -1,11 +1,8 @@
 import { useMotionValue, useSpring, useTransform } from "framer-motion";
 import { MouseEvent } from "react";
 
-/**
- * Inner band stays flat. Tilt only ramps in the outer corners so hovering
- * name / stack / sprite doesn't wobble the whole card.
- * 0–DEAD on each axis is dead; the leftover outer band is the corner zone.
- */
+// tilt only in the corners
+// hovering name or stack shouldnt wobble the whole card
 const DEAD = 0.4;
 
 function cornerAxis(n: number) {

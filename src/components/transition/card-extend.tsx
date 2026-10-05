@@ -1,12 +1,8 @@
 "use client";
 
-/**
- * Card ↔ portfolio — ink the LIVE face, then grow a black plate.
- *
- * The iris is mounted inside [data-card-visual] so 3D tilt can't put
- * panels over it (and so we never paint a second trainer card).
- * The body plate is only a black rectangle for the grow / shrink.
- */
+// card to portfolio wipe
+// ink the live face then grow a black plate
+// iris lives inside the card so tilt cant cover it
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";

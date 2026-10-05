@@ -9,9 +9,7 @@ export type WipeState = {
   href: string;
 };
 
-/** Interior iris-to-black, then the card grows. Keep these in sync with CSS. */
 export const INK_MS = 560;
-/** Short breath on the black card so the grow doesn't kick immediately. */
 export const HOLD_MS = 80;
 export const GROW_MS = 1080;
 export const FADE_MS = 340;
@@ -129,7 +127,6 @@ export function showLiveCard() {
   delete document.documentElement.dataset.cardExtending;
 }
 
-/** Kill tilt / float / 3D so the live card and the black plate share one 2D box. */
 export function freezeLiveCard() {
   document.documentElement.dataset.cardFrozen = "1";
 }
@@ -147,7 +144,6 @@ function faceHost(): HTMLElement | null {
   return inner instanceof HTMLElement ? inner : null;
 }
 
-/** Iris lives inside the live face so 3D stacking can't put panels over it. */
 export function mountLiveInk(): HTMLElement | null {
   const host = faceHost();
   if (!host) return null;
@@ -171,7 +167,6 @@ export function setLiveInk(on: boolean, snap = false) {
   return true;
 }
 
-/** Mount ink at rest, then open it so the CSS scale actually tweens. */
 export function playLiveInk() {
   const layer = mountLiveInk();
   if (!layer) return false;
@@ -183,7 +178,6 @@ export function playLiveInk() {
   return true;
 }
 
-/** Cover the live face instantly (no tween) so we can show it under a full iris. */
 export function coverLiveInk() {
   const layer = mountLiveInk();
   if (!layer) return false;
@@ -193,7 +187,6 @@ export function coverLiveInk() {
   return true;
 }
 
-/** Open the iris on the live face. */
 export function openLiveInk() {
   const layer = mountLiveInk();
   if (!layer) return false;
