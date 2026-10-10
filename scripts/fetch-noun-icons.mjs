@@ -1,5 +1,5 @@
 /**
- * one-shot: pull pixel-ish icons from Noun Project v2 into public/icons/noun
+ * one-shot i think ->  pull pixel-ish icons from Noun Project v2 into public/icons/noun
  * keys via env — never commit them
  *
  *   $env:NOUN_KEY="..."; $env:NOUN_SECRET="..."; node scripts/fetch-noun-icons.mjs

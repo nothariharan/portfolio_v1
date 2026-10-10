@@ -5,12 +5,7 @@
 // first tap also kicks bgm if nothing is playing yet
 
 import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
+  createContext,useCallback,useContext,useEffect,useRef,useState,
   type ReactNode,
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
@@ -20,11 +15,7 @@ import {
   estimateCardOrigin,
   getCardOrigin,
   isPortfolioPath,
-  readStoredOrigin,
-  showLiveCard,
-  storeCardOrigin,
-  unfreezeLiveCard,
-  clearLiveInk,
+  readStoredOrigin,showLiveCard,storeCardOrigin,unfreezeLiveCard,clearLiveInk,
   type WipeState,
 } from "@/hooks/wipe-utils";
 
@@ -42,22 +33,21 @@ function prefersReducedMotion() {
 export function TransitionProvider({ children }: { children: ReactNode }) {
   const [wipe, setWipe] = useState<WipeState | null>(null);
   const hrefRef = useRef<string | null>(null);
-  const busyRef = useRef(false);
-  const pathnameRef = useRef("/");
-  const router = useRouter();
-  const pathname = usePathname();
+  const busyRef= useRef(false);
+  const pathnameRef =useRef("/");
+  const router = useRouter();const pathname = usePathname();
   pathnameRef.current = pathname;
 
   const finish = useCallback(() => {
     hrefRef.current = null;
-    busyRef.current = false;
+    busyRef.current =false;
     clearLiveInk();
     unfreezeLiveCard();
     showLiveCard();
     setWipe(null);
   }, []);
-
   const commitNavigation = useCallback(() => {
+
     const href = hrefRef.current;
     if (!href) return;
     router.push(href);
@@ -67,17 +57,17 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
     (url: string) => {
       const path = pathnameRef.current;
       const sameWorld = isPortfolioPath(path) && isPortfolioPath(url);
-      if (sameWorld) {
+      if (sameWorld){
         router.push(url);
         return;
       }
       if (busyRef.current) return;
 
-      const goingToPortfolio = isPortfolioPath(url);
+      const goingToPortfolio= isPortfolioPath(url);
       retroSound.playWipeWhoosh(goingToPortfolio ? "expand" : "collapse");
 
       if (prefersReducedMotion()) {
-        router.push(url);
+      router.push(url);
         return;
       }
 
@@ -91,7 +81,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
       router.prefetch(url);
       setWipe({
         dir: goingToPortfolio ? "expand" : "collapse",
-        origin,
+       origin,
         href: url,
       });
     },

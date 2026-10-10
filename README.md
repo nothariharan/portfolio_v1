@@ -1,102 +1,53 @@
-# my portfolio — developer card edition
+# portfolio v1.(lostcount bro)
 
-this is my personal portfolio site and it's a bit different from the usual scroll-down-resume thing
+live at [hariharann.me](https://hariharann.me)
 
-you land on a **pokemon-style developer card** first — gba vibes, pixel fonts, the whole trainer card energy — first visit plays a short boot fight then the card, and if you flip it and dig in you get to a **clean minimal portfolio** behind a card wipe
+`/` main card for people with less attention span ( me lowk ) 
 
-one site, two moods. menu screen and then the actual game
+and `/portfolio` is the 'professional' section under it so ppl can deep link the part they care about and quite elaborated as well
 
-the boot only plays once per tab. coming back from `/portfolio` doesnt replay it. music starts on the first tap, skip song just changes the loop
+## how the routes sit
 
----
+`/` is the card. flip it do whatever u want i am always thinking of ways to optimize this as it has lots of assets and it as its own mobile view too ( it looks like a pokemon tcg card )
 
-## what's on here
+`/portfolio` is the summary home. hero, the journey, a few projects, awards, and whats playing
 
-### the developer card (front)
+then dedicated routes
 
-the landing page at `/` is a flip-able card that looks like those old firered/leafgreen trainer cards but it's about me as a dev
+- `/portfolio/experience`
+- `/portfolio/projects`
+- `/portfolio/skills`
+- `/portfolio/achievements` (the nav just says awards)
+- `/portfolio/blog` which is file based markdown under `content/blog` and
 
-- **name + sprite** — hariharan, pixel mascot on the right
-- **focus row** — four attached slanted cards (ai/ml, web app, devops, exploring) with simple retro pixel icons baked into square tiles
-- **stack** — core + infra tech logos in little 8-bit bordered squares
-- **exp + currently** — experience readout and a desk-scene banner with progress bars for what i'm working on
-- **footer badges** — earned gym badge slots (yc starter school in the first one, rest locked for now)
+ each post ( or blog or yap ) lives at `/portfolio/blog/[slug]`
 
-the card also **tilts on hover**, **floats idle**, and you can **zoom it** with +/- controls in the corner
 
-### the data file (back)
 
-flip the card and you get four slanted columns — projects, experience, honors, skills
+`/hari.md` and `/llms.txt` are the static dump for agents. no js. same words in both 
 
-hover a column and the readout panel below updates with real content pulled from my work. each section has links out to github, live demos, linkedin etc. there's a button to jump straight into the full portfolio on any tab
 
-### main portfolio
+## the drawings
 
-`/portfolio` is the serious side — dark, typography-first, minimal. inspired by portfolios like ratneshc.com and abhiishekrathore.com
+ive been drawing ever since i was 6 yo and was doing it proffesionaly ( was getting paid for it  ) since i was 16 yo i quit it when i became 18 to get into tech
 
-sections:
-- hero + about
-- projects (with a dedicated `/portfolio/projects` page too)
-- skills
-- experience
-- achievements
-- footer with a way back to the card
+ the illustrations on the site, the mascot and the panels and the little scenes, started as my own sketches in ibis paint and then an ai pass cleaned them into the assets that actually ship and work ( cba doing 70 different assets man when ai does it faster only) **the sketch is mine. the enhance pass is ai.**  
 
-clicking through from the card runs a **white flash transition** — framer motion + a full viewport overlay that makes the page change feel intentional instead of just... navigating
+ BUTTTT the main mascot ( which is me ) was fully drew by me taking almost 30 + pokemon sprite into inspiration understanding their art style and everything and thats how me ( hari ) was born 0 AI was used in that 
 
-there's also a skip button top-right if someone just wants the portfolio without the card theatrics. no judgment
+the gallery shot is the originals sitting in ibis paint before that pass. longer pile is on https://www.deviantart.com/h4riharan
 
----
+the oldest one dates back like 3 months ago
 
-## tech stack
+![original drawings in ibis paint, before the ai pass](./docs/ibispaint-originals.png)
 
-| thing | why |
-|---|---|
-| **next.js 16** (app router) | routing, server stuff, easy deploy |
-| **tailwind v4** | styling both the pixel card world and the minimal portfolio |
-| **framer motion** | card flip, tilt, float, transition flash, scroll animations |
-| **press start 2p + pokemon ds font** | authentic retro card typography |
-| **typescript** | because i like my types |
+## stack
 
-deploy target is **vercel** — push to main and it goes live
+next.js 16 · react 19 · tailwind v4 · framer motion · typescript
 
----
+deployed on vercel
 
-## project structure (the useful bits)
-
-```text
-public/
-  audio/            original looping themes (not ripped osts)
-  boot/             fight sprites for the first-visit loader
-  fonts/            pixel type
-  honors/           honor tiles + cards
-  logos/            tech stack svgs (thesvg.org via npm run sync:icons)
-  shots/            live project screenshots
-  sprites/          card mascot, focus icons, panel art
-  ui/               SNES HUD plaques (skip, mute, color, zoom)
-
-src/
-  app/
-    page.tsx                    trainer card landing
-    portfolio/page.tsx          main portfolio
-    portfolio/projects/page.tsx all projects view
-  components/
-    card/                       card front, back, badges, boot screen
-    site/                       portfolio sections + now-playing HUD
-    transition/                 card wipe overlay
-  hooks/
-    use-card-tilt.ts            mouse tracking for holographic tilt
-    use-transition.tsx          wipe + navigation
-  lib/
-    sound.ts                    chiptune sfx + bgm pool
-    boot-scene.ts               canvas fight playhead
-```
-
-scratch stays out of git — `tmp/`, boot refs, unused idle, `*.preview.png`, `.env*`. copy `.env.example` if you want the view chip locally.
-
----
-
-## run it locally
+## run it
 
 ```bash
 npm install
@@ -105,35 +56,34 @@ npm run dev
 
 open [http://localhost:3000](http://localhost:3000)
 
-card is at `/`, portfolio at `/portfolio`
-
-### other commands
+`/` is the card. `/portfolio` is the rest
 
 ```bash
-npm run build    # production build
-npm run start    # run the built version
-npm run lint     # eslint
+npm run build
+npm run start
+npm run lint
 ```
 
----
+## where the files live
 
-## how the card front works (quick note)
+```text
+content/blog/          posts. one markdown file each
+public/                sprites, honors, shots, audio, fonts, hari.md
+src/app/               the routes above
+src/components/card/   the trainer card
+src/components/site/   the /portfolio pages
+```
 
-the **focus icons** in `public/sprites/focus_*.png` are square pixel tiles — icon centered with matching pastel background color so they sit cleanly inside the slanted parallelogram cards without weird cropping
+scratch stays out of git. `tmp/`, `*.preview.png`, `.env*`
 
-the **borders** on focus cards and footer badge slots use a stacked pixel border (colored inner ring → white highlight → dark outer edge → drop shadow) so they feel like actual gba ui elements not flat divs
+## credits
 
----
+pokemon ofc hope i dont get banned or something by nintendo
 
-## credits & inspo
+as for the minimal actual portfolio versions i took countless inspos like pretty much 1/5 portfolios now look that way anyway 
 
-- pokemon firered/leafgreen/emerald trainer card ui — the whole card concept
-- [ratneshc.com](https://ratneshc.com/) and [abhiishekrathore.com](https://www.abhiishekrathore.com/) — minimal portfolio energy
-- noun project pixel icons — see `public/icons/noun/ATTRIBUTION.txt`
-- my obsidian second brain for the actual content about me
 
-bgm in `/public/audio` is original loops. the card typeface is a ds-style pixel font for the look, not an official nintendo dump
 
----
+bgm in `public/audio` is original loops. the card typeface is a ds style pixel font for the look, not an official nintendo dump ( and those musics are js fav ones of mine from back in the day )
 
-built by **hariharan** — if you're reading this you probably clicked through the card. hope the transition was fun
+built / written  by hariharan ( no tokens were harmed )

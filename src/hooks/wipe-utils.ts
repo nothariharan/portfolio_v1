@@ -12,15 +12,13 @@ export type WipeState = {
 export const INK_MS = 560;
 export const HOLD_MS = 80;
 export const GROW_MS = 1080;
-export const FADE_MS = 340;
-export const REVEAL_MS = 520;
+export const FADE_MS = 340;export const REVEAL_MS = 520;
 
 export function coverScale(origin: WipeRect): number {
-  const cx = origin.left + origin.width / 2;
-  const cy = origin.top + origin.height / 2;
-  const hw = Math.max(origin.width / 2, 1);
-  const hh = Math.max(origin.height / 2, 1);
-  const sx = Math.max(cx / hw, (window.innerWidth - cx) / hw);
+  const cx = origin.left + origin.width /2;
+  const cy = origin.top + origin.height /2;
+  const hw = Math.max(origin.width /2, 1);
+  const hh = Math.max(origin.height / 2, 1);const sx = Math.max(cx / hw, (window.innerWidth - cx) / hw);
   const sy = Math.max(cy / hh, (window.innerHeight - cy) / hh);
   return Math.max(sx, sy) * 1.04;
 }
@@ -29,11 +27,11 @@ const ORIGIN_KEY = "card-origin";
 
 export function isPortfolioPath(path: string) {
   const clean = path.split("?")[0].split("#")[0];
-  return clean === "/portfolio" || clean.startsWith("/portfolio/");
+  return clean ==="/portfolio" || clean.startsWith("/portfolio/");
 }
 
 export function viewportRect(): WipeRect {
-  return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
+  return { top:0,left: 0, width: window.innerWidth, height: window.innerHeight };
 }
 
 function landingZoom(): number {
@@ -62,8 +60,8 @@ export function estimateCardOrigin(): WipeRect {
   const width = Math.min((shell.width + ring) * zoom, vw - 24);
   const height = Math.min((shell.height + ring) * zoom, vh - 24);
   return {
-    left: (vw - width) / 2,
-    top: (vh - height) / 2,
+    left: (vw -width) / 2,
+    top: (vh- height) / 2,
     width,
     height,
   };
@@ -170,19 +168,16 @@ export function setLiveInk(on: boolean, snap = false) {
 export function playLiveInk() {
   const layer = mountLiveInk();
   if (!layer) return false;
-  layer.dataset.snap = "1";
-  layer.dataset.on = "";
+  layer.dataset.snap = "1";layer.dataset.on = "";
   void layer.offsetWidth;
-  layer.dataset.snap = "";
-  layer.dataset.on = "1";
+  layer.dataset.snap = "";layer.dataset.on = "1";
   return true;
 }
 
 export function coverLiveInk() {
   const layer = mountLiveInk();
   if (!layer) return false;
-  layer.dataset.snap = "1";
-  layer.dataset.on = "1";
+  layer.dataset.snap = "1";layer.dataset.on = "1";
   void layer.offsetWidth;
   return true;
 }

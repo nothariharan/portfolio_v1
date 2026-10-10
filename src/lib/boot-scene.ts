@@ -30,10 +30,10 @@ function easeOut(t: number) {
 const boundCache = new WeakMap<CanvasImageSource, { x: number; y: number; w: number; h: number }>();
 
 function srcSize(img: CanvasImageSource) {
-  if (img instanceof HTMLImageElement) return { w: img.naturalWidth, h: img.naturalHeight };
+  if (img instanceof HTMLImageElement)return { w: img.naturalWidth, h: img.naturalHeight };
   if (img instanceof HTMLCanvasElement) return { w: img.width, h: img.height };
   if (typeof ImageBitmap !== "undefined" && img instanceof ImageBitmap) {
-    return { w: img.width, h: img.height };
+    return {w: img.width, h: img.height };
   }
   if (typeof OffscreenCanvas !== "undefined" && img instanceof OffscreenCanvas) {
     return { w: img.width, h: img.height };
@@ -44,7 +44,7 @@ function srcSize(img: CanvasImageSource) {
 export function alphaBounds(img: CanvasImageSource) {
   const hit = boundCache.get(img);
   if (hit) return hit;
-  const { w, h } = srcSize(img);
+  const {w, h } = srcSize(img);
   const box = { x: 0, y: 0, w, h };
   if (w < 2 || h < 2) {
     boundCache.set(img, box);
@@ -52,28 +52,25 @@ export function alphaBounds(img: CanvasImageSource) {
   }
   const max = 320;
   const shrink = Math.min(1, max / Math.max(w, h));
-  const sw = Math.max(1, Math.round(w * shrink));
-  const sh = Math.max(1, Math.round(h * shrink));
-  const c = document.createElement("canvas");
-  c.width = sw;
-  c.height = sh;
-  const g = c.getContext("2d", { willReadFrequently: true });
-  if (!g) {
-    boundCache.set(img, box);
-    return box;
+  const sw =Math.max(1, Math.round(w * shrink));
+  const sh= Math.max(1, Math.round(h * shrink));
+  const c= document.createElement("canvas");
+  c.width =sw;
+  c.height=sh;
+  const g =c.getContext("2d", { willReadFrequently: true });
+  if (!g){
+    boundCache.set(img, box);return box;
   }
   g.imageSmoothingEnabled = false;
   g.drawImage(img, 0, 0, sw, sh);
-  const data = g.getImageData(0, 0, sw, sh).data;
+  const data= g.getImageData(0, 0, sw, sh).data;
   let minX = sw;
-  let minY = sh;
-  let maxX = 0;
-  let maxY = 0;
+  let minY =sh;let maxX = 0;let maxY = 0;
   for (let y = 0; y < sh; y++) {
     for (let x = 0; x < sw; x++) {
       if (data[(y * sw + x) * 4 + 3] > 18) {
         if (x < minX) minX = x;
-        if (y < minY) minY = y;
+        if (y< minY) minY = y;
         if (x > maxX) maxX = x;
         if (y > maxY) maxY = y;
       }
@@ -83,9 +80,9 @@ export function alphaBounds(img: CanvasImageSource) {
     maxX >= minX
       ? {
           x: Math.floor(minX / shrink),
-          y: Math.floor(minY / shrink),
-          w: Math.ceil((maxX - minX + 1) / shrink),
-          h: Math.ceil((maxY - minY + 1) / shrink),
+          y: Math.floor(minY/ shrink),
+          w: Math.ceil((maxX- minX + 1) / shrink),
+          h: Math.ceil((maxY - minY +1) / shrink),
         }
       : box;
   boundCache.set(img, out);
@@ -93,14 +90,14 @@ export function alphaBounds(img: CanvasImageSource) {
 }
 
 function chipSprite(img: CanvasImageSource, destH: number) {
-  const b = alphaBounds(img);
-  if (b.w < 2 || b.h < 2) return null;
+  const b= alphaBounds(img);
+  if (b.w< 2 || b.h< 2) return null;
   const step = Math.max(1, Math.round(b.h / destH));
-  const dw = Math.max(1, Math.round(b.w / step));
-  const dh = Math.max(1, Math.round(b.h / step));
-  const c = document.createElement("canvas");
-  c.width = dw;
-  c.height = dh;
+  const dw =Math.max(1, Math.round(b.w / step));
+  const dh= Math.max(1, Math.round(b.h / step));
+  const c= document.createElement("canvas");
+  c.width= dw;
+  c.height= dh;
   const g = c.getContext("2d");
   if (!g) return null;
   g.imageSmoothingEnabled = false;
@@ -118,14 +115,13 @@ export function prepareBootSprites(raw: BootSprites): BootSprites {
 }
 
 export async function chipBootImage(img: HTMLImageElement, destH: number) {
-  const w = img.naturalWidth;
-  const h = img.naturalHeight;
-  if (w < 2 || h < 2) return img;
-  const max = 256;
-  const shrink = Math.min(1, max / Math.max(w, h));
+  const w = img.naturalWidth;const h = img.naturalHeight;
+  if (w <2 || h < 2) return img;
+  const max= 256;
+  const shrink =Math.min(1, max / Math.max(w, h));
   let src: CanvasImageSource = img;
-  if (shrink < 1 && typeof createImageBitmap === "function") {
-    src = await createImageBitmap(img, {
+  if (shrink <1 && typeof createImageBitmap === "function") {
+    src= await createImageBitmap(img, {
       resizeWidth: Math.max(1, Math.round(w * shrink)),
       resizeHeight: Math.max(1, Math.round(h * shrink)),
       resizeQuality: "pixelated",
@@ -136,45 +132,41 @@ export async function chipBootImage(img: HTMLImageElement, destH: number) {
 
 function spriteSize(img: CanvasImageSource, destH: number) {
   const { w, h } = srcSize(img);
-  if (w < 2 || h < 2) return { dw: 0, dh: 0, sx: 0, sy: 0, sw: 0, sh: 0 };
-  if (w <= destH * 2 && h <= destH * 2) {
-    return { dw: w, dh: h, sx: 0, sy: 0, sw: w, sh: h };
+  if (w< 2 || h < 2) return { dw: 0, dh: 0, sx: 0, sy: 0, sw: 0, sh: 0 };
+  if (w <=destH * 2 && h <= destH * 2) {
+    return {dw: w, dh: h,sx: 0, sy: 0, sw: w, sh: h };
   }
   const b = alphaBounds(img);
-  if (b.w < 2 || b.h < 2) return { dw: 0, dh: 0, sx: 0, sy: 0, sw: 0, sh: 0 };
-  const step = Math.max(1, Math.round(b.h / destH));
+  if (b.w < 2|| b.h < 2) return { dw: 0, dh: 0, sx: 0, sy: 0, sw: 0, sh: 0 };
+  const step= Math.max(1, Math.round(b.h / destH));
   return {
     dw: Math.max(1, Math.round(b.w / step)),
-    dh: Math.max(1, Math.round(b.h / step)),
+    dh:Math.max(1, Math.round(b.h / step)),
     sx: b.x,
-    sy: b.y,
+    sy:b.y,
     sw: b.w,
-    sh: b.h,
+    sh:b.h,
   };
 }
 
 type Pose = {
   hop?: number;
-  ox?: number;
+  ox?:number;
   rot?: number;
-  sx?: number;
+  sx?:number;
   sy?: number;
 };
 
 function blitPose(
   ctx: CanvasRenderingContext2D,
   img: CanvasImageSource,
-  feetX: number,
-  feetY: number,
-  destH: number,
+  feetX: number, feetY: number,destH: number,
   pose: Pose = {},
 ) {
   const dim = spriteSize(img, destH);
   if (dim.dw < 2 || dim.dh < 2) return;
   const hop = pose.hop ?? 0;
-  const ox = pose.ox ?? 0;
-  const rot = pose.rot ?? 0;
-  const sx = pose.sx ?? 1;
+  const ox= pose.ox ?? 0;const rot= pose.rot ?? 0;const sx = pose.sx ?? 1;
   const sy = pose.sy ?? 1;
   ctx.save();
   ctx.imageSmoothingEnabled = false;
@@ -193,9 +185,7 @@ function shadow(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, 
 function pix(
   ctx: CanvasRenderingContext2D,
   x: number,
-  y: number,
-  w: number,
-  h: number,
+  y:number,w: number,h: number,
   color: string,
 ) {
   ctx.fillStyle = color;
@@ -236,9 +226,7 @@ function rgbCss(c: [number, number, number]) {
 
 function drawBar(ctx: CanvasRenderingContext2D, x: number, y: number, segs: number, t: number) {
   const cell = 8;
-  const h = 8;
-  const w = segs * cell;
-  const filled = Math.round(segs * clamp01(t));
+  const h = 8;const w =segs * cell;const filled = Math.round(segs * clamp01(t));
   const fill = rgbCss(barFillRgb(t));
   pix(ctx, x - 2, y - 1, w + 4, h + 2, "#c8ced6");
   pix(ctx, x - 1, y, 1, h, "#d7dce3");
@@ -263,6 +251,8 @@ function gait(u: number, frames: number, hopPx: number) {
     frame,
     hop: -air * hopPx,
     rot: phase < 0.5 ? 7 : -7,
+
+
     sx: contact ? 1.1 : 0.94,
     sy: contact ? 0.86 : 1.08,
     dust: contact && phase < 0.1,
@@ -281,6 +271,8 @@ function drawBolt(
   x0: number,
   y0: number,
   x1: number,
+
+
   y1: number,
   u: number,
 ) {
@@ -308,9 +300,9 @@ function drawHitSpark(ctx: CanvasRenderingContext2D, x: number, y: number, u: nu
   if (u <= 0 || u > 0.45) return;
   const r = Math.round(3 + (1 - u) * 5);
   pix(ctx, x - r, y, 2, 2, "#fff");
-  pix(ctx, x + r, y, 2, 2, "#ff6a6a");
-  pix(ctx, x, y - r, 2, 2, "#ffe46a");
-  pix(ctx, x, y + r, 2, 2, "#fff");
+  pix(ctx, x + r, y,2, 2, "#ff6a6a");
+  pix(ctx, x, y - r,2,2, "#ffe46a");
+  pix(ctx, x, y + r,2,2, "#fff");
 }
 
 function drawBurst(ctx: CanvasRenderingContext2D, x: number, y: number, u: number, n: number, colors: string[]) {
@@ -320,8 +312,8 @@ function drawBurst(ctx: CanvasRenderingContext2D, x: number, y: number, u: numbe
     const a = (i / n) * Math.PI * 2 + u * 1.2;
     pix(
       ctx,
-      x + Math.cos(a) * r,
-      y + Math.sin(a) * r * 0.7,
+      x +Math.cos(a) * r,
+      y+ Math.sin(a) * r * 0.7,
       2,
       2,
       colors[i % colors.length],
