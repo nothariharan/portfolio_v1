@@ -234,25 +234,20 @@ export function CardBack({
         />
         {/* main details — contained scroll so wheel/swipe stays in-panel */}
         <PanelScroll
+          key={active.tab}
           className={`flex-1 min-h-0 p-[3px] pr-1 ${
             active.tab === "honors" ? "overflow-hidden" : "overflow-y-auto"
           }`}
         >
           {/* projects — No. + name + one line + link, nothing else */}
           {active.tab === "projects" && (
-            <div
-              className={
-                mobile
-                  ? "flex flex-col justify-between h-full min-h-full gap-2"
-                  : "flex flex-col gap-2"
-              }
-            >
-              <div className={`flex flex-col ${mobile ? "gap-2.5 flex-1" : "gap-2"}`}>
+            <div className="flex flex-col gap-2">
+              <div className={`flex flex-col ${mobile ? "gap-2.5" : "gap-2"}`}>
                 {BACK_PROJECTS.map((p, i) => (
                   <div
                     key={p.name}
                     className={`group flex items-center rounded-[6px] ${
-                      mobile ? "gap-2 p-2.5 pl-1.5 flex-1 min-h-[72px]" : "gap-1.5 p-1.5 pl-1"
+                      mobile ? "gap-2 p-2.5 pl-1.5" : "gap-1.5 p-1.5 pl-1"
                     }`}
                     style={rowStyle(p.color)}
                   >

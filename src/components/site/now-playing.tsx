@@ -2,8 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Pause, Play, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react";
+import { Pause, Play, SkipBack, SkipForward, Volume2, VolumeX, X } from "lucide-react";
 import { retroSound, type MusicSnapshot } from "@/lib/sound";
+import { useCardMobileLayout } from "@/hooks/use-media-query";
+
+const TUCK_KEY = "hari-player-tuck";
 
 const EMPTY: MusicSnapshot = {
   track: "off",
@@ -63,6 +66,9 @@ function Hit({
 
 export function NowPlaying() {
   const reduce = useReducedMotion();
+  const mobile = useCardMobileLayout();
+  // the panel covers the copy on a phone so it can tuck into a chip
+  const [tucked, setTucked] = useState(false);
   const [snap, setSnap] = useState<MusicSnapshot>(EMPTY);
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -70,6 +76,19 @@ export function NowPlaying() {
   const [dragging, setDragging] = useState(false);
   const dragRef = useRef(false);
   const barRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (sessionStorage.getItem(TUCK_KEY) === "1") setTucked(true);
+  }, []);
+
+  const tuck = () => {
+    setTucked(true);
+    sessionStorage.setItem(TUCK_KEY, "1");
+  };
+  const untuck = () => {
+    setTucked(false);
+    sessionStorage.setItem(TUCK_KEY, "0");
+  };
 
   useEffect(() => {
     const sync = () => {
@@ -131,6 +150,21 @@ export function NowPlaying() {
     e.currentTarget.releasePointerCapture(e.pointerId);
   };
 
+  if (mobile && tucked) {
+    return (
+      <button
+        type="button"
+        onClick={untuck}
+        aria-label="show player"
+        className="fixed bottom-3 left-3 z-30 flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-portfolio-border bg-portfolio-card/95 text-portfolio-text shadow-[0_10px_30px_rgba(0,0,0,0.45)] backdrop-blur-md cursor-pointer"
+      >
+        <span className="scale-[0.62]">
+          <EqCover playing={snap.playing} />
+        </span>
+      </button>
+    );
+  }
+
   return (
     <motion.div
       initial={reduce ? false : { opacity: 0, y: 12 }}
@@ -140,7 +174,15 @@ export function NowPlaying() {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <div className="pointer-events-auto w-[280px] max-[720px]:w-[min(280px,calc(100vw-5.5rem))] rounded-2xl border border-portfolio-border bg-portfolio-card/95 p-3 shadow-[0_16px_50px_rgba(0,0,0,0.55)] backdrop-blur-md">
+      <div className="pointer-events-auto relative w-[280px] max-[720px]:w-[min(280px,calc(100vw-1.5rem))] rounded-2xl border border-portfolio-border bg-portfolio-card/95 p-3 shadow-[0_16px_50px_rgba(0,0,0,0.55)] backdrop-blur-md">
+        <button
+          type="button"
+          onClick={tuck}
+          aria-label="hide player"
+          className="absolute -top-2 -right-2 hidden h-7 w-7 items-center justify-center rounded-full border border-portfolio-border bg-portfolio-bg text-portfolio-muted max-[720px]:flex cursor-pointer"
+        >
+          <X className="h-3.5 w-3.5" strokeWidth={2} />
+        </button>
         <div className="flex items-center gap-3">
           <EqCover playing={snap.playing} />
           <div className="min-w-0 flex-1">

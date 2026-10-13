@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   BACK_HONORS,
   BACK_PROJECTS,
@@ -91,16 +91,62 @@ export function PanelScroll({
   className?: string;
   axis?: "y" | "x";
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  // the face is rotateY'd so a phone wont scroll this on its own
+  // drive scrollTop from the finger and leave the cream bar alone
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || axis !== "y") return;
+    let lastY = 0;
+    let originY = 0;
+    let dragging = false;
+
+    const start = (e: TouchEvent) => {
+      if (e.touches.length !== 1) return;
+      lastY = originY = e.touches[0].clientY;
+      dragging = false;
+    };
+    const move = (e: TouchEvent) => {
+      if (e.touches.length !== 1) return;
+      const y = e.touches[0].clientY;
+      if (!dragging && Math.abs(y - originY) < 8) return;
+      dragging = true;
+      const max = el.scrollHeight - el.clientHeight;
+      if (max <= 0) return;
+      el.scrollTop = Math.max(0, Math.min(max, el.scrollTop + (lastY - y)));
+      lastY = y;
+      e.preventDefault();
+    };
+    const end = () => {
+      dragging = false;
+    };
+
+    el.addEventListener("touchstart", start, { passive: true });
+    el.addEventListener("touchmove", move, { passive: false });
+    el.addEventListener("touchend", end);
+    el.addEventListener("touchcancel", end);
+    return () => {
+      el.removeEventListener("touchstart", start);
+      el.removeEventListener("touchmove", move);
+      el.removeEventListener("touchend", end);
+      el.removeEventListener("touchcancel", end);
+    };
+  }, [axis]);
+
   return (
     <div
+      ref={ref}
+      data-no-flip
       className={`gba-scroll ${className}`}
       style={{
         overscrollBehavior: "contain",
-        touchAction: axis === "y" ? "pan-y" : "pan-x",
+        // none so the flipped face doesnt swallow the finger
+        // the cream bar stays, this just feeds scrollTop
+        touchAction: axis === "y" ? "none" : "pan-x",
         WebkitOverflowScrolling: "touch",
       }}
       onWheel={(e) => e.stopPropagation()}
-      onTouchMove={(e) => e.stopPropagation()}
       onPointerDown={(e) => e.stopPropagation()}
     >
       {children}

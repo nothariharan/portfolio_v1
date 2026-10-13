@@ -4,7 +4,7 @@
 // close the drawer before we leave so ppl dont get stuck on the next page
 
 import { useEffect, useState } from "react";
-import { SITE } from "./content";
+import { useContactCard } from "./contact-card";
 import { useTransition } from "@/hooks/use-transition";
 
 const LINKS = [
@@ -18,6 +18,7 @@ const LINKS = [
 
 export function SiteNav({ onBack, active = "home" }: { onBack: () => void; active?: string }) {
   const { startTransition } = useTransition();
+  const contact = useContactCard();
   const [open, setOpen] = useState(false);
 
   const go = (id: string, href: string) => {
@@ -89,12 +90,16 @@ export function SiteNav({ onBack, active = "home" }: { onBack: () => void; activ
             </span>
           </button>
 
-          <a
-            href={`mailto:${SITE.email}`}
-            className="rounded-md border border-portfolio-border px-3 py-1.5 text-sm text-portfolio-text/80 transition-colors hover:border-white/25 hover:text-portfolio-text"
+          {/* opens the envelope from the side instead of jumping straight into mail */}
+          <button
+            type="button"
+            data-contact-trigger
+            aria-expanded={contact.open}
+            onClick={() => contact.toggle()}
+            className="rounded-md border border-portfolio-border px-3 py-1.5 text-sm text-portfolio-text/80 transition-colors hover:border-white/25 hover:text-portfolio-text cursor-pointer"
           >
             contact
-          </a>
+          </button>
         </div>
       </nav>
 

@@ -635,298 +635,34 @@ export const EDUCATION: ExpRow[] = [
 ];
 
 // ------------------------------------------------------------------
-// Upstream OSS — org-grouped PRs (own-repo PRs excluded).
-// Facts from wiki/life/open-source-activity + HF export 2026-08-06.
-// Graphify #2422 landed via cherry-pick (shipped, not GitHub-merged).
+// oss orgs only. big ones. area of work under the name, no pr counts
+// hacktoberfest repos stay out of this list
 // ------------------------------------------------------------------
-
-export type OssPrState = "merged" | "shipped" | "open";
-
-export type OssPr = {
-  number: number;
-  title: string;
-  url: string;
-  state: OssPrState;
-  note?: string;
-};
-
-export type OssGroup = "upstream" | "hacktoberfest" | "other";
 
 export type OssOrg = {
   id: string;
   name: string;
-  /** shown as owner/repo under the org name */
-  repo: string;
+  /** what the org actually works on */
+  area: string;
+  href: string;
   logo: string;
-  /** invert dark SVGs so they read on the black tile */
+  /** invert dark svgs so they read on the black tile */
   invert?: boolean;
-  note?: string;
-  group: OssGroup;
-  prs: OssPr[];
 };
 
 export const OSS_ORGS: OssOrg[] = [
-  {
-    id: "openai",
-    name: "OpenAI",
-    repo: "openai/openai-agents-python",
-    logo: "/logos/openai.svg",
-    invert: true,
-    note: "Agents SDK",
-    group: "upstream",
-    prs: [
-      {
-        number: 4298,
-        title: "fix(sessions): restore session history when compaction replacement is cancelled",
-        url: "https://github.com/openai/openai-agents-python/pull/4298",
-        state: "merged",
-      },
-    ],
-  },
-  {
-    id: "google",
-    name: "Google",
-    repo: "google/adk-js",
-    logo: "/logos/google.svg",
-    note: "ADK JS",
-    group: "upstream",
-    prs: [
-      {
-        number: 644,
-        title: "fix(skills): preserve binary skill assets as Buffer",
-        url: "https://github.com/google/adk-js/pull/644",
-        state: "merged",
-      },
-    ],
-  },
-  {
-    id: "graphify",
-    name: "Graphify Labs",
-    repo: "Graphify-Labs/graphify",
-    logo: "/oss/graphify-labs.png",
-    note: "YC S26",
-    group: "upstream",
-    prs: [
-      {
-        number: 2422,
-        title: "fix(hooks): skip post-checkout rebuild when PREV_HEAD equals NEW_HEAD",
-        url: "https://github.com/Graphify-Labs/graphify/pull/2422",
-        state: "shipped",
-        note: "v0.9.46",
-      },
-      {
-        number: 2423,
-        title: "fix(cli): point explain truncation at affected for full blast-radius",
-        url: "https://github.com/Graphify-Labs/graphify/pull/2423",
-        state: "open",
-      },
-    ],
-  },
-  {
-    id: "mem0",
-    name: "Mem0",
-    repo: "mem0ai/mem0",
-    logo: "/oss/mem0ai.png",
-    note: "YC S24",
-    group: "upstream",
-    prs: [
-      {
-        number: 6851,
-        title: "fix(vector_stores/azure_ai_search): raise on failed IndexingResult",
-        url: "https://github.com/mem0ai/mem0/pull/6851",
-        state: "open",
-      },
-    ],
-  },
-  {
-    id: "foss42",
-    name: "foss42",
-    repo: "foss42/apidash",
-    logo: "/oss/foss42.png",
-    note: "APIDash",
-    group: "upstream",
-    prs: [
-      {
-        number: 1742,
-        title: "fix: prevent AI JSON parse from leaving request stuck in isWorking",
-        url: "https://github.com/foss42/apidash/pull/1742",
-        state: "open",
-      },
-      {
-        number: 1738,
-        title: "Clear expired history via isolate",
-        url: "https://github.com/foss42/apidash/pull/1738",
-        state: "open",
-      },
-    ],
-  },
-  {
-    id: "foodie",
-    name: "Foodie",
-    repo: "janavipandole/Foodie",
-    logo: "/oss/janavipandole.png",
-    group: "hacktoberfest",
-    prs: [
-      {
-        number: 131,
-        title: "Updated Filter Bar",
-        url: "https://github.com/janavipandole/Foodie/pull/131",
-        state: "merged",
-      },
-      {
-        number: 114,
-        title: "Add feature: Added Items into the menu",
-        url: "https://github.com/janavipandole/Foodie/pull/114",
-        state: "merged",
-      },
-    ],
-  },
-  {
-    id: "opensauce",
-    name: "OpenSauce",
-    repo: "xthxr/OpenSauce",
-    logo: "/oss/xthxr.png",
-    group: "hacktoberfest",
-    prs: [
-      {
-        number: 260,
-        title: "Added Searching and Sorting algorithms on Scala and Swift",
-        url: "https://github.com/xthxr/OpenSauce/pull/260",
-        state: "merged",
-      },
-      {
-        number: 231,
-        title: "Add DynamicProgramming and Linked List Cycles in JavaScript",
-        url: "https://github.com/xthxr/OpenSauce/pull/231",
-        state: "merged",
-      },
-    ],
-  },
-  {
-    id: "css-art-museum",
-    name: "css-art-museum",
-    repo: "pixel-museum/css-art-museum",
-    logo: "/oss/pixel-museum.png",
-    group: "hacktoberfest",
-    prs: [
-      {
-        number: 314,
-        title: "feat: Create Animated Halloween Scene with CSS Art",
-        url: "https://github.com/pixel-museum/css-art-museum/pull/314",
-        state: "merged",
-      },
-    ],
-  },
-  {
-    id: "leetcode2024",
-    name: "LeetCode 6Companies30Days",
-    repo: "abhisek247767/LeetCode2024-6Companies30Days",
-    logo: "/oss/abhisek247767.png",
-    group: "hacktoberfest",
-    prs: [
-      {
-        number: 211,
-        title: "Added solution to Trapping Rain Water Problem and LRU Cache in JS",
-        url: "https://github.com/abhisek247767/LeetCode2024-6Companies30Days/pull/211",
-        state: "merged",
-      },
-    ],
-  },
-  {
-    id: "student-portfolio",
-    name: "Student-Portfolio",
-    repo: "Sbiswas001/Student-Portfolio",
-    logo: "/oss/sbiswas001.png",
-    group: "hacktoberfest",
-    prs: [
-      {
-        number: 68,
-        title: "Add My Portfolio",
-        url: "https://github.com/Sbiswas001/Student-Portfolio/pull/68",
-        state: "merged",
-      },
-    ],
-  },
-  {
-    id: "beginner-python",
-    name: "beginner-python-mini-projects",
-    repo: "arya2004/beginner-python-mini-projects-hacktoberfest-2025",
-    logo: "/oss/arya2004.png",
-    group: "hacktoberfest",
-    prs: [
-      {
-        number: 87,
-        title: "Added Typing Speed Test with Documentation",
-        url: "https://github.com/arya2004/beginner-python-mini-projects-hacktoberfest-2025/pull/87",
-        state: "merged",
-      },
-    ],
-  },
-  {
-    id: "hf-2k25",
-    name: "Hacktoberfest-2k25",
-    repo: "mohamedammar27/Hacktoberfest-2k25",
-    logo: "/oss/mohamedammar27.png",
-    group: "hacktoberfest",
-    prs: [
-      {
-        number: 19,
-        title: "Added My Portfolio",
-        url: "https://github.com/mohamedammar27/Hacktoberfest-2k25/pull/19",
-        state: "merged",
-      },
-    ],
-  },
-  {
-    id: "ai-tools-manager",
-    name: "ai-tools-manager",
-    repo: "ArshdeepGrover/ai-tools-manager",
-    logo: "/oss/arshdeepgrover.png",
-    group: "hacktoberfest",
-    prs: [
-      {
-        number: 121,
-        title: "Add 2 new AI Tools",
-        url: "https://github.com/ArshdeepGrover/ai-tools-manager/pull/121",
-        state: "merged",
-      },
-    ],
-  },
-  {
-    id: "hf-python",
-    name: "HACKTOBERFEST_25_Python",
-    repo: "A-K-0/HACKTOBERFEST_25_Python",
-    logo: "/oss/a-k-0.png",
-    group: "hacktoberfest",
-    prs: [
-      {
-        number: 51,
-        title: "Add: Create command-line Blackjack game and documentation",
-        url: "https://github.com/A-K-0/HACKTOBERFEST_25_Python/pull/51",
-        state: "merged",
-      },
-    ],
-  },
-  {
-    id: "hackathon-tools",
-    name: "Hackathon-Tools",
-    repo: "rahavshukla/Hackathon-Tools",
-    logo: "/oss/rahavshukla.png",
-    group: "other",
-    prs: [
-      {
-        number: 2,
-        title: "README techs",
-        url: "https://github.com/rahavshukla/Hackathon-Tools/pull/2",
-        state: "open",
-      },
-    ],
-  },
+  { id: "openai", name: "OpenAI", area: "agents sdk", href: "https://github.com/openai", logo: "/logos/openai.svg", invert: true },
+  { id: "google", name: "Google", area: "agent development kit", href: "https://github.com/google", logo: "/logos/google.svg" },
+  { id: "gemini", name: "Gemini", area: "gemini cli", href: "https://github.com/google-gemini", logo: "/oss/google-gemini.png" },
+  { id: "langchain", name: "LangChain", area: "coding agents", href: "https://github.com/langchain-ai", logo: "/oss/langchain-ai.png" },
+  { id: "graphify", name: "Graphify Labs", area: "code graphs", href: "https://github.com/Graphify-Labs", logo: "/oss/graphify-labs.png" },
+  { id: "mem0", name: "Mem0", area: "agent memory", href: "https://github.com/mem0ai", logo: "/oss/mem0ai.png" },
+  { id: "foss42", name: "foss42", area: "api client", href: "https://github.com/foss42", logo: "/oss/foss42.png" },
+  { id: "c2si", name: "C2SI", area: "agent security", href: "https://github.com/c2siorg", logo: "/oss/c2siorg.png" },
+  { id: "ruxailab", name: "RUXAILAB", area: "remote ux research", href: "https://github.com/ruxailab", logo: "/oss/ruxailab.png" },
+  { id: "topoteretes", name: "topoteretes", area: "research agents", href: "https://github.com/topoteretes", logo: "/oss/topoteretes.png" },
+  { id: "traceroot", name: "TraceRoot", area: "agent tracing", href: "https://github.com/traceroot-ai", logo: "/oss/traceroot-ai.png" },
 ];
-
-export const OSS_UPSTREAM = OSS_ORGS.filter((o) => o.group === "upstream");
-export const OSS_HACKTOBERFEST = OSS_ORGS.filter((o) => o.group === "hacktoberfest");
-export const OSS_OTHER = OSS_ORGS.filter((o) => o.group === "other");
 
 // ------------------------------------------------------------------
 // Journey timeline — the full "so far", newest first

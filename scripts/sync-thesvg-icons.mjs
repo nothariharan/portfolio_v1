@@ -143,8 +143,8 @@ function tileSafeSvg(svg, { forceDarkWhite = false } = {}) {
 async function fetchIcon(slug, variants, override) {
   const order = [];
   if (override) order.push(override);
-  if (variants?.includes("color") && override !== "color") order.push("color");
-  if (!order.includes("default")) order.push("default");
+  if(variants?.includes("color") && override !== "color") order.push("color");
+  if(!order.includes("default")) order.push("default");
   for (const v of order) {
     const svg = await fetchText(`${CDN}/${slug}/${v}.svg`);
     if (svg) {
@@ -156,20 +156,19 @@ async function fetchIcon(slug, variants, override) {
   }
   return null;
 }
-
 mkdirSync(OUT, { recursive: true });
 
 console.log("fetching thesvg.org registry…");
-const registry = await fetch(REGISTRY_URL).then((r) => r.json());
-const bySlug = Object.fromEntries(registry.icons.map((i) => [i.slug, i]));
+const registry= await fetch(REGISTRY_URL).then((r) => r.json());
+const bySlug =Object.fromEntries(registry.icons.map((i) => [i.slug, i]));
 
-let replaced = 0;
-let kept = 0;
-let missing = 0;
+let replaced= 0;
+let kept =0;
+let missing=0;
 
 for (const [key, slug] of Object.entries(SLUGS)) {
-  const meta = bySlug[slug];
-  const dest = join(OUT, `${key}.svg`);
+  const meta= bySlug[slug];
+  const dest=join(OUT, `${key}.svg`);
 
   if (!meta) {
     console.warn(`MISS  ${key} → ${slug} (not in registry) — keep existing`);
@@ -179,16 +178,16 @@ for (const [key, slug] of Object.entries(SLUGS)) {
   }
 
   try {
-    const hit = await fetchIcon(slug, meta.variants, VARIANT_OVERRIDE[key]);
+    const hit= await fetchIcon(slug, meta.variants, VARIANT_OVERRIDE[key]);
     if (!hit) {
       console.warn(`FAIL  ${key} → ${slug} (no valid svg) — keep existing`);
       kept++;
       continue;
     }
     // Normalize to a single trailing newline; don't rewrite fill colors.
-    const out = hit.svg.trimEnd() + "\n";
-    const prev = existsSync(dest) ? readFileSync(dest, "utf8") : null;
-    if (prev === out) {
+    const out=hit.svg.trimEnd() + "\n";
+    const prev =existsSync(dest) ? readFileSync(dest, "utf8") : null;
+    if (prev ===out) {
       console.log(`same  ${key} ← ${slug}/${hit.variant}`);
       kept++;
       continue;

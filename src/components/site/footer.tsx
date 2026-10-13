@@ -2,6 +2,7 @@
 
 import { SITE } from "./content";
 import { Container, GitHubIcon, LinkedInIcon, MailIcon } from "./ui";
+import { useContactCard } from "./contact-card";
 import { useTransition } from "@/hooks/use-transition";
 
 const social =
@@ -9,18 +10,22 @@ const social =
 
 export function Footer({ onBack }: { onBack: () => void }) {
   const { startTransition } = useTransition();
+  const contact = useContactCard();
 
   return (
-    <footer className="mt-6 border-t border-portfolio-border/70 py-10">
+    <footer className="border-t border-portfolio-border/70 py-8">
       <Container>
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <a
-              href={`mailto:${SITE.email}`}
-              className="text-[15px] font-semibold text-portfolio-text transition-colors hover:text-portfolio-muted"
+            {/* same envelope the nav contact button slides in */}
+            <button
+              type="button"
+              data-contact-trigger
+              onClick={() => contact.toggle()}
+              className="text-left text-[15px] font-semibold text-portfolio-text transition-colors hover:text-portfolio-muted cursor-pointer"
             >
               {SITE.email}
-            </a>
+            </button>
             <div className="mt-3 flex items-center gap-2">
               <a href={SITE.socials.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className={social}>
                 <GitHubIcon className="h-[18px] w-[18px]" />
@@ -28,9 +33,15 @@ export function Footer({ onBack }: { onBack: () => void }) {
               <a href={SITE.socials.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className={social}>
                 <LinkedInIcon className="h-[18px] w-[18px]" />
               </a>
-              <a href={`mailto:${SITE.email}`} aria-label="Email" className={social}>
+              <button
+                type="button"
+                data-contact-trigger
+                aria-label="Email"
+                onClick={() => contact.toggle()}
+                className={`${social} cursor-pointer`}
+              >
                 <MailIcon className="h-[18px] w-[18px]" />
-              </a>
+              </button>
             </div>
           </div>
 

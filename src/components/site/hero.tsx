@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { SITE } from "./content";
+import { useContactCard } from "./contact-card";
 import { Container, GitHubIcon, LinkedInIcon, MailIcon } from "./ui";
 
 // sitting loop for the portfolio hero — frames are already lined up on the feet
@@ -48,6 +49,8 @@ const social =
   "flex h-9 w-9 items-center justify-center rounded-md border border-portfolio-border text-portfolio-muted transition-colors hover:border-white/25 hover:text-portfolio-text";
 
 export function Hero() {
+  const contact = useContactCard();
+
   return (
     <section id="about" className="scroll-mt-24 pt-10 pb-12 sm:pt-14">
       <Container>
@@ -94,12 +97,14 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
               className="mt-6 flex flex-wrap items-center gap-2.5"
             >
-              <a
-                href={`mailto:${SITE.email}`}
-                className="inline-flex items-center gap-2 rounded-md bg-portfolio-text px-4 py-2 text-[13px] font-medium text-portfolio-bg transition-colors hover:bg-portfolio-text/90"
+              <button
+                type="button"
+                data-contact-trigger
+                onClick={() => contact.toggle()}
+                className="inline-flex items-center gap-2 rounded-md bg-portfolio-text px-4 py-2 text-[13px] font-medium text-portfolio-bg transition-colors hover:bg-portfolio-text/90 cursor-pointer"
               >
                 <MailIcon className="h-4 w-4" /> get in touch
-              </a>
+              </button>
               <a href={SITE.socials.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className={social}>
                 <GitHubIcon className="h-[18px] w-[18px]" />
               </a>

@@ -287,6 +287,22 @@ export function LinkedInIcon({ className = "h-5 w-5" }: { className?: string }) 
   );
 }
 
+export function XIcon({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
+      <path d="M14.7 3h2.6l-5.7 6.5L18.5 21h-5.1l-4-5.2L5 21H2.4l6.1-7L2 3h5.2l3.6 4.8L14.7 3Zm-.9 16.2h1.4L6.3 4.7H4.8l9 14.5Z" />
+    </svg>
+  );
+}
+
+export function YouTubeIcon({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
+      <path d="M23 12.2s0-3.2-.4-4.6c-.2-.9-.9-1.6-1.8-1.8C19.2 5.4 12 5.4 12 5.4s-7.2 0-8.8.4c-.9.2-1.6.9-1.8 1.8C1 9 1 12.2 1 12.2s0 3.2.4 4.6c.2.9.9 1.6 1.8 1.8 1.6.4 8.8.4 8.8.4s7.2 0 8.8-.4c.9-.2 1.6-.9 1.8-1.8.4-1.4.4-4.6.4-4.6ZM9.8 15.5v-6.6l6.2 3.3-6.2 3.3Z" />
+    </svg>
+  );
+}
+
 export function MailIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden>

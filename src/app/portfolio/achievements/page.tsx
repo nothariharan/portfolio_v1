@@ -12,6 +12,8 @@ export default function AchievementsPage() {
           merged upstream prs, yc startup school, hacktoberfest gold, and the hackathon circuit if you want the full list.
         </p>
 
+        {/* later on adding more here for now just testing with few of mine and later on wi add more */}
+
         <ol className="mt-8 flex flex-col">
           {ACHIEVEMENTS.map((a, i) => (
             <Reveal key={a.title} delay={(i % 6) * 0.04}>
@@ -24,6 +26,9 @@ export default function AchievementsPage() {
                     <h2 className="text-[16px] font-semibold tracking-tight text-portfolio-text">{a.title}</h2>
                     <span className="shrink-0 font-mono text-[11px] text-portfolio-muted">{a.date}</span>
                   </div>
+
+                  {/* adding blogs here later on  */}
+
                   <p className="mt-0.5 font-mono text-[11px] text-portfolio-muted/80">{a.event}</p>
                   <p className="mt-2 text-[13px] leading-relaxed text-portfolio-muted">{a.note}</p>
 
@@ -37,6 +42,7 @@ export default function AchievementsPage() {
                           <span className="text-portfolio-muted">
                             <span className="font-mono text-[10px] uppercase text-portfolio-muted/70">{t.label}</span>{" "}
                             · {t.project}
+                            
                           </span>
                           <span className="shrink-0 font-medium text-portfolio-text/90">{t.result}</span>
                         </div>
@@ -45,12 +51,7 @@ export default function AchievementsPage() {
                   )}
 
                   {a.live && (
-                    <a
-                      href={a.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-3 inline-flex items-center gap-1 font-mono text-[12px] text-portfolio-muted transition-colors hover:text-portfolio-text"
-                    >
+                    <a href={a.live} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1 font-mono text-[12px] text-portfolio-muted transition-colors hover:text-portfolio-text" >
                       {a.project ? `${a.project.toLowerCase()} — live` : "live"}{" "}
                       <ArrowIcon className="h-3.5 w-3.5" />
                     </a>

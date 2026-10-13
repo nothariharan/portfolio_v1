@@ -112,7 +112,7 @@ export function Experience() {
         className="group mt-5 flex w-full items-center justify-between gap-3 rounded-lg border border-portfolio-border bg-portfolio-card px-4 py-3 text-left transition-colors hover:border-white/20 cursor-pointer"
       >
         <span className="text-[13px] text-portfolio-muted">
-          want the full story? roles, education, and every upstream pr.
+          want the full story? roles, education, and the oss orgs.
         </span>
         <span className="inline-flex shrink-0 items-center gap-1 text-[13px] font-medium text-portfolio-text">
           the journey <ArrowIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />

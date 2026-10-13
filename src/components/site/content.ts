@@ -21,8 +21,11 @@ export const SITE = {
   ],
 
   email: "nmhariharanme@gmail.com",
+  // envelope card reads from here so the links dont get copy pasted in three places
   socials: {
     github: "https://github.com/nothariharan",
     linkedin: "https://www.linkedin.com/in/nmhariharan/",
+    x: "https://x.com/lazyclaude",
+    youtube: "https://www.youtube.com/@hari-e5w5v",
   },
 };

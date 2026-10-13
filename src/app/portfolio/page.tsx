@@ -6,42 +6,40 @@ import { useTransition } from "@/hooks/use-transition";
 import { Hero } from "@/components/site/hero";
 import { Experience } from "@/components/site/experience";
 import { Projects } from "@/components/site/projects";
-import { Achievements } from "@/components/site/achievements";
-import { NowPlaying } from "@/components/site/now-playing";
 
 // deep links from the trainer card now route to their dedicated pages
 const TAB_ROUTE: Record<string, string> = {
   projects: "/portfolio/projects",
+
   honors: "/portfolio/achievements",
   skills: "/portfolio/skills",
 };
 
 function PortfolioInner() {
-  const { startTransition } = useTransition();
-  const params = useSearchParams();
-  const tab = params.get("tab");
+  const { startTransition }= useTransition();
+  const params =useSearchParams();
+  const tab=params.get("tab");
 
   // route deep links to dedicated pages; experience stays on this page (the journey summary)
-  useEffect(() => {
+  useEffect(()=> {
     if (!tab) return;
     const route = TAB_ROUTE[tab];
-    if (route) {
-      startTransition(route);
-      return;
+    if (route){
+      startTransition(route);return;
     }
-    if (tab === "experience") {
-      const el = document.getElementById("experience");
-      if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" }));
+    if (tab=== "experience") {
+      const el= document.getElementById("experience");
+      if (el)requestAnimationFrame(() =>el.scrollIntoView({ behavior:"smooth",block: "start"}));
     }
-  }, [tab, startTransition]);
+  }, [tab,startTransition]);
 
+  // selected awards live on /portfolio/achievements so the home doesnt carry that block
+  // and theres no extra pad under here the player is fixed on the layout now
   return (
-    <main className="pb-52">
+    <main>
       <Hero />
       <Experience />
       <Projects />
-      <Achievements />
-      <NowPlaying />
     </main>
   );
 }
