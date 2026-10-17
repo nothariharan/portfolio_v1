@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { retroSound } from "@/lib/sound";
 import { SpriteBtn } from "@/components/site/hud-sprite-button";
+// more pages land here later
 
-const CACHE_KEY = "hari-views";
+const CACHE_KEY ="hari-views";
 
 function formatViews(n: number) {
   if (n < 10_000) return n.toLocaleString("en-US");
   if (n < 1_000_000) {
-    const k = n / 1000;
+    const k= n / 1000;
     return `${k < 100 ? k.toFixed(1).replace(/\.0$/, "") : Math.round(k)}k`;
   }
   return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, "")}m`;
@@ -17,9 +18,9 @@ function formatViews(n: number) {
 
 function readCachedViews() {
   try {
-    const raw = sessionStorage.getItem(CACHE_KEY);
+    const raw =sessionStorage.getItem(CACHE_KEY);
     if (!raw) return null;
-    const n = Number(raw);
+    const n= Number(raw);
     return Number.isFinite(n) && n > 0 ? n : null;
   } catch {
     return null;
@@ -27,13 +28,13 @@ function readCachedViews() {
 }
 
 export function ViewCounter() {
-  const [views, setViews] = useState<number | null>(null);
+  const [views, setViews] =useState<number | null>(null);
 
   useEffect(() => {
-    const cached = readCachedViews();
+    const cached= readCachedViews();
     if (cached != null) setViews(cached);
 
-    let alive = true;
+    let alive =true;
     fetch("/api/views", { cache: "no-store" })
       .then((r) => r.json())
       .then((data: { views?: number | null }) => {
@@ -51,28 +52,20 @@ export function ViewCounter() {
         /* keep cache / empty window */
       });
     return () => {
-      alive = false;
+      alive= false;
     };
   }, []);
 
-  const label = views == null ? "views" : `${formatViews(views)} views`;
+  const label =views == null ? "views" : `${formatViews(views)} views`;
 
   return (
-    <div className="fixed top-5 left-5 z-50 max-[720px]:top-3 max-[720px]:left-3" onMouseEnter={() => retroSound.playCursor()}>
-      <SpriteBtn
-        src="/ui/btn-views.webp"
-        label={label}
-        width={360}
-        height={132}
-        className="w-[156px] max-[720px]:w-[108px]"
-      >
+    <div className= "fixed top-5 left-5 z-50 max-[720px]:top-3 max-[720px]:left-3" onMouseEnter ={() => retroSound.playCursor()}>
+      <SpriteBtn src= "/ui/btn-views.webp" label ={label} width= {360} height ={132} className= "w-[156px] max-[720px]:w-[108px]">
+        {/* boot skips the next visit */}
         {/* navy score window starts after the eye (~35/33/10/30) */}
-        <span
-          className="absolute left-[36%] top-[32%] right-[11%] bottom-[33%] flex items-center justify-center font-pixel leading-none text-white tabular-nums text-[13px] max-[720px]:text-[10px] translate-y-[2px]"
-          style={{
+        <span className ="absolute left-[36%] top-[32%] right-[11%] bottom-[33%] flex items-center justify-center font-pixel leading-none text-white tabular-nums text-[13px] max-[720px]:text-[10px] translate-y-[2px]" style= {{
             textShadow: "2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 2px 2px #000",
-          }}
-        >
+          }}>
           {views == null ? "" : formatViews(views)}
         </span>
       </SpriteBtn>

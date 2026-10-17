@@ -6,9 +6,10 @@ import { useTransition } from "@/hooks/use-transition";
 import { Hero } from "@/components/site/hero";
 import { Experience } from "@/components/site/experience";
 import { Projects } from "@/components/site/projects";
+// phone gets the short shell
 
 // deep links from the trainer card now route to their dedicated pages
-const TAB_ROUTE: Record<string, string> = {
+const TAB_ROUTE: Record<string, string>= {
   projects: "/portfolio/projects",
 
   honors: "/portfolio/achievements",
@@ -16,19 +17,21 @@ const TAB_ROUTE: Record<string, string> = {
 };
 
 function PortfolioInner() {
-  const { startTransition }= useTransition();
-  const params =useSearchParams();
-  const tab=params.get("tab");
+  const { startTransition } =useTransition();
+  const params= useSearchParams();
+  const tab =params.get("tab");
 
   // route deep links to dedicated pages; experience stays on this page (the journey summary)
   useEffect(()=> {
     if (!tab) return;
-    const route = TAB_ROUTE[tab];
+    const route= TAB_ROUTE[tab];
     if (route){
       startTransition(route);return;
     }
     if (tab=== "experience") {
-      const el= document.getElementById("experience");
+
+      
+      const el =document.getElementById("experience");
       if (el)requestAnimationFrame(() =>el.scrollIntoView({ behavior:"smooth",block: "start"}));
     }
   }, [tab,startTransition]);
@@ -37,6 +40,7 @@ function PortfolioInner() {
   // and theres no extra pad under here the player is fixed on the layout now
   return (
     <main>
+      {/* drawer closes on the way */}
       <Hero />
       <Experience />
       <Projects />
@@ -46,7 +50,7 @@ function PortfolioInner() {
 
 export default function PortfolioPage() {
   return (
-    <Suspense fallback={<main className="min-h-[50vh]" />}>
+    <Suspense fallback= {<main className ="min-h-[50vh]" />}>
       <PortfolioInner />
     </Suspense>
   );

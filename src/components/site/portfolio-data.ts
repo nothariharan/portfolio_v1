@@ -1,3 +1,4 @@
+// icons stay on the tile
 // ------------------------------------------------------------------
 // Full portfolio catalog for the main site (/portfolio + sub-routes).
 // Every fact here is sourced from the /Desktop/Hariharan knowledge base
@@ -6,16 +7,16 @@
 // deployed apps live in /public/shots (captured from production).
 // ------------------------------------------------------------------
 
-export type Category =
+export type Category= 
   | "AI / Agents"
   | "Civic Tech"
   | "Dev Tools"
   | "ML / Research"
   | "Mobile / Creative";
 
-export type FeaturedLane = "people" | "systems" | "civic";
+export type FeaturedLane ="people" | "systems" | "civic";
 
-export type SiteProject = {
+export type SiteProject= {
   slug: string;
   name: string;
   tagline: string; // punchy one-liner
@@ -34,7 +35,7 @@ export type SiteProject = {
   lane?: FeaturedLane;
 };
 
-export const CATEGORIES: Category[] = [
+export const CATEGORIES: Category[] =[
   "AI / Agents",
   "Civic Tech",
   "Dev Tools",
@@ -43,7 +44,7 @@ export const CATEGORIES: Category[] = [
 ];
 
 // accent + fallback glyph per category (used for cover panels without a screenshot)
-export const CATEGORY_META: Record<Category, { color: string; glyph: string }> = {
+export const CATEGORY_META: Record<Category, { color: string; glyph: string }>= {
   "AI / Agents": { color: "#8b5cf6", glyph: "◇" },
   "Civic Tech": { color: "#10b981", glyph: "❖" },
   "Dev Tools": { color: "#38bdf8", glyph: "⌘" },
@@ -51,7 +52,7 @@ export const CATEGORY_META: Record<Category, { color: string; glyph: string }> =
   "Mobile / Creative": { color: "#ec4899", glyph: "✦" },
 };
 
-export const PROJECTS: SiteProject[] = [
+export const PROJECTS: SiteProject[] =[
   {
     slug: "phyla",
     name: "Phyla",
@@ -407,13 +408,13 @@ export const PROJECTS: SiteProject[] = [
   },
 ];
 
-export const FEATURED_PROJECTS = PROJECTS.filter((p) => p.featured);
+export const FEATURED_PROJECTS= PROJECTS.filter((p) => p.featured);
 
 // ------------------------------------------------------------------
 // Achievements — 9 hackathon wins + recognitions (chronological, newest first)
 // ------------------------------------------------------------------
 
-export type Achievement = {
+export type Achievement ={
   title: string;
   event: string;
   result: "1st" | "2nd" | "Winner" | "Golden" | "Participant" | "Selected" | "Best UI/UX" | "Finalist";
@@ -427,7 +428,7 @@ export type Achievement = {
   featured?: boolean;
 };
 
-export const ACHIEVEMENTS: Achievement[] = [
+export const ACHIEVEMENTS: Achievement[]= [
   {
     title: "Build What Moves India — Finalist",
     event: "Maya · Build What Moves India",
@@ -563,13 +564,13 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
 ];
 
-export const FEATURED_ACHIEVEMENTS = ACHIEVEMENTS.filter((a) => a.featured);
+export const FEATURED_ACHIEVEMENTS =ACHIEVEMENTS.filter((a) => a.featured);
 
 // ------------------------------------------------------------------
 // Experience + education (from wiki/life/profile + entities/Rinexis)
 // ------------------------------------------------------------------
 
-export type ExpRow = {
+export type ExpRow= {
   title: string;
   org: string;
   period: string;
@@ -581,7 +582,7 @@ export type ExpRow = {
   bullets?: string[];
 };
 
-export const WORK: ExpRow[] = [
+export const WORK: ExpRow[] =[
   {
     title: "Founding Engineer",
     org: "Stealth Startup (VC-backed)",
@@ -617,7 +618,7 @@ export const WORK: ExpRow[] = [
   },
 ];
 
-export const EDUCATION: ExpRow[] = [
+export const EDUCATION: ExpRow[]= [
   {
     title: "B.Tech, Computer Science",
     org: "IIIT Sri City",
@@ -639,7 +640,7 @@ export const EDUCATION: ExpRow[] = [
 // hacktoberfest repos stay out of this list
 // ------------------------------------------------------------------
 
-export type OssOrg = {
+export type OssOrg ={
   id: string;
   name: string;
   /** what the org actually works on */
@@ -650,7 +651,7 @@ export type OssOrg = {
   invert?: boolean;
 };
 
-export const OSS_ORGS: OssOrg[] = [
+export const OSS_ORGS: OssOrg[]= [
   { id: "openai", name: "OpenAI", area: "agents sdk", href: "https://github.com/openai", logo: "/logos/openai.svg", invert: true },
   { id: "google", name: "Google", area: "agent development kit", href: "https://github.com/google", logo: "/logos/google.svg" },
   { id: "gemini", name: "Gemini", area: "gemini cli", href: "https://github.com/google-gemini", logo: "/oss/google-gemini.png" },
@@ -669,9 +670,9 @@ export const OSS_ORGS: OssOrg[] = [
 // (curated from wiki/life/timeline.md)
 // ------------------------------------------------------------------
 
-export type JourneyKind = "education" | "work" | "win" | "ship" | "milestone";
+export type JourneyKind ="education" | "work" | "win" | "ship" | "milestone";
 
-export type JourneyEntry = {
+export type JourneyEntry= {
   date: string;
   title: string;
   desc: string;
@@ -679,7 +680,7 @@ export type JourneyEntry = {
   icon: string;
 };
 
-export const JOURNEY_KIND_META: Record<JourneyKind, { color: string; label: string }> = {
+export const JOURNEY_KIND_META: Record<JourneyKind, { color: string; label: string }> ={
   education: { color: "#10b981", label: "education" },
   work: { color: "#8b5cf6", label: "work" },
   win: { color: "#f59e0b", label: "win" },
@@ -687,7 +688,7 @@ export const JOURNEY_KIND_META: Record<JourneyKind, { color: string; label: stri
   milestone: { color: "#ec4899", label: "milestone" },
 };
 
-export const JOURNEY: JourneyEntry[] = [
+export const JOURNEY: JourneyEntry[]= [
   {
     date: "Jun 2026 — Aug 2026",
     title: "Founding Eng @ Stealth (VC-backed)",

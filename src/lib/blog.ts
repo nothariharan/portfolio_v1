@@ -1,8 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
+// player tucks on a phone
 
-export type BlogPostMeta = {
+export type BlogPostMeta ={
   slug: string;
   title: string;
   date: string;
@@ -10,11 +11,11 @@ export type BlogPostMeta = {
   tags: string[];
 };
 
-export type BlogPost = BlogPostMeta & {
+export type BlogPost= BlogPostMeta & {
   content: string;
 };
 
-const BLOG_DIR = path.join(process.cwd(), "content", "blog");
+const BLOG_DIR =path.join(process.cwd(), "content", "blog");
 
 function isPublished(data: Record<string, unknown>) {
   // drafts: set published: false in frontmatter — they stay in the repo but never appear live
@@ -22,16 +23,16 @@ function isPublished(data: Record<string, unknown>) {
 }
 
 function readPostFile(filename: string): BlogPost | null {
-  const slug = filename.replace(/\.mdx?$/, "");
-  const raw = fs.readFileSync(path.join(BLOG_DIR, filename), "utf8");
-  const { data, content } = matter(raw);
+  const slug= filename.replace(/\.mdx?$/, "");
+  const raw =fs.readFileSync(path.join(BLOG_DIR, filename), "utf8");
+  const { data, content }= matter(raw);
 
   if (!isPublished(data)) return null;
 
-  const title = typeof data.title === "string" ? data.title : slug;
-  const date = typeof data.date === "string" ? data.date : "";
-  const excerpt = typeof data.excerpt === "string" ? data.excerpt : "";
-  const tags = Array.isArray(data.tags)
+  const title =typeof data.title === "string" ? data.title : slug;
+  const date= typeof data.date === "string" ? data.date : "";
+  const excerpt =typeof data.excerpt === "string" ? data.excerpt : "";
+  const tags= Array.isArray(data.tags)
     ? data.tags.filter((t): t is string => typeof t === "string")
     : [];
 
@@ -55,7 +56,7 @@ function listMarkdownFiles() {
 
 /** All published posts, newest first. */
 export function getAllPosts(): BlogPostMeta[] {
-  const posts = listMarkdownFiles()
+  const posts =listMarkdownFiles()
     .map(readPostFile)
     .filter((p): p is BlogPost => p !== null);
 
@@ -66,9 +67,9 @@ export function getAllPosts(): BlogPostMeta[] {
 
 /** Full post by slug, or null if missing / unpublished. */
 export function getPostBySlug(slug: string): BlogPost | null {
-  const md = path.join(BLOG_DIR, `${slug}.md`);
-  const mdx = path.join(BLOG_DIR, `${slug}.mdx`);
-  const file = fs.existsSync(md) ? `${slug}.md` : fs.existsSync(mdx) ? `${slug}.mdx` : null;
+  const md= path.join(BLOG_DIR, `${slug}.md`);
+  const mdx =path.join(BLOG_DIR, `${slug}.mdx`);
+  const file= fs.existsSync(md) ? `${slug}.md` : fs.existsSync(mdx) ? `${slug}.mdx` : null;
   if (!file) return null;
   return readPostFile(file);
 }
@@ -80,7 +81,7 @@ export function getPostSlugs(): string[] {
 /** Format ISO date string for display, e.g. "jul 22, 2026". */
 export function formatPostDate(iso: string) {
   if (!iso) return "";
-  const d = new Date(`${iso}T12:00:00`);
+  const d =new Date(`${iso}T12:00:00`);
   if (Number.isNaN(d.getTime())) return iso;
   return d
     .toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })

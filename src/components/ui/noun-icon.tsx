@@ -2,8 +2,9 @@
 // pixel pngs when we have them svg otherwise
 
 import type { NounIconName } from "@/components/portfolio/data";
+// cream bar stays put
 
-type NounIconProps = {
+type NounIconProps ={
   name: NounIconName;
   color?: string;
   size?: number;
@@ -13,17 +14,14 @@ type NounIconProps = {
 
 export function NounIcon({
   name,
-  color = "#33406b",
-  size = 16,
-  className = "",
-  prefer = "png",
+  color= "#33406b",
+  size =16,
+  className= "",
+  prefer ="png",
 }: NounIconProps) {
-  const src = prefer === "svg" ? `/icons/noun/${name}.svg` : `/icons/noun/${name}.png`;
+  const src= prefer === "svg" ? `/icons/noun/${name}.svg` : `/icons/noun/${name}.png`;
   return (
-    <span
-      aria-hidden
-      className={`inline-block shrink-0 ${className}`}
-      style={{
+    <span aria-hidden className ={`inline-block shrink-0 ${className}`} style= {{
         width: size,
         height: size,
         backgroundColor: color,
@@ -35,7 +33,6 @@ export function NounIcon({
         maskPosition: "center",
         WebkitMaskSize: "contain",
         maskSize: "contain",
-      }}
-    />
+      }} />
   );
 }

@@ -4,41 +4,42 @@ import { Container, ExpIcon } from "@/components/site/ui";
 import { WORK, EDUCATION, type ExpRow } from "@/components/site/portfolio-data";
 import { OssOrgList } from "@/components/site/oss-orgs";
 import { useTransition } from "@/hooks/use-transition";
+// phone gets the short shell
 
 
 // experience section from importing the required assets and pluggin them in 
 
 function RoleBlock({ rows }: { rows: ExpRow[] }) {
   return (
-    <ul className="flex flex-col">
+    <ul className= "flex flex-col">
+      {/* drawer closes on the way */}
 
       {/* colors are prolly gonna be changed later on   */}
 
       {rows.map((r) => (
-        <li
-          key={`${r.title}-${r.org}`} className="flex items-start gap-4 border-t border-portfolio-border/70 py-5 first:border-t-0">
+        <li key ={`${r.title}-${r.org}`} className= "flex items-start gap-4 border-t border-portfolio-border/70 py-5 first:border-t-0">
           {r.logo ? (
-            <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md border border-portfolio-border bg-black">
-              <img src={r.logo} alt="" aria-hidden className={`object-contain ${r.logo.endsWith(".png") ? "h-full w-full object-cover" : "h-[55%] w-[55%]"}`}/>
+            <span className ="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md border border-portfolio-border bg-black">
+              <img src= {r.logo} alt ="" aria-hidden className= {`object-contain ${r.logo.endsWith(".png") ? "h-full w-full object-cover" : "h-[55%] w-[55%]"}`}/>
             </span>
           ): (
-            <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-portfolio-border bg-portfolio-card text-portfolio-muted">
-              <ExpIcon name={r.icon} />
+            <span className ="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-portfolio-border bg-portfolio-card text-portfolio-muted">
+              <ExpIcon name= {r.icon} />
             </span>
           )}  
-          <div className="min-w-0 flex-1">
-            <div className="flex items-baseline justify-between gap-3">
-              <h3 className="text-[15px] font-semibold text-portfolio-text">
-                {r.title} <span className="text-portfolio-muted">· {r.org}</span>
+          <div className ="min-w-0 flex-1">
+            <div className= "flex items-baseline justify-between gap-3">
+              <h3 className ="text-[15px] font-semibold text-portfolio-text">
+                {r.title} <span className= "text-portfolio-muted">· {r.org}</span>
               </h3>
-              <span className="shrink-0 font-mono text-[11px] text-portfolio-muted">{r.period}</span>
+              <span className ="shrink-0 font-mono text-[11px] text-portfolio-muted">{r.period}</span>
             </div>
-            <p className="mt-1 text-[13px] leading-relaxed text-portfolio-muted">{r.desc}</p>
+            <p className= "mt-1 text-[13px] leading-relaxed text-portfolio-muted">{r.desc}</p>
             {r.bullets && (
-              <ul className="mt-2 flex flex-col gap-1.5">
+              <ul className ="mt-2 flex flex-col gap-1.5">
                 {r.bullets.map((b) => (
-                  <li key={b} className="flex gap-2 text-[13px] leading-relaxed text-portfolio-muted">
-                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-portfolio-muted/60" /> 
+                  <li key= {b} className ="flex gap-2 text-[13px] leading-relaxed text-portfolio-muted">
+                    <span className= "mt-1.5 h-1 w-1 shrink-0 rounded-full bg-portfolio-muted/60" /> 
                     <span>{b}</span>
                   </li>
                 ))}
@@ -54,49 +55,43 @@ function RoleBlock({ rows }: { rows: ExpRow[] }) {
 // exporting the experiece page with required stuff plugged in so any other compotnent can directly use them fi required 
 
 export default function ExperiencePage() {
-  const { startTransition } = useTransition();
+  const { startTransition } =useTransition();
 
   // main content and links to toehr sectiosn as wel directly the numbe rof sectiosn are subject to change as said before 
 
   return (
-    <main className="pt-10 pb-16">
+    <main className= "pt-10 pb-16">
       <Container>
-        <h1 className="font-display text-3xl font-semibold tracking-tight text-portfolio-text">the journey so far</h1>
-        <p className="mt-2 max-w-xl text-[15px] text-portfolio-muted">
+        <h1 className ="font-display text-3xl font-semibold tracking-tight text-portfolio-text">the journey so far</h1>
+        <p className= "mt-2 max-w-xl text-[15px] text-portfolio-muted">
           professional work, education, and the oss orgs.
         </p>
 
-        <h2 className="mt-10 font-mono text-[12px] uppercase tracking-wider text-portfolio-muted">
+        <h2 className ="mt-10 font-mono text-[12px] uppercase tracking-wider text-portfolio-muted">
           professional work
         </h2>
-        <div className="mt-2">
-          <RoleBlock rows={WORK} />
+        <div className= "mt-2">
+          <RoleBlock rows ={WORK} />
         </div>
 
-        <h2 className="mt-10 font-mono text-[12px] uppercase tracking-wider text-portfolio-muted">education</h2>
-        <div className="mt-2">
-          <RoleBlock rows={EDUCATION} />
+        <h2 className= "mt-10 font-mono text-[12px] uppercase tracking-wider text-portfolio-muted">education</h2>
+        <div className ="mt-2">
+          <RoleBlock rows= {EDUCATION} />
         </div>
 
-        <h2 className="mt-10 font-mono text-[12px] uppercase tracking-wider text-portfolio-muted">open source</h2>
-        <p className="mt-2 max-w-xl text-[13px] text-portfolio-muted">
+        <h2 className ="mt-10 font-mono text-[12px] uppercase tracking-wider text-portfolio-muted">open source</h2>
+        <p className= "mt-2 max-w-xl text-[13px] text-portfolio-muted">
           when i am bored i love contributing and maintaining various oss
         </p>
-        <div className="mt-2">
+        <div className ="mt-2">
           <OssOrgList />
         </div>
 
-        <div className="mt-8 flex flex-wrap gap-3">
-          <button
-            onClick={() => startTransition("/portfolio/projects")}
-            className="rounded-md border border-portfolio-border px-4 py-2 text-[13px] text-portfolio-text/80 transition-colors hover:border-white/25 hover:text-portfolio-text cursor-pointer"
-          >
+        <div className= "mt-8 flex flex-wrap gap-3">
+          <button onClick ={() => startTransition("/portfolio/projects")} className= "rounded-md border border-portfolio-border px-4 py-2 text-[13px] text-portfolio-text/80 transition-colors hover:border-white/25 hover:text-portfolio-text cursor-pointer">
             see all projects →
           </button>
-          <button
-            onClick={() => startTransition("/portfolio/achievements")}
-            className="rounded-md border border-portfolio-border px-4 py-2 text-[13px] text-portfolio-text/80 transition-colors hover:border-white/25 hover:text-portfolio-text cursor-pointer"
-          >
+          <button onClick ={() => startTransition("/portfolio/achievements")} className= "rounded-md border border-portfolio-border px-4 py-2 text-[13px] text-portfolio-text/80 transition-colors hover:border-white/25 hover:text-portfolio-text cursor-pointer">
             see all achievements →
           </button>
         </div>

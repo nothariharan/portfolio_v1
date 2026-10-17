@@ -1,15 +1,16 @@
+// links sit in the note
 // copy and ranks live here
 // ui just renders whatever BACK_* exports
 // honors art is under public/honors fix css dont regen the pngs
 
-export const TRAINER_ID = "67420";
+export const TRAINER_ID ="67420";
 
 
-export type TabKey = "projects" | "experience" | "honors" | "skills";
+export type TabKey= "projects" | "experience" | "honors" | "skills";
 
 // projects data
 
-export type Project = {
+export type Project ={
   id: string;
   name: string;
   short: string;
@@ -26,7 +27,7 @@ export type Project = {
   repo: string;
 };
 
-export const PROJECTS: Project[] = [
+export const PROJECTS: Project[]= [
   {
     id: "008",
     name: "SCOUT",
@@ -174,7 +175,7 @@ export const PROJECTS: Project[] = [
 ];
 
 // project metadata mapping icons and descriptions
-export const PROJECT_META: Record<string, { icon: string; listDesc: string }> = {
+export const PROJECT_META: Record<string, { icon: string; listDesc: string }> ={
   "008": { icon: "scout", listDesc: "Voice buyer agent — haggles vendors with verified quotes." },
   "009": { icon: "slopmark", listDesc: "Honest AI slop benchmarks — rule-based, not vibes." },
   "007": { icon: "certamen", listDesc: "Live arena where AI models battle & the crowd bets." },
@@ -186,18 +187,18 @@ export const PROJECT_META: Record<string, { icon: string; listDesc: string }> = 
   "006": { icon: "mugen", listDesc: "Audits AI models for bias before the EU AI Act does." },
 };
 
-export const TOTAL_BUILT = "40+";
+export const TOTAL_BUILT= "40+";
 
 // experience data
 
-export const EXP_STATS = [
+export const EXP_STATS =[
   { value: "5", label: "EXPERIENCES" },
   { value: "40+", label: "PROJECTS" },
   { value: "100+", label: "MCP USERS" },
   { value: "80+", label: "EXT USERS" },
 ];
 
-export type TimelineItem = {
+export type TimelineItem= {
   current?: boolean;
   period: string;
   title: string;
@@ -205,7 +206,7 @@ export type TimelineItem = {
   icon: "laptop" | "brain" | "globe" | "code" | "hands";
 };
 
-export const TIMELINE: TimelineItem[] = [
+export const TIMELINE: TimelineItem[] =[
   {
     period: "Jun — Aug 2026",
     title: "Founding Engineer · Stealth Startup VC backed",
@@ -240,7 +241,7 @@ export const TIMELINE: TimelineItem[] = [
   },
 ];
 
-export const CURRENT_ROLE = {
+export const CURRENT_ROLE= {
   title: "AI / FULL-STACK BUILDER",
   status: "Present",
   tagline: "Building products, solving real world problems.",
@@ -254,14 +255,14 @@ export const CURRENT_ROLE = {
   extraTech: 4,
 };
 
-export const KEY_ACHIEVEMENTS = [
+export const KEY_ACHIEVEMENTS =[
   "Shipped 40+ projects across AI & web",
   "100+ MCP users on image-gen · 80+ on Tecora",
   "Merged PRs into OpenAI Agents SDK & Google ADK JS",
   "YC Startup School India '26 participant",
 ];
 
-export const SKILLS_GAINED = [
+export const SKILLS_GAINED= [
   "Multi-Agent AI",
   "System Design",
   "Rapid Prototyping",
@@ -271,18 +272,18 @@ export const SKILLS_GAINED = [
 ];
 
 // education background
-export const EDUCATION = "B.Tech CS · IIIT SriCity × IIT Patna (since Aug 2025)";
+export const EDUCATION ="B.Tech CS · IIIT SriCity × IIT Patna (since Aug 2025)";
 
 // honors data
 
-export const HONOR_STATS = [
+export const HONOR_STATS= [
   { value: "8", label: "ACHIEVEMENTS", icon: "trophy" },
   { value: "10+", label: "HACKATHONS", icon: "medal" },
   { value: "9", label: "WINS", icon: "ribbon" },
   { value: "4", label: "FEATURED", icon: "star" },
 ];
 
-export type Honor = {
+export type Honor ={
   title: string;
   sub: string;
   badge: "Winner" | "Runner Up" | "Finalist" | "Contributor" | "Certificate" | "Participant";
@@ -290,7 +291,7 @@ export type Honor = {
   shape: "trophy" | "medal" | "shield" | "code" | "cert" | "star";
 };
 
-export const HONORS: Honor[] = [
+export const HONORS: Honor[]= [
   { title: "Hackathon Winner", sub: "Backtracking with Minds — VahanLive", badge: "Winner", date: "Jan 2026", shape: "trophy" },
   { title: "AMUHACKS 5.0 Winner", sub: "Aligarh Muslim University", badge: "Winner", date: "2026", shape: "medal" },
   { title: "Cosmix Hackathon Winner", sub: "Cosmix '26", badge: "Winner", date: "2026", shape: "shield" },
@@ -301,7 +302,7 @@ export const HONORS: Honor[] = [
   { title: "Lean In Hacks 5.0", sub: "Flash Rescue — resource matching", badge: "Participant", date: "Feb 2026", shape: "shield" },
 ];
 
-export const FEATURED_HONOR = {
+export const FEATURED_HONOR ={
   title: "HACKATHON WINNER",
   event: "BACKTRACKING WITH MINDS",
   blurb: "Built VahanLive — a real-time public-transport tracking system — and won. Live at vahan-live.vercel.app.",
@@ -315,14 +316,14 @@ export const FEATURED_HONOR = {
 
 // skills data
 
-export const SKILL_STATS = [
+export const SKILL_STATS= [
   { value: "30+", label: "TECHNOLOGIES", icon: "code" },
   { value: "6", label: "DOMAINS", icon: "tools" },
   { value: "40+", label: "PROJECTS", icon: "book" },
   { value: "9", label: "HACK WINS", icon: "bolt" },
 ];
 
-export const SKILL_CATEGORIES = [
+export const SKILL_CATEGORIES =[
   { key: "lang", name: "LANGUAGES", desc: "Programming languages I build with.", color: "#7e54b8", icon: "code" },
   { key: "frame", name: "FRAMEWORKS", desc: "React, Next, FastAPI, Node, Flutter.", color: "#3a7cc2", icon: "react" },
   { key: "ai", name: "AI & ML", desc: "Agents, LLM APIs, PyTorch.", color: "#d99a2c", icon: "brain" },
@@ -331,7 +332,7 @@ export const SKILL_CATEGORIES = [
   { key: "learn", name: "CURRENTLY LEARNING", desc: "What I'm levelling up next.", color: "#5d6b7a", icon: "book" },
 ];
 
-export const LANGUAGES = [
+export const LANGUAGES= [
   { name: "Python", key: "python", stars: 5 },
   { name: "TypeScript", key: "typescript", stars: 5 },
   { name: "JavaScript", key: "javascript", stars: 5 },
@@ -340,7 +341,7 @@ export const LANGUAGES = [
   { name: "Dart", key: "dart", stars: 3 },
 ];
 
-export const PROFICIENCY = [
+export const PROFICIENCY =[
   { name: "AI / ML & Agents", pct: 90, color: "#7e54b8" },
   { name: "Full-Stack Web", pct: 90, color: "#3a7cc2" },
   { name: "Backend (FastAPI/Node)", pct: 85, color: "#3f9b46" },
@@ -349,14 +350,14 @@ export const PROFICIENCY = [
   { name: "System Design", pct: 70, color: "#c2453d" },
 ];
 
-export const CURRENTLY_LEARNING = [
+export const CURRENTLY_LEARNING= [
   { name: "System Design", key: "system", pct: 60 },
   { name: "LangGraph", key: "langgraph", pct: 55 },
   { name: "Kubernetes", key: "kubernetes", pct: 45 },
   { name: "Multi-Agent AI", key: "agents", pct: 65 },
 ];
 
-export const SKILL_RADAR = [
+export const SKILL_RADAR =[
   { axis: "Problem\nSolving", value: 0.9 },
   { axis: "Code\nQuality", value: 0.82 },
   { axis: "Shipping\nSpeed", value: 0.92 },
@@ -364,7 +365,7 @@ export const SKILL_RADAR = [
   { axis: "Learning\nAgility", value: 0.95 },
 ];
 
-export const SKILL_STATS_FOOTER = [
+export const SKILL_STATS_FOOTER= [
   { label: "LeetCode Rating", value: "1700+", icon: "trophy" },
   { label: "Hackathon Wins", value: "9", icon: "lines" },
   { label: "Projects Built", value: "40+", icon: "code" },
@@ -373,7 +374,7 @@ export const SKILL_STATS_FOOTER = [
 
 // back-of-card panels data
 
-export const PANELS: { tab: TabKey; label: string; img: string; accent: string }[] = [
+export const PANELS: { tab: TabKey; label: string; img: string; accent: string }[] =[
   { tab: "projects", label: "PROJECTS", img: "/sprites/panel_projects.webp", accent: "#5fd0e6" },
   { tab: "experience", label: "EXPERIENCE", img: "/sprites/panel_experience.webp", accent: "#7fd6a6" },
   { tab: "honors", label: "HONORS", img: "/sprites/panel_honors.webp", accent: "#f0c84a" },
@@ -384,7 +385,7 @@ export const PANELS: { tab: TabKey; label: string; img: string; accent: string }
 export const BACK_SUMMARY: Record<
   TabKey,
   { tagline: string; lines: string[]; stat: string; link: { label: string; url: string } }
-> = {
+>= {
   projects: {
     tagline: "things i've shipped",
     lines: [
@@ -430,7 +431,7 @@ export const BACK_SUMMARY: Record<
 // back-of-card lists content
 
 // high-level projects summaries for the back face — tag + color give each row its own identity
-export const BACK_PROJECTS = [
+export const BACK_PROJECTS =[
   { name: "Scout", icon: "scout", desc: "Voice buyer agent — haggles with verified quotes only.", tag: "VOICE AGENT", color: "#5b87d6", live: "https://scout-dusky-six.vercel.app", repo: "https://github.com/nothariharan/scout" },
   { name: "Continuum", icon: "continuum", desc: "Company memory that stays true over time.", tag: "COMPANY MEMORY", color: "#3d8a9a", live: "https://continuum-web-xi.vercel.app", repo: "https://github.com/nothariharan/continuum" },
   { name: "Phyla", icon: "phyla", desc: "Household safety watchdog — know when something you own becomes dangerous.", tag: "SAFETY", color: "#c4a04a", live: "https://phyla.vercel.app", repo: "https://github.com/nothariharan/phyla" },
@@ -438,10 +439,10 @@ export const BACK_PROJECTS = [
 ];
 
 // experience highlights — work / internships first, education last (newest → oldest)
-export type BackExperienceStatus = "COMPLETED" | "ACTIVE" | "IN PROGRESS";
-export type BackExperienceBadge = "trophy" | "star" | "bolt" | "rocket";
+export type BackExperienceStatus= "COMPLETED" | "ACTIVE" | "IN PROGRESS";
+export type BackExperienceBadge ="trophy" | "star" | "bolt" | "rocket";
 
-export type BackExperience = {
+export type BackExperience= {
   year: string;
   title: string;
   sub: string;
@@ -454,7 +455,7 @@ export type BackExperience = {
   github?: string;
 };
 
-export const BACK_EXPERIENCE: BackExperience[] = [
+export const BACK_EXPERIENCE: BackExperience[] =[
   {
     year: "JUN — AUG 2026",
     title: "Stealth Startup VC backed",
@@ -527,7 +528,7 @@ export const BACK_EXPERIENCE: BackExperience[] = [
  * pixel icons:   /public/icons/noun/*.png  (Noun Project, CSS-mask tinted)
  * brand logos:   /public/logos/*.svg       (thesvg.org)
  */
-export type BackHonorWorld = "forest" | "garage" | "arena" | "furnace";
+export type BackHonorWorld= "forest" | "garage" | "arena" | "furnace";
 
 /** filename under /icons/noun/*.{png,svg} */
 export type NounIconName =
@@ -549,7 +550,7 @@ export type NounIconName =
   | "opensource"
   | "globe";
 
-export type BackHonorMetric = {
+export type BackHonorMetric= {
   icon: NounIconName;
   label: string;
   value: string;
@@ -558,7 +559,7 @@ export type BackHonorMetric = {
 };
 
 /** Win strip thumbs — real /shots from /portfolio projects */
-export type BackHonorWin = {
+export type BackHonorWin ={
   label: string;
   result: string;
   shot: string;
@@ -567,7 +568,7 @@ export type BackHonorWin = {
 };
 
 /** Token-burn flow — real brand logos under /public/logos */
-export type BackHonorAgent = {
+export type BackHonorAgent= {
   label: string;
   /** optional short label for the tight HOW IT FLOWS strip */
   short?: string;
@@ -576,7 +577,7 @@ export type BackHonorAgent = {
   logo: string;
 };
 
-export type BackHonor = {
+export type BackHonor ={
   title: string;
   sub: string;
   cardTitle: string;
@@ -607,7 +608,7 @@ export type BackHonor = {
   metrics: [BackHonorMetric, BackHonorMetric, BackHonorMetric];
 };
 
-export const BACK_HONORS: BackHonor[] = [
+export const BACK_HONORS: BackHonor[]= [
   {
     title: "Hacktoberfest '25",
     cardTitle: "Hack-t-Oberfest",
@@ -736,7 +737,7 @@ export const BACK_HONORS: BackHonor[] = [
 ];
 
 // skills grouped by type
-export const BACK_SKILLS: { label: string; icons: string[] }[] = [
+export const BACK_SKILLS: { label: string; icons: string[] }[] =[
   { label: "AI / ML", icons: ["python", "pytorch", "opencv", "numpy", "pandas", "gemini", "huggingface", "openai"] },
   { label: "FULL-STACK", icons: ["react", "nextjs", "nodejs", "fastapi", "express", "typescript", "tailwindcss", "mongodb", "supabase"] },
   { label: "DEVOPS", icons: ["docker", "kubernetes", "git", "github", "linux", "bash", "nginx", "githubactions"] },

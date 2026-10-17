@@ -1,16 +1,17 @@
+// phone gets the short shell
 // chiptune beeps plus looping themes from public audio
 // these loops are original not ripped osts
 // first tap starts music skip just changes the track
 
-export type MusicTrackId = "off" | (string & {});
+export type MusicTrackId= "off" | (string & {});
 
-export type MusicTrack = {
+export type MusicTrack ={
   id: string;
   label: string;
   src: string;
 };
 
-export const MUSIC_POOL: MusicTrack[] = [
+export const MUSIC_POOL: MusicTrack[]= [
   { id: "theme-2", label: "THEME 2", src: "/audio/theme-2.mp3" },
   { id: "theme-3", label: "THEME 3", src: "/audio/theme-3.mp3" },
   { id: "theme-5", label: "THEME 5", src: "/audio/theme-5.mp3" },
@@ -19,22 +20,22 @@ export const MUSIC_POOL: MusicTrack[] = [
   { id: "theme-8", label: "THEME 8", src: "/audio/theme-8.mp3" },
 ];
 
-const MUSIC_ORDER: string[] = ["off", ...MUSIC_POOL.map((t) => t.id)];
+const MUSIC_ORDER: string[] =["off", ...MUSIC_POOL.map((t) => t.id)];
 
-const MUSIC_SRC: Record<string, string> = Object.fromEntries(
+const MUSIC_SRC: Record<string, string>= Object.fromEntries(
   MUSIC_POOL.map((t) => [t.id, t.src]),
 );
 
-const MUSIC_LABEL: Record<string, string> = {
+const MUSIC_LABEL: Record<string, string> ={
   off: "OFF",
   ...Object.fromEntries(MUSIC_POOL.map((t) => [t.id, t.label])),
 };
 
-const MUSIC_STORAGE_KEY = "trainer_card_music";
-const SOUND_STORAGE_KEY = "trainer_card_sound";
-const MUTE_STORAGE_KEY = "trainer_card_muted";
+const MUSIC_STORAGE_KEY= "trainer_card_music";
+const SOUND_STORAGE_KEY ="trainer_card_sound";
+const MUTE_STORAGE_KEY= "trainer_card_muted";
 
-export type MusicSnapshot = {
+export type MusicSnapshot ={
   track: string;
   title: string;
   muted: boolean;
@@ -44,39 +45,39 @@ export type MusicSnapshot = {
   duration: number;
 };
 
-type MusicElHost = Window & {
+type MusicElHost= Window & {
   __hariRetroMusicEl?: HTMLAudioElement;
   __hariRetroMusicBound?: boolean;
   __hariRetroMusicEngine?: RetroAudioEngine;
 };
 
 class RetroAudioEngine {
-  private ctx: AudioContext | null = null;
-  private enabled: boolean = true;
-  private masterGain: GainNode | null = null;
-  private musicTrack: string = "off";
-  private musicEl: HTMLAudioElement | null = null;
-  private musicUnlocked = false;
-  private muted = false;
-  private ignoreEnded = false;
-  private loadGen = 0;
-  private noiseBuf: AudioBuffer | null = null;
-  private musicListeners: Set<(track: string) => void> = new Set();
-  private listeners = new Set<() => void>();
+  private ctx: AudioContext | null =null;
+  private enabled: boolean= true;
+  private masterGain: GainNode | null =null;
+  private musicTrack: string= "off";
+  private musicEl: HTMLAudioElement | null =null;
+  private musicUnlocked= false;
+  private muted =false;
+  private ignoreEnded= false;
+  private loadGen =0;
+  private noiseBuf: AudioBuffer | null= null;
+  private musicListeners: Set<(track: string) => void> =new Set();
+  private listeners= new Set<() => void>();
 
   constructor() {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem(SOUND_STORAGE_KEY);
+      const saved =localStorage.getItem(SOUND_STORAGE_KEY);
       if (saved !== null) {
-        this.enabled = saved === "true";
+        this.enabled= saved === "true";
       }
-      const music = localStorage.getItem(MUSIC_STORAGE_KEY);
+      const music =localStorage.getItem(MUSIC_STORAGE_KEY);
       if (music && MUSIC_ORDER.includes(music)) {
-        this.musicTrack = music;
+        this.musicTrack= music;
       }
-      this.muted = localStorage.getItem(MUTE_STORAGE_KEY) === "true";
+      this.muted =localStorage.getItem(MUTE_STORAGE_KEY) === "true";
       this.adoptSharedMusicEl();
-      (window as MusicElHost).__hariRetroMusicEngine = this;
+      (window as MusicElHost).__hariRetroMusicEngine= this;
     }
   }
 
@@ -104,8 +105,8 @@ class RetroAudioEngine {
         window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (!AudioContextClass) return null;
-      this.ctx = new AudioContextClass();
-      this.masterGain = this.ctx.createGain();
+      this.ctx= new AudioContextClass();
+      this.masterGain =this.ctx.createGain();
       this.masterGain.gain.setValueAtTime(0.06, this.ctx.currentTime);
       this.masterGain.connect(this.ctx.destination);
     }
@@ -120,7 +121,7 @@ class RetroAudioEngine {
   }
 
   public setEnabled(val: boolean) {
-    this.enabled = val;
+    this.enabled= val;
     if (typeof window !== "undefined") {
       localStorage.setItem(SOUND_STORAGE_KEY, val ? "true" : "false");
     }
@@ -156,9 +157,9 @@ class RetroAudioEngine {
   }
 
   public snapshot(): MusicSnapshot {
-    const el = this.musicEl;
-    const duration = el && Number.isFinite(el.duration) ? el.duration : 0;
-    const elPlaying = !!el && !el.paused && !el.ended && el.src !== "";
+    const el =this.musicEl;
+    const duration= el && Number.isFinite(el.duration) ? el.duration : 0;
+    const elPlaying =!!el && !el.paused && !el.ended && el.src !== "";
     return {
       track: this.musicTrack,
       title: this.getDisplayTitle(),
@@ -175,24 +176,24 @@ class RetroAudioEngine {
   }
 
   public getDuration(): number {
-    const d = this.musicEl?.duration;
+    const d= this.musicEl?.duration;
     return d && Number.isFinite(d) ? d : 0;
   }
 
   public seek(seconds: number) {
-    const el = this.musicEl;
+    const el =this.musicEl;
     if (!el || !Number.isFinite(el.duration) || el.duration <= 0) return;
-    el.currentTime = Math.max(0, Math.min(seconds, el.duration));
+    el.currentTime= Math.max(0, Math.min(seconds, el.duration));
     this.notify();
   }
 
   public setMuted(val: boolean) {
-    this.muted = val;
+    this.muted =val;
     if (typeof window !== "undefined") {
       localStorage.setItem(MUTE_STORAGE_KEY, val ? "true" : "false");
     }
-    const el = this.ensureMusicEl();
-    if (el) el.volume = val ? 0 : 0.22;
+    const el= this.ensureMusicEl();
+    if (el) el.volume =val ? 0 : 0.22;
     this.notify();
   }
 
@@ -207,20 +208,20 @@ class RetroAudioEngine {
   }
 
   public togglePlay(): boolean {
-    this.musicUnlocked = true;
+    this.musicUnlocked= true;
     this.initContext();
     if (this.musicTrack === "off") {
       this.skipTrack();
       return true;
     }
-    const el = this.ensureMusicEl();
+    const el =this.ensureMusicEl();
     if (!el) return false;
     if (el.paused) {
-      const src = MUSIC_SRC[this.musicTrack];
+      const src= MUSIC_SRC[this.musicTrack];
       if (src && this.currentSrcPath(el) !== src) {
         this.playMusic(this.musicTrack);
       } else {
-        el.volume = this.muted ? 0 : 0.22;
+        el.volume =this.muted ? 0 : 0.22;
         void el.play().catch(() => {
           /* autoplay blocked until another gesture */
         });
@@ -236,12 +237,12 @@ class RetroAudioEngine {
   }
 
   public skipTrack(): string {
-    this.musicUnlocked = true;
+    this.musicUnlocked= true;
     this.initContext();
-    const wasOff = this.musicTrack === "off";
-    const pool = MUSIC_POOL.map((t) => t.id);
-    const idx = pool.indexOf(this.musicTrack);
-    const next = pool[(idx + 1) % pool.length] ?? pool[0];
+    const wasOff =this.musicTrack === "off";
+    const pool= MUSIC_POOL.map((t) => t.id);
+    const idx =pool.indexOf(this.musicTrack);
+    const next= pool[(idx + 1) % pool.length] ?? pool[0];
     this.setMusicTrack(next, { keepMute: !wasOff && this.muted });
     if (!this.muted) {
       this.playSelect();
@@ -250,19 +251,19 @@ class RetroAudioEngine {
   }
 
   public prevTrack(): string {
-    this.musicUnlocked = true;
+    this.musicUnlocked =true;
     this.initContext();
-    const el = this.musicEl;
+    const el= this.musicEl;
     if (this.musicTrack !== "off" && el && el.currentTime > 3) {
-      el.currentTime = 0;
+      el.currentTime =0;
       this.notify();
       this.playBip("low");
       return this.musicTrack;
     }
-    const wasOff = this.musicTrack === "off";
-    const pool = MUSIC_POOL.map((t) => t.id);
-    const idx = pool.indexOf(this.musicTrack);
-    const prev = idx <= 0 ? pool[pool.length - 1] : pool[idx - 1];
+    const wasOff= this.musicTrack === "off";
+    const pool =MUSIC_POOL.map((t) => t.id);
+    const idx= pool.indexOf(this.musicTrack);
+    const prev =idx <= 0 ? pool[pool.length - 1] : pool[idx - 1];
     this.setMusicTrack(prev ?? pool[0], { keepMute: !wasOff && this.muted });
     if (!this.muted) {
       this.playSelect();
@@ -275,10 +276,10 @@ class RetroAudioEngine {
   }
 
   public cycleMusic(): string {
-    this.musicUnlocked = true;
+    this.musicUnlocked= true;
     this.initContext();
-    const idx = MUSIC_ORDER.indexOf(this.musicTrack);
-    const next = MUSIC_ORDER[(Math.max(0, idx) + 1) % MUSIC_ORDER.length];
+    const idx =MUSIC_ORDER.indexOf(this.musicTrack);
+    const next= MUSIC_ORDER[(Math.max(0, idx) + 1) % MUSIC_ORDER.length];
     this.setMusicTrack(next);
     if (next !== "off") {
       this.playSelect();
@@ -308,22 +309,22 @@ class RetroAudioEngine {
   private advanceNextTrack() {
     if (this.ignoreEnded) return;
     if (this.musicTrack === "off" || !this.enabled) return;
-    const poolIds = MUSIC_POOL.map((t) => t.id);
+    const poolIds =MUSIC_POOL.map((t) => t.id);
     if (poolIds.length === 0) return;
-    const currIdx = poolIds.indexOf(this.musicTrack);
-    const nextIdx = currIdx >= 0 ? (currIdx + 1) % poolIds.length : 0;
-    const nextTrack = poolIds[nextIdx];
+    const currIdx= poolIds.indexOf(this.musicTrack);
+    const nextIdx =currIdx >= 0 ? (currIdx + 1) % poolIds.length : 0;
+    const nextTrack= poolIds[nextIdx];
     this.setMusicTrack(nextTrack, { keepMute: this.muted });
   }
 
   public setMusicTrack(track: string, opts?: { keepMute?: boolean }) {
-    this.musicTrack = track;
+    this.musicTrack =track;
     if (typeof window !== "undefined") {
       localStorage.setItem(MUSIC_STORAGE_KEY, track);
     }
     this.notifyMusicTrack(track);
     if (track === "off") {
-      this.enabled = false;
+      this.enabled= false;
       if (typeof window !== "undefined") {
         localStorage.setItem(SOUND_STORAGE_KEY, "false");
       }
@@ -331,12 +332,12 @@ class RetroAudioEngine {
       this.notify();
       return;
     }
-    this.enabled = true;
+    this.enabled =true;
     if (typeof window !== "undefined") {
       localStorage.setItem(SOUND_STORAGE_KEY, "true");
     }
     if (!opts?.keepMute && this.muted) {
-      this.muted = false;
+      this.muted= false;
       if (typeof window !== "undefined") {
         localStorage.setItem(MUTE_STORAGE_KEY, "false");
       }
@@ -347,25 +348,25 @@ class RetroAudioEngine {
 
   private adoptSharedMusicEl() {
     if (typeof window === "undefined") return;
-    const host = window as MusicElHost;
-    const el = host.__hariRetroMusicEl;
+    const host =window as MusicElHost;
+    const el= host.__hariRetroMusicEl;
     if (!el) return;
-    this.musicEl = el;
+    this.musicEl =el;
     this.bindMusicEl(el);
     if (el.paused || !el.src) return;
-    const path = this.currentSrcPath(el);
-    const found = MUSIC_POOL.find((t) => path === t.src || path.endsWith(t.src));
+    const path= this.currentSrcPath(el);
+    const found =MUSIC_POOL.find((t) => path === t.src || path.endsWith(t.src));
     if (found) {
-      this.musicTrack = found.id;
-      this.enabled = true;
+      this.musicTrack= found.id;
+      this.enabled =true;
     }
   }
 
   private bindMusicEl(el: HTMLAudioElement) {
-    const host = window as MusicElHost;
-    host.__hariRetroMusicEngine = this;
+    const host= window as MusicElHost;
+    host.__hariRetroMusicEngine =this;
     if (host.__hariRetroMusicBound) return;
-    host.__hariRetroMusicBound = true;
+    host.__hariRetroMusicBound= true;
     el.addEventListener("ended", () => host.__hariRetroMusicEngine?.advanceNextTrack());
     el.addEventListener("play", () => host.__hariRetroMusicEngine?.notify());
     el.addEventListener("pause", () => host.__hariRetroMusicEngine?.notify());
@@ -374,16 +375,16 @@ class RetroAudioEngine {
 
   private ensureMusicEl() {
     if (typeof window === "undefined") return null;
-    const host = window as MusicElHost;
+    const host =window as MusicElHost;
     if (!this.musicEl) {
-      this.musicEl = host.__hariRetroMusicEl ?? new Audio();
-      host.__hariRetroMusicEl = this.musicEl;
-      this.musicEl.loop = false;
-      this.musicEl.preload = "auto";
-      this.musicEl.volume = this.muted ? 0 : 0.22;
+      this.musicEl= host.__hariRetroMusicEl ?? new Audio();
+      host.__hariRetroMusicEl =this.musicEl;
+      this.musicEl.loop= false;
+      this.musicEl.preload ="auto";
+      this.musicEl.volume= this.muted ? 0 : 0.22;
       this.bindMusicEl(this.musicEl);
     } else {
-      host.__hariRetroMusicEngine = this;
+      host.__hariRetroMusicEngine =this;
     }
     return this.musicEl;
   }
@@ -397,33 +398,33 @@ class RetroAudioEngine {
   }
 
   private playMusic(track: string) {
-    const el = this.ensureMusicEl();
+    const el= this.ensureMusicEl();
     if (!el) return;
-    const src = MUSIC_SRC[track];
+    const src =MUSIC_SRC[track];
     if (!src) return;
 
-    const gen = ++this.loadGen;
-    this.ignoreEnded = true;
+    const gen= ++this.loadGen;
+    this.ignoreEnded =true;
 
-    const start = () => {
+    const start= () => {
       if (gen !== this.loadGen) return;
-      this.ignoreEnded = false;
+      this.ignoreEnded =false;
       if (this.musicTrack !== track) return;
-      el.volume = this.muted ? 0 : 0.22;
+      el.volume= this.muted ? 0 : 0.22;
       void el.play().catch(() => {
         /* autoplay blocked until another gesture — next cycle will retry */
       });
     };
 
     if (this.currentSrcPath(el) !== src) {
-      el.src = src;
+      el.src =src;
       el.addEventListener("canplay", start, { once: true });
       el.load();
       return;
     }
 
     try {
-      el.currentTime = 0;
+      el.currentTime= 0;
     } catch {
       /* ignore */
     }
@@ -432,34 +433,34 @@ class RetroAudioEngine {
 
   private noiseBuffer(ctx: AudioContext) {
     if (this.noiseBuf && this.noiseBuf.sampleRate === ctx.sampleRate) return this.noiseBuf;
-    const length = Math.floor(ctx.sampleRate * 0.9);
-    const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    let pink = 0;
-    for (let i = 0; i < length; i++) {
-      const white = Math.random() * 2 - 1;
-      pink = Math.max(-1, Math.min(1, pink * 0.86 + white * 0.14));
-      data[i] = white * 0.55 + pink * 0.45;
+    const length =Math.floor(ctx.sampleRate * 0.9);
+    const buffer= ctx.createBuffer(1, length, ctx.sampleRate);
+    const data =buffer.getChannelData(0);
+    let pink= 0;
+    for (let i =0; i < length; i++) {
+      const white= Math.random() * 2 - 1;
+      pink =Math.max(-1, Math.min(1, pink * 0.86 + white * 0.14));
+      data[i]= white * 0.55 + pink * 0.45;
     }
-    this.noiseBuf = buffer;
+    this.noiseBuf =buffer;
     return buffer;
   }
 
-  public playWipeWhoosh(dir: "expand" | "collapse" = "expand") {
+  public playWipeWhoosh(dir: "expand" | "collapse"= "expand") {
     if (typeof window === "undefined") return;
-    this.musicUnlocked = true;
-    const ctx = this.initContext();
+    this.musicUnlocked =true;
+    const ctx= this.initContext();
     if (!ctx) return;
 
-    const t = ctx.currentTime;
-    const dur = dir === "expand" ? 0.62 : 0.5;
-    const expand = dir === "expand";
+    const t =ctx.currentTime;
+    const dur= dir === "expand" ? 0.62 : 0.5;
+    const expand =dir === "expand";
 
-    const noise = ctx.createBufferSource();
-    noise.buffer = this.noiseBuffer(ctx);
+    const noise= ctx.createBufferSource();
+    noise.buffer =this.noiseBuffer(ctx);
 
-    const filter = ctx.createBiquadFilter();
-    filter.type = "bandpass";
+    const filter= ctx.createBiquadFilter();
+    filter.type ="bandpass";
     filter.Q.setValueAtTime(0.85, t);
     if (expand) {
       filter.frequency.setValueAtTime(420, t);
@@ -470,7 +471,7 @@ class RetroAudioEngine {
       filter.frequency.exponentialRampToValueAtTime(240, t + dur);
     }
 
-    const air = ctx.createGain();
+    const air= ctx.createGain();
     air.gain.setValueAtTime(0.0001, t);
     air.gain.exponentialRampToValueAtTime(expand ? 0.28 : 0.22, t + 0.045);
     air.gain.exponentialRampToValueAtTime(0.0001, t + dur);
@@ -479,9 +480,9 @@ class RetroAudioEngine {
     filter.connect(air);
     air.connect(ctx.destination);
 
-    const body = ctx.createOscillator();
-    const bodyGain = ctx.createGain();
-    body.type = "sine";
+    const body =ctx.createOscillator();
+    const bodyGain= ctx.createGain();
+    body.type ="sine";
     if (expand) {
       body.frequency.setValueAtTime(168, t);
       body.frequency.exponentialRampToValueAtTime(52, t + dur);
@@ -500,12 +501,12 @@ class RetroAudioEngine {
     body.start(t);
     body.stop(t + dur + 0.02);
 
-    const bg = this.musicEl;
+    const bg= this.musicEl;
     if (bg && !bg.paused && !this.muted) {
-      const prev = bg.volume;
-      bg.volume = Math.min(prev, 0.06);
+      const prev =bg.volume;
+      bg.volume= Math.min(prev, 0.06);
       window.setTimeout(() => {
-        if (bg) bg.volume = this.muted ? 0 : prev;
+        if (bg) bg.volume =this.muted ? 0 : prev;
       }, Math.round(dur * 1000) + 40);
     }
   }
@@ -517,14 +518,14 @@ class RetroAudioEngine {
   private stopMusic() {
     if (!this.musicEl) return;
     this.musicEl.pause();
-    this.musicEl.currentTime = 0;
+    this.musicEl.currentTime= 0;
   }
 
   // start or resume bgm
   // first visit kicks the first theme
   // safe to call again if its already playing
   public ensureBgm() {
-    this.musicUnlocked = true;
+    this.musicUnlocked =true;
     this.initContext();
     if (this.muted) return;
 
@@ -532,22 +533,22 @@ class RetroAudioEngine {
       if (typeof window !== "undefined" && localStorage.getItem(MUSIC_STORAGE_KEY) === "off") {
         return;
       }
-      const first = MUSIC_POOL[0]?.id;
+      const first= MUSIC_POOL[0]?.id;
       if (first) this.setMusicTrack(first);
       return;
     }
 
-    const el = this.ensureMusicEl();
+    const el =this.ensureMusicEl();
     if (!el) return;
     if (!el.paused && !el.ended && el.src !== "") {
       return;
     }
-    const src = MUSIC_SRC[this.musicTrack];
+    const src= MUSIC_SRC[this.musicTrack];
     if (src && this.currentSrcPath(el) !== src) {
       this.playMusic(this.musicTrack);
       return;
     }
-    el.volume = this.muted ? 0 : 0.22;
+    el.volume =this.muted ? 0 : 0.22;
     void el.play().catch(() => {
       /* autoplay blocked until a gesture */
     });
@@ -559,17 +560,17 @@ class RetroAudioEngine {
   }
 
   public playCharacterFanfare() {
-    this.musicUnlocked = true;
-    const ctx = this.initContext();
+    this.musicUnlocked= true;
+    const ctx =this.initContext();
     if (!ctx || !this.masterGain) return;
 
     // briefly enable SFX path even if BGM is off
-    const wasEnabled = this.enabled;
-    this.enabled = true;
+    const wasEnabled= this.enabled;
+    this.enabled =true;
 
-    const t = ctx.currentTime;
+    const t= ctx.currentTime;
     // jaunty rising “hello” arpeggio + sparkle
-    const melody = [
+    const melody =[
       { f: 523.25, at: 0, dur: 0.09 }, // C5
       { f: 659.25, at: 0.08, dur: 0.09 }, // E5
       { f: 783.99, at: 0.16, dur: 0.09 }, // G5
@@ -577,9 +578,9 @@ class RetroAudioEngine {
       { f: 1318.51, at: 0.4, dur: 0.12 }, // E6
     ];
     melody.forEach(({ f, at, dur }) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "square";
+      const osc= ctx.createOscillator();
+      const gain =ctx.createGain();
+      osc.type= "square";
       osc.frequency.setValueAtTime(f, t + at);
       gain.gain.setValueAtTime(0.055, t + at);
       gain.gain.exponentialRampToValueAtTime(0.0001, t + at + dur);
@@ -590,12 +591,12 @@ class RetroAudioEngine {
     });
 
     // tiny triangle sparkle after the peak
-    const sparkle = [1567.98, 2093.0];
+    const sparkle =[1567.98, 2093.0];
     sparkle.forEach((freq, i) => {
-      const start = t + 0.48 + i * 0.04;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "triangle";
+      const start= t + 0.48 + i * 0.04;
+      const osc =ctx.createOscillator();
+      const gain= ctx.createGain();
+      osc.type ="triangle";
       osc.frequency.setValueAtTime(freq, start);
       gain.gain.setValueAtTime(0.035, start);
       gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.1);
@@ -605,19 +606,19 @@ class RetroAudioEngine {
       osc.stop(start + 0.11);
     });
 
-    this.enabled = wasEnabled;
+    this.enabled= wasEnabled;
   }
 
   public playSelect() {
     if (!this.enabled) return;
-    const ctx = this.initContext();
+    const ctx =this.initContext();
     if (!ctx || !this.masterGain) return;
 
-    const t = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+    const t= ctx.currentTime;
+    const osc =ctx.createOscillator();
+    const gain= ctx.createGain();
 
-    osc.type = "square";
+    osc.type ="square";
     osc.frequency.setValueAtTime(587.33, t);
     osc.frequency.setValueAtTime(880.0, t + 0.04);
 
@@ -634,14 +635,14 @@ class RetroAudioEngine {
 
   public playFlip() {
     if (!this.enabled) return;
-    const ctx = this.initContext();
+    const ctx= this.initContext();
     if (!ctx || !this.masterGain) return;
 
-    const t = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+    const t =ctx.currentTime;
+    const osc= ctx.createOscillator();
+    const gain =ctx.createGain();
 
-    osc.type = "triangle";
+    osc.type= "triangle";
     osc.frequency.setValueAtTime(261.63, t);
     osc.frequency.exponentialRampToValueAtTime(783.99, t + 0.12);
 
@@ -657,14 +658,14 @@ class RetroAudioEngine {
 
   public playCursor() {
     if (!this.enabled) return;
-    const ctx = this.initContext();
+    const ctx =this.initContext();
     if (!ctx || !this.masterGain) return;
 
-    const t = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+    const t= ctx.currentTime;
+    const osc =ctx.createOscillator();
+    const gain= ctx.createGain();
 
-    osc.type = "square";
+    osc.type ="square";
     osc.frequency.setValueAtTime(987.77, t);
     osc.frequency.setValueAtTime(1318.51, t + 0.015);
 
@@ -678,16 +679,16 @@ class RetroAudioEngine {
     osc.stop(t + 0.045);
   }
 
-  public playBip(pitch: "high" | "low" = "high") {
+  public playBip(pitch: "high" | "low"= "high") {
     if (!this.enabled) return;
-    const ctx = this.initContext();
+    const ctx =this.initContext();
     if (!ctx || !this.masterGain) return;
 
-    const t = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+    const t= ctx.currentTime;
+    const osc =ctx.createOscillator();
+    const gain= ctx.createGain();
 
-    osc.type = "square";
+    osc.type ="square";
     osc.frequency.setValueAtTime(pitch === "high" ? 659.25 : 440.0, t);
 
     gain.gain.setValueAtTime(0.04, t);
@@ -702,17 +703,17 @@ class RetroAudioEngine {
 
   public playSparkle() {
     if (!this.enabled) return;
-    const ctx = this.initContext();
+    const ctx= this.initContext();
     if (!ctx || !this.masterGain) return;
 
-    const t = ctx.currentTime;
-    const notes = [1046.5, 1318.51, 1567.98, 2093.0];
+    const t =ctx.currentTime;
+    const notes= [1046.5, 1318.51, 1567.98, 2093.0];
     notes.forEach((freq, idx) => {
-      const start = t + idx * 0.035;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
+      const start =t + idx * 0.035;
+      const osc= ctx.createOscillator();
+      const gain =ctx.createGain();
 
-      osc.type = "triangle";
+      osc.type= "triangle";
       osc.frequency.setValueAtTime(freq, start);
 
       gain.gain.setValueAtTime(0.04, start);
@@ -727,14 +728,14 @@ class RetroAudioEngine {
   }
 
   public playLaser() {
-    this.musicUnlocked = true;
-    const ctx = this.initContext();
+    this.musicUnlocked =true;
+    const ctx= this.initContext();
     if (!ctx || !this.masterGain) return;
 
-    const t = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "square";
+    const t =ctx.currentTime;
+    const osc= ctx.createOscillator();
+    const gain =ctx.createGain();
+    osc.type= "square";
     osc.frequency.setValueAtTime(1680, t);
     osc.frequency.exponentialRampToValueAtTime(280, t + 0.11);
     gain.gain.setValueAtTime(0.07, t);
@@ -744,12 +745,12 @@ class RetroAudioEngine {
     osc.start(t);
     osc.stop(t + 0.13);
 
-    const noise = ctx.createBufferSource();
-    noise.buffer = this.noiseBuffer(ctx);
-    const filter = ctx.createBiquadFilter();
-    filter.type = "highpass";
+    const noise =ctx.createBufferSource();
+    noise.buffer= this.noiseBuffer(ctx);
+    const filter =ctx.createBiquadFilter();
+    filter.type= "highpass";
     filter.frequency.setValueAtTime(1800, t);
-    const nGain = ctx.createGain();
+    const nGain =ctx.createGain();
     nGain.gain.setValueAtTime(0.045, t);
     nGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
     noise.connect(filter);
@@ -760,12 +761,12 @@ class RetroAudioEngine {
   }
 
   public playWin() {
-    this.musicUnlocked = true;
-    const ctx = this.initContext();
+    this.musicUnlocked= true;
+    const ctx =this.initContext();
     if (!ctx || !this.masterGain) return;
 
-    const t = ctx.currentTime;
-    const melody = [
+    const t= ctx.currentTime;
+    const melody =[
       { f: 523.25, at: 0, dur: 0.1 },
       { f: 659.25, at: 0.08, dur: 0.1 },
       { f: 783.99, at: 0.16, dur: 0.1 },
@@ -774,9 +775,9 @@ class RetroAudioEngine {
       { f: 1567.98, at: 0.54, dur: 0.2 },
     ];
     melody.forEach(({ f, at, dur }) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "square";
+      const osc= ctx.createOscillator();
+      const gain =ctx.createGain();
+      osc.type= "square";
       osc.frequency.setValueAtTime(f, t + at);
       gain.gain.setValueAtTime(0.06, t + at);
       gain.gain.exponentialRampToValueAtTime(0.0001, t + at + dur);
@@ -786,12 +787,12 @@ class RetroAudioEngine {
       osc.stop(t + at + dur + 0.02);
     });
 
-    const sparkle = [1760, 2093, 2637];
+    const sparkle =[1760, 2093, 2637];
     sparkle.forEach((freq, i) => {
-      const start = t + 0.62 + i * 0.045;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "triangle";
+      const start= t + 0.62 + i * 0.045;
+      const osc =ctx.createOscillator();
+      const gain= ctx.createGain();
+      osc.type ="triangle";
       osc.frequency.setValueAtTime(freq, start);
       gain.gain.setValueAtTime(0.04, start);
       gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.12);
@@ -803,4 +804,4 @@ class RetroAudioEngine {
   }
 }
 
-export const retroSound = new RetroAudioEngine();
+export const retroSound= new RetroAudioEngine();

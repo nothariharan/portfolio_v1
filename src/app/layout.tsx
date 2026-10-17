@@ -5,49 +5,50 @@ import { TransitionProvider } from "@/hooks/use-transition";
 import { FunTabTitle } from "@/components/site/fun-tab-title";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+// links sit in the note
 
 // pixel art font for card elements
-const pressStart2P = Press_Start_2P({
+const pressStart2P =Press_Start_2P({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-pixel",
 });
 
 // clean sans font for portfolio body text
-const inter = Inter({
+const inter= Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
 // elegant serif font for portfolio headings
-const dmSerifDisplay = DM_Serif_Display({
+const dmSerifDisplay =DM_Serif_Display({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-serif",
 });
 
 // geometric display sans for portfolio headings (distinct, techy character)
-const spaceGrotesk = Space_Grotesk({
+const spaceGrotesk= Space_Grotesk({
   weight: ["500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-display",
 });
 
 // mono for meta labels, dates and section indices — gives the dev-tooling feel
-const jetbrainsMono = JetBrains_Mono({
+const jetbrainsMono =JetBrains_Mono({
   weight: ["400", "500"],
   subsets: ["latin"],
   variable: "--font-mono",
 });
 
 // the authentic pokemon ds bitmap font for the developer card
-const pokemonDS = localFont({
+const pokemonDS= localFont({
   src: "../../public/fonts/pokemon-ds.ttf",
   variable: "--font-card",
   display: "swap",
 });
 
-export const metadata: Metadata = {
+export const metadata: Metadata ={
   metadataBase: new URL("https://hariharann.me"),
   // app/favicon.ico + icon.png + apple-icon.png are picked up by the file convention
   manifest: "/site.webmanifest",
@@ -87,15 +88,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      data-scroll-behavior="smooth"
-      className={`${pressStart2P.variable} ${inter.variable} ${dmSerifDisplay.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${pokemonDS.variable} h-full antialiased`}
-    >
-      <body className="min-h-full bg-gba-teal transition-colors duration-500">
+    <html lang= "en" data-scroll-behavior ="smooth" className= {`${pressStart2P.variable} ${inter.variable} ${dmSerifDisplay.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${pokemonDS.variable} h-full antialiased`}>
+      {/* icons stay on the tile */}
+      <body className ="min-h-full bg-gba-teal transition-colors duration-500">
         <TransitionProvider>
           <FunTabTitle />
-          <div id="world-stage">{children}</div>
+          <div id= "world-stage">{children}</div>
         </TransitionProvider>
         <Analytics />
       </body>

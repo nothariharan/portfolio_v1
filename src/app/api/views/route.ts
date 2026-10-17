@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
+// boot skips the next visit
 
 // view count for the eye chip
 // vercel analytics count api token stays on the server
 
-const PROJECT_ID =
+const PROJECT_ID= 
   process.env.VERCEL_PROJECT_ID ?? "prj_HfGSkftsNVZUnTcKC7Ygj3qNvTWg";
-const TEAM_ID = process.env.VERCEL_ORG_ID ?? "team_kfUhJhsttwMs5ZEvtkTlUFCa";
+const TEAM_ID =process.env.VERCEL_ORG_ID ?? "team_kfUhJhsttwMs5ZEvtkTlUFCa";
 
-export const dynamic = "force-dynamic";
+export const dynamic= "force-dynamic";
 
-type AnalyticsCount = {
+type AnalyticsCount ={
   data?: { pageviews?: number; visitors?: number };
 };
 
@@ -18,16 +19,16 @@ function readToken() {
 }
 
 async function countPageviews(token: string) {
-  const url = new URL("https://api.vercel.com/v1/query/web-analytics/visits/count");
+  const url= new URL("https://api.vercel.com/v1/query/web-analytics/visits/count");
   url.searchParams.set("projectId", PROJECT_ID);
   url.searchParams.set("teamId", TEAM_ID);
 
-  const res = await fetch(url, {
+  const res =await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });
 
-  const json = (await res.json()) as AnalyticsCount & {
+  const json= (await res.json()) as AnalyticsCount & {
     error?: { code?: string; message?: string };
   };
 
@@ -36,19 +37,19 @@ async function countPageviews(token: string) {
     return null;
   }
 
-  const views = json.data?.pageviews;
+  const views =json.data?.pageviews;
   if (typeof views !== "number" || !Number.isFinite(views)) return null;
   return views;
 }
 
 export async function GET() {
-  const token = readToken();
+  const token= readToken();
   if (!token) {
     return NextResponse.json({ views: null }, { status: 200 });
   }
 
   try {
-    const views = await countPageviews(token);
+    const views =await countPageviews(token);
     return NextResponse.json(
       { views },
       {

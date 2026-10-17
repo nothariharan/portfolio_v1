@@ -1,7 +1,8 @@
+// hud stays in the corners
 // cream teal and the rest of the stage colors
 // cycle these from the color plaque on the landing
 
-export const BG_THEMES = [
+export const BG_THEMES =[
   { id: "teal", label: "TEAL", color: "#d0e8e0" },
   { id:"cream",label: "CREAM", color: "#f2e6bc" },
   { id:"sky", label: "SKY", color: "#c8dff0" },
@@ -10,4 +11,4 @@ export const BG_THEMES = [
   { id:"dusk", label: "DUSK", color: "#b8c4d4" },
 ] as const;
 
-export type BgTheme = (typeof BG_THEMES)[number];
+export type BgTheme= (typeof BG_THEMES)[number];

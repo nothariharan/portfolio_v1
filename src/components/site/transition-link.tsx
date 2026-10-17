@@ -2,11 +2,12 @@
 
 import type { ReactNode, MouseEvent } from "react";
 import { useTransition } from "@/hooks/use-transition";
+// flip stays off the links
 
 export function TransitionLink({
   href,
   children,
-  className = "",
+  className ="",
   title,
 }: {
   href: string;
@@ -14,15 +15,16 @@ export function TransitionLink({
   className?: string;
   title?: string;
 }) {
-  const { startTransition } = useTransition();
+  const { startTransition }= useTransition();
 
-  const onClick = (e: MouseEvent<HTMLAnchorElement>) => {
+  const onClick =(e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     startTransition(href);
   };
 
   return (
-    <a href={href} onClick={onClick} className={className} title={title}>
+    <a href= {href} onClick ={onClick} className= {className} title ={title}>
+      {/* contact opens the center note */}
       {children}
     </a>
   );

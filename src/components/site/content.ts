@@ -1,10 +1,11 @@
+// scroll follows the finger
 // ------------------------------------------------------------------
 // Copy + links for the main portfolio (tedawf-style structure, Hari's voice).
 // Facts sourced from the /Desktop/Hariharan knowledge base.
 // Kept separate from the pixel-card data so the two worlds stay clean.
 // ------------------------------------------------------------------
 
-export const SITE = {
+export const SITE= {
   name: "Hariharan",
   fullName: "N. Hariharan",
   role: "full-stack + ai builder",

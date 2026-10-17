@@ -6,8 +6,9 @@
 import { useEffect, useState } from "react";
 import { useContactCard } from "./contact-card";
 import { useTransition } from "@/hooks/use-transition";
+// phone gets the short shell
 
-const LINKS = [
+const LINKS= [
   { id: "home", label: "home", href: "/portfolio" },
   { id: "experience", label: "experience", href: "/portfolio/experience" },
   { id: "projects", label: "projects", href: "/portfolio/projects" },
@@ -16,12 +17,12 @@ const LINKS = [
   { id: "blog", label: "blog", href: "/portfolio/blog" },
 ];
 
-export function SiteNav({ onBack, active = "home" }: { onBack: () => void; active?: string }) {
-  const { startTransition } = useTransition();
-  const contact = useContactCard();
-  const [open, setOpen] = useState(false);
+export function SiteNav({ onBack, active ="home" }: { onBack: () => void; active?: string }) {
+  const { startTransition }= useTransition();
+  const contact =useContactCard();
+  const [open, setOpen]= useState(false);
 
-  const go = (id: string, href: string) => {
+  const go =(id: string, href: string) => {
     setOpen(false);
     if (id === "home" && active === "home") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -32,7 +33,7 @@ export function SiteNav({ onBack, active = "home" }: { onBack: () => void; activ
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
+    const onKey= (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
     window.addEventListener("keydown", onKey);
@@ -40,85 +41,52 @@ export function SiteNav({ onBack, active = "home" }: { onBack: () => void; activ
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 bg-portfolio-bg/70 backdrop-blur-md">
-      <nav className="mx-auto flex h-16 w-full max-w-3xl items-center justify-between px-6 sm:px-8">
-        <button
-          onClick={onBack}
-          className="group flex items-center gap-1.5 text-sm text-portfolio-muted transition-colors hover:text-portfolio-text cursor-pointer"
-          title="Back to the trainer card"
-        >
-          <span className="transition-transform group-hover:-translate-x-0.5">◂</span>
+    <header className ="sticky top-0 z-40 bg-portfolio-bg/70 backdrop-blur-md">
+      {/* drawer closes on the way */}
+      <nav className= "mx-auto flex h-16 w-full max-w-3xl items-center justify-between px-6 sm:px-8">
+        <button onClick ={onBack} className= "group flex items-center gap-1.5 text-sm text-portfolio-muted transition-colors hover:text-portfolio-text cursor-pointer" title ="Back to the trainer card">
+          <span className= "transition-transform group-hover:-translate-x-0.5">◂</span>
           card
         </button>
 
-        <div className="hidden items-center gap-6 sm:flex">
+        <div className ="hidden items-center gap-6 sm:flex">
           {LINKS.map((l) => (
-            <button
-              key={l.id}
-              onClick={() => go(l.id, l.href)}
-              className={`relative text-sm transition-colors cursor-pointer ${
+            <button key= {l.id} onClick ={() => go(l.id, l.href)} className= {`relative text-sm transition-colors cursor-pointer ${
                 active === l.id ? "text-portfolio-text" : "text-portfolio-muted hover:text-portfolio-text"
-              }`}
-            >
+              }`}>
               {l.label}
               {active === l.id && (
-                <span className="absolute -bottom-1.5 left-0 right-0 mx-auto h-1 w-1 rounded-full bg-portfolio-text" />
+                <span className ="absolute -bottom-1.5 left-0 right-0 mx-auto h-1 w-1 rounded-full bg-portfolio-text" />
               )}
             </button>
           ))}
         </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-portfolio-border text-portfolio-muted transition-colors hover:border-white/25 hover:text-portfolio-text sm:hidden"
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            aria-label={open ? "Close menu" : "Open menu"}
-            onClick={() => setOpen((v) => !v)}
-          >
-            <span className="relative block h-3.5 w-4" aria-hidden>
-              <span
-                className={`absolute left-0 top-0 h-[1.5px] w-full bg-current transition-transform ${open ? "translate-y-[5.5px] rotate-45" : ""}`}
-              />
-              <span
-                className={`absolute left-0 top-[5.5px] h-[1.5px] w-full bg-current transition-opacity ${open ? "opacity-0" : ""}`}
-              />
-              <span
-                className={`absolute left-0 top-[11px] h-[1.5px] w-full bg-current transition-transform ${open ? "-translate-y-[5.5px] -rotate-45" : ""}`}
-              />
+        <div className= "flex items-center gap-2">
+          <button type ="button" className= "inline-flex h-9 w-9 items-center justify-center rounded-md border border-portfolio-border text-portfolio-muted transition-colors hover:border-white/25 hover:text-portfolio-text sm:hidden" aria-expanded ={open} aria-controls= "mobile-nav" aria-label ={open ? "Close menu" : "Open menu"} onClick= {() => setOpen((v) => !v)}>
+            <span className ="relative block h-3.5 w-4" aria-hidden>
+              <span className= {`absolute left-0 top-0 h-[1.5px] w-full bg-current transition-transform ${open ? "translate-y-[5.5px] rotate-45" : ""}`} />
+              <span className ={`absolute left-0 top-[5.5px] h-[1.5px] w-full bg-current transition-opacity ${open ? "opacity-0" : ""}`} />
+              <span className= {`absolute left-0 top-[11px] h-[1.5px] w-full bg-current transition-transform ${open ? "-translate-y-[5.5px] -rotate-45" : ""}`} />
             </span>
           </button>
 
           {/* opens the envelope from the side instead of jumping straight into mail */}
-          <button
-            type="button"
-            data-contact-trigger
-            aria-expanded={contact.open}
-            onClick={() => contact.toggle()}
-            className="rounded-md border border-portfolio-border px-3 py-1.5 text-sm text-portfolio-text/80 transition-colors hover:border-white/25 hover:text-portfolio-text cursor-pointer"
-          >
+          <button type ="button" data-contact-trigger aria-expanded= {contact.open} onClick ={() => contact.toggle()} className= "rounded-md border border-portfolio-border px-3 py-1.5 text-sm text-portfolio-text/80 transition-colors hover:border-white/25 hover:text-portfolio-text cursor-pointer">
             contact
           </button>
         </div>
       </nav>
 
       {open && (
-        <div
-          id="mobile-nav"
-          className="border-t border-portfolio-border/70 bg-portfolio-bg/95 px-6 py-3 sm:hidden"
-        >
-          <div className="mx-auto flex max-w-3xl flex-col gap-1">
+        <div id ="mobile-nav" className= "border-t border-portfolio-border/70 bg-portfolio-bg/95 px-6 py-3 sm:hidden">
+          <div className ="mx-auto flex max-w-3xl flex-col gap-1">
             {LINKS.map((l) => (
-              <button
-                key={l.id}
-                onClick={() => go(l.id, l.href)}
-                className={`rounded-md px-3 py-2.5 text-left text-sm transition-colors cursor-pointer ${
+              <button key= {l.id} onClick ={() => go(l.id, l.href)} className= {`rounded-md px-3 py-2.5 text-left text-sm transition-colors cursor-pointer ${
                   active === l.id
                     ? "bg-portfolio-border/40 text-portfolio-text"
                     : "text-portfolio-muted hover:bg-portfolio-border/25 hover:text-portfolio-text"
-                }`}
-              >
+                }`}>
                 {l.label}
               </button>
             ))}

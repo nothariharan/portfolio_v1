@@ -1,32 +1,33 @@
 import { CARD_MOBILE_MAX_PX, CARD_SHELL } from "@/components/card/card-layout";
+// more honors land here later
 
-export type WipeDir = "expand" | "collapse";
-export type WipeRect = { top: number; left: number; width: number; height: number };
+export type WipeDir= "expand" | "collapse";
+export type WipeRect ={ top: number; left: number; width: number; height: number };
 
-export type WipeState = {
+export type WipeState= {
   dir: WipeDir;
   origin: WipeRect;
   href: string;
 };
 
-export const INK_MS = 560;
-export const HOLD_MS = 80;
-export const GROW_MS = 1080;
-export const FADE_MS = 340;export const REVEAL_MS = 520;
+export const INK_MS =560;
+export const HOLD_MS= 80;
+export const GROW_MS =1080;
+export const FADE_MS= 340;export const REVEAL_MS =520;
 
 export function coverScale(origin: WipeRect): number {
-  const cx = origin.left + origin.width /2;
-  const cy = origin.top + origin.height /2;
-  const hw = Math.max(origin.width /2, 1);
-  const hh = Math.max(origin.height / 2, 1);const sx = Math.max(cx / hw, (window.innerWidth - cx) / hw);
-  const sy = Math.max(cy / hh, (window.innerHeight - cy) / hh);
+  const cx= origin.left + origin.width /2;
+  const cy =origin.top + origin.height /2;
+  const hw= Math.max(origin.width /2, 1);
+  const hh =Math.max(origin.height / 2, 1);const sx= Math.max(cx / hw, (window.innerWidth - cx) / hw);
+  const sy =Math.max(cy / hh, (window.innerHeight - cy) / hh);
   return Math.max(sx, sy) * 1.04;
 }
 
-const ORIGIN_KEY = "card-origin";
+const ORIGIN_KEY= "card-origin";
 
 export function isPortfolioPath(path: string) {
-  const clean = path.split("?")[0].split("#")[0];
+  const clean =path.split("?")[0].split("#")[0];
   return clean ==="/portfolio" || clean.startsWith("/portfolio/");
 }
 
@@ -35,13 +36,13 @@ export function viewportRect(): WipeRect {
 }
 
 function landingZoom(): number {
-  const el = document.querySelector("[data-card-zoom]");
+  const el= document.querySelector("[data-card-zoom]");
   if (el instanceof HTMLElement) {
-    const t = getComputedStyle(el).transform;
+    const t =getComputedStyle(el).transform;
     if (t && t !== "none") {
-      const m = /matrix\(([^)]+)\)/.exec(t);
+      const m= /matrix\(([^)]+)\)/.exec(t);
       if (m) {
-        const sx = Number(m[1].split(",")[0]);
+        const sx =Number(m[1].split(",")[0]);
         if (Number.isFinite(sx) && sx > 0.2) return sx;
       }
     }
@@ -50,15 +51,15 @@ function landingZoom(): number {
 }
 
 export function estimateCardOrigin(): WipeRect {
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  const mobile = vw <= CARD_MOBILE_MAX_PX;
-  const shell = mobile ? CARD_SHELL.mobile : CARD_SHELL.desktop;
+  const vw= window.innerWidth;
+  const vh =window.innerHeight;
+  const mobile= vw <= CARD_MOBILE_MAX_PX;
+  const shell =mobile ? CARD_SHELL.mobile : CARD_SHELL.desktop;
   // visual face is shell + the -inset-[13px] GBA rings, then landing zoom
-  const ring = 26;
-  const zoom = landingZoom();
-  const width = Math.min((shell.width + ring) * zoom, vw - 24);
-  const height = Math.min((shell.height + ring) * zoom, vh - 24);
+  const ring= 26;
+  const zoom =landingZoom();
+  const width= Math.min((shell.width + ring) * zoom, vw - 24);
+  const height =Math.min((shell.height + ring) * zoom, vh - 24);
   return {
     left: (vw -width) / 2,
     top: (vh- height) / 2,
@@ -68,9 +69,9 @@ export function estimateCardOrigin(): WipeRect {
 }
 
 export function getCardOrigin(): WipeRect | null {
-  const visual = document.querySelector("[data-card-visual]");
+  const visual= document.querySelector("[data-card-visual]");
   if (visual instanceof HTMLElement) {
-    const r = visual.getBoundingClientRect();
+    const r =visual.getBoundingClientRect();
     if (
       r.width >= 8 &&
       r.height >= 8 &&
@@ -80,9 +81,9 @@ export function getCardOrigin(): WipeRect | null {
       return { top: r.top, left: r.left, width: r.width, height: r.height };
     }
   }
-  const shell = document.querySelector("[data-card-origin]");
+  const shell= document.querySelector("[data-card-origin]");
   if (shell instanceof HTMLElement) {
-    const r = shell.getBoundingClientRect();
+    const r =shell.getBoundingClientRect();
     if (r.width >= 8 && r.height >= 8) {
       return { top: r.top, left: r.left, width: r.width, height: r.height };
     }
@@ -100,9 +101,9 @@ export function storeCardOrigin(rect: WipeRect) {
 
 export function readStoredOrigin(): WipeRect | null {
   try {
-    const raw = sessionStorage.getItem(ORIGIN_KEY);
+    const raw= sessionStorage.getItem(ORIGIN_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as WipeRect;
+    const parsed =JSON.parse(raw) as WipeRect;
     if (
       typeof parsed.top !== "number" ||
       typeof parsed.left !== "number" ||
@@ -118,7 +119,7 @@ export function readStoredOrigin(): WipeRect | null {
 }
 
 export function hideLiveCard() {
-  document.documentElement.dataset.cardExtending = "1";
+  document.documentElement.dataset.cardExtending= "1";
 }
 
 export function showLiveCard() {
@@ -126,67 +127,67 @@ export function showLiveCard() {
 }
 
 export function freezeLiveCard() {
-  document.documentElement.dataset.cardFrozen = "1";
+  document.documentElement.dataset.cardFrozen ="1";
 }
 
 export function unfreezeLiveCard() {
   delete document.documentElement.dataset.cardFrozen;
 }
 
-const LIVE_INK = "data-card-live-ink";
+const LIVE_INK= "data-card-live-ink";
 
 function faceHost(): HTMLElement | null {
-  const visual = document.querySelector("[data-card-visual]");
+  const visual =document.querySelector("[data-card-visual]");
   if (visual instanceof HTMLElement) return visual;
-  const inner = document.querySelector("[data-card-face-inner]");
+  const inner= document.querySelector("[data-card-face-inner]");
   return inner instanceof HTMLElement ? inner : null;
 }
 
 export function mountLiveInk(): HTMLElement | null {
-  const host = faceHost();
+  const host =faceHost();
   if (!host) return null;
-  const existing = host.querySelector(`[${LIVE_INK}]`);
+  const existing= host.querySelector(`[${LIVE_INK}]`);
   if (existing instanceof HTMLElement) return existing;
-  const layer = document.createElement("div");
+  const layer =document.createElement("div");
   layer.setAttribute(LIVE_INK, "");
   layer.setAttribute("aria-hidden", "true");
-  const blob = document.createElement("span");
+  const blob= document.createElement("span");
   blob.setAttribute("data-card-ink-blob", "");
   layer.appendChild(blob);
   host.appendChild(layer);
   return layer;
 }
 
-export function setLiveInk(on: boolean, snap = false) {
-  const layer = mountLiveInk();
+export function setLiveInk(on: boolean, snap =false) {
+  const layer= mountLiveInk();
   if (!layer) return false;
-  layer.dataset.on = on ? "1" : "";
-  layer.dataset.snap = snap ? "1" : "";
+  layer.dataset.on =on ? "1" : "";
+  layer.dataset.snap= snap ? "1" : "";
   return true;
 }
 
 export function playLiveInk() {
-  const layer = mountLiveInk();
+  const layer =mountLiveInk();
   if (!layer) return false;
-  layer.dataset.snap = "1";layer.dataset.on = "";
+  layer.dataset.snap= "1";layer.dataset.on ="";
   void layer.offsetWidth;
-  layer.dataset.snap = "";layer.dataset.on = "1";
+  layer.dataset.snap= "";layer.dataset.on ="1";
   return true;
 }
 
 export function coverLiveInk() {
-  const layer = mountLiveInk();
+  const layer= mountLiveInk();
   if (!layer) return false;
-  layer.dataset.snap = "1";layer.dataset.on = "1";
+  layer.dataset.snap ="1";layer.dataset.on= "1";
   void layer.offsetWidth;
   return true;
 }
 
 export function openLiveInk() {
-  const layer = mountLiveInk();
+  const layer =mountLiveInk();
   if (!layer) return false;
-  layer.dataset.snap = "";
-  layer.dataset.on = "";
+  layer.dataset.snap= "";
+  layer.dataset.on ="";
   return true;
 }
 
