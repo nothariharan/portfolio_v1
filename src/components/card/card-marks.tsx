@@ -32,8 +32,10 @@ export function HeaderEmblem({ size= 30 }: { size?: number }) {
 
 type Focus= {
   label: string;
-  fill: string;
+  edge: string;
   border: string;
+  lip: string;
+  fill: string;
   labelColor: string;
   img: string;
 };
@@ -41,40 +43,69 @@ type Focus= {
 const FOCUS: Focus[] =[
   {
     label: "AI / ML",
-    fill: "#c8a9ec",
+    edge: "#4a2a78",
     border: "#8a5bc4",
+    lip: "#f3e8ff",
+    fill: "#c8a9ec",
     labelColor: "#7d4fb3",
-    img: "/sprites/focus_ai.webp",
+    img: "/sprites/focus_ai.png",
   },
   {
     label: "WEB APP",
-    fill: "#a8d2f2",
+    edge: "#1e5a96",
     border: "#5a9bd6",
+    lip: "#eef7ff",
+    fill: "#a8d2f2",
     labelColor: "#2f78bf",
-    img: "/sprites/focus_web.webp",
+    img: "/sprites/focus_web.png",
   },
   {
     label: "DEVOPS",
-    fill: "#a9d99f",
+    edge: "#246b22",
     border: "#5aa84d",
+    lip: "#eefae8",
+    fill: "#a9d99f",
     labelColor: "#3f8f33",
-    img: "/sprites/focus_devops.webp",
+    img: "/sprites/focus_devops.png",
   },
   {
     label: "EXPLORING",
-    fill: "#e0e2e5",
+    edge: "#5e656c",
     border: "#9aa0a6",
+    lip: "#f7f8f9",
+    fill: "#e0e2e5",
     labelColor: "#6f757c",
-    img: "/sprites/focus_explore.webp",
+    img: "/sprites/focus_explore.png",
   },
 ];
 
-function pixelSquareBorder(border: string) {
-  return {
-    boxShadow: `inset 0 0 0 2px ${border}, inset 0 0 0 4px rgba(255,255,255,0.4), 0 0 0 2px #33406b, 0 2px 0 rgba(0,0,0,0.18)`,
-    clipPath:
-      "polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px), 0 4px)",
-  } as const;
+const FRAME_CHAMFER =
+  "polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px), 0 4px)";
+
+function FocusFrame({
+  edge,
+  border,
+  lip,
+  fill,
+  children,
+}: {
+  edge: string;
+  border: string;
+  lip: string;
+  fill: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="h-full w-full p-[2px]" style={{ background: edge, clipPath: FRAME_CHAMFER }}>
+      <div className="h-full w-full p-[3px]" style={{ background: border }}>
+        <div className="h-full w-full p-px" style={{ background: lip }}>
+          <div className="flex h-full w-full items-center justify-center overflow-hidden" style={{ background: fill }}>
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 const CORE_STACK= [
@@ -142,14 +173,13 @@ export function FocusGrid({ columns }: { columns: 2 | 4 }) {
           }>
           <div className= {
               (columns === 2
-                ? "w-full max-w-[68px] aspect-square overflow-hidden flex items-center justify-center"
-                : "w-full aspect-square overflow-hidden flex items-center justify-center") +
+                ? "w-full max-w-[68px] aspect-square"
+                : "w-full aspect-square") +
               " cursor-pointer transition-all duration-150 ease-out hover:-translate-y-1 hover:scale-[1.06] hover:brightness-[1.04] hover:[filter:drop-shadow(0_3px_0_rgba(0,0,0,0.28))_drop-shadow(0_0_0_2px_rgba(51,64,107,0.85))] active:translate-y-0 active:scale-[0.98] active:brightness-[0.97] active:[filter:drop-shadow(0_0_0_2px_rgba(51,64,107,0.6))]"
-            } style ={{
-              background: f.fill,
-              ...pixelSquareBorder(f.border),
-            }}>
-            <img src= {`${f.img}?v=sq1`} alt ={f.label} className= "w-full h-full object-cover object-center pixelated select-none" draggable ={false} decoding= "async" />
+            } style={{ boxShadow: "0 0 0 2px #33406b, 0 2px 0 rgba(0,0,0,0.18)" }}>
+            <FocusFrame edge={f.edge} border={f.border} lip={f.lip} fill={f.fill}>
+              <img src={f.img} alt={f.label} className="h-full w-full object-contain pixelated select-none" draggable={false} decoding="async" />
+            </FocusFrame>
           </div>
           <span className ={`font-pixel leading-none tracking-tight text-center ${columns === 2 ? "text-[7px]" : "text-[8px]"}`} style= {{ color: f.labelColor }}>
             {f.label}
