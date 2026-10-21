@@ -162,8 +162,8 @@ export function FocusGrid({ columns }: { columns: 2 | 4 }) {
   return (
     <div className= {
         columns === 2
-          ? "grid grid-cols-2 gap-x-2 gap-y-1.5 pl-[18px] max-w-[176px]"
-          : "flex gap-1.5 pl-[26px]"
+          ? "grid grid-cols-2 gap-x-2 gap-y-1.5 pl-[18px] max-w-[200px]"
+          : "flex gap-1.5 pl-[18px]"
       }>
       {FOCUS.map((f) => (
         <div key ={f.label} onMouseEnter= {() => retroSound.playCursor()} className ={
@@ -173,10 +173,10 @@ export function FocusGrid({ columns }: { columns: 2 | 4 }) {
           }>
           <div className= {
               (columns === 2
-                ? "w-full max-w-[68px] aspect-square"
+                ? "w-full max-w-[82px] aspect-square"
                 : "w-full aspect-square") +
-              " cursor-pointer transition-all duration-150 ease-out hover:-translate-y-1 hover:scale-[1.06] hover:brightness-[1.04] hover:[filter:drop-shadow(0_3px_0_rgba(0,0,0,0.28))_drop-shadow(0_0_0_2px_rgba(51,64,107,0.85))] active:translate-y-0 active:scale-[0.98] active:brightness-[0.97] active:[filter:drop-shadow(0_0_0_2px_rgba(51,64,107,0.6))]"
-            } style={{ boxShadow: "0 0 0 2px #33406b, 0 2px 0 rgba(0,0,0,0.18)" }}>
+              " cursor-pointer transition-all duration-150 ease-out hover:-translate-y-1 hover:scale-[1.06] hover:brightness-[1.04] hover:[filter:drop-shadow(0_3px_0_rgba(0,0,0,0.28))] active:translate-y-0 active:scale-[0.98] active:brightness-[0.97]"
+            }>
             <FocusFrame edge={f.edge} border={f.border} lip={f.lip} fill={f.fill}>
               <img src={f.img} alt={f.label} className="h-full w-full object-contain pixelated select-none" draggable={false} decoding="async" />
             </FocusFrame>

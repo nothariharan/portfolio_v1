@@ -29,7 +29,7 @@ function IdentityPanel({ layout }: { layout: CardLayout }) {
 
   return (
     <div className= {`relative z-10 flex flex-col rounded-[8px] ${
-        mobile ? "w-full gap-1 px-2 py-1.5" : "w-[64%] gap-1 px-2.5 py-1.5"
+        mobile ? "w-full gap-1 px-2 py-1.5" : "w-[70%] gap-1 px-2.5 py-1.5"
       }`} style ={CARD_PANEL_STYLE}>
       <div>
         {/* oss orgs sit under here */}
