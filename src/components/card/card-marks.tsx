@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MouseEvent as ReactMouseEvent } from "framer-motion";
+import { useEffect, useState, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { retroSound } from "@/lib/sound";
 // still cooking this bit
 

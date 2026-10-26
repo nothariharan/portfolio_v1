@@ -116,7 +116,7 @@ export default function Home() {
 
       {!isMobileLayout ? (
         <div className= "mb-3 text-center select-none z-10">
-          <p className ="text-[8px] font-pixel text-slate-500 animate-pulse">
+          <p className ="text-[8px] font-pixel text-[#111] hint-blink">
             click or press A to flip · hover a corner to tilt
           </p>
         </div>
