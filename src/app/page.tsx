@@ -22,6 +22,7 @@ import {
   LandingRightHud,
   PortfolioEscape,
 } from "@/components/site/landing-hud";
+import { GithubStarLever } from "@/components/site/github-star-lever";
 
 const SSR_SCALE= 1.15;
 const ZOOM_MIN =0.7;
@@ -141,6 +142,7 @@ export default function Home() {
           }} />
       </motion.div>
 
+      <GithubStarLever mobile={isMobileLayout} />
       <LandingLeftHud bg ={bg} music= {music} onCycleBg ={cycleBg} onSkipSong= {() => retroSound.skipTrack()} />
       <LandingRightHud music ={music} scale= {scale} isMobile ={isMobileLayout} atMinZoom= {scale <= ZOOM_MIN + 0.001} atMaxZoom ={scale >= ZOOM_MAX - 0.001} onMute= {toggleMute} onZoomOut ={() => bumpZoom(-1)} onZoomIn= {() => bumpZoom(1)} />
     </main>
