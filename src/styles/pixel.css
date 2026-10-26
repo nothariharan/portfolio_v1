@@ -166,3 +166,161 @@
     transform: scaleY(0.5);
   }
 }
+
+.hud-type {
+  font-family: var(--font-pixel), monospace;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+  text-rendering: geometricPrecision;
+  letter-spacing: 0.04em;
+}
+
+.hud-btn {
+  --hud-face: #ffffff;
+  --hud-ink: #111111;
+  --hud-lip: #c8c8c8;
+  --box-shadow-width: 4px;
+  --pixel-box-shadow:
+    calc(-1 * var(--box-shadow-width)) 0 0 0 #111111,
+    var(--box-shadow-width) 0 0 0 #111111,
+    0 var(--box-shadow-width) 0 0 #111111,
+    0 calc(-1 * var(--box-shadow-width)) 0 0 #111111;
+  box-sizing: border-box;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  margin: var(--box-shadow-width);
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 0;
+  background-color: var(--hud-face);
+  color: var(--hud-ink);
+  box-shadow: var(--pixel-box-shadow);
+  font-family: var(--font-pixel), monospace;
+  image-rendering: pixelated;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  line-height: 1;
+}
+
+.hud-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-right: 4px solid var(--hud-lip);
+  border-bottom: 4px solid var(--hud-lip);
+  pointer-events: none;
+}
+
+.hud-btn:hover:not(:disabled):not([data-static]) {
+  background-color: color-mix(in hsl, var(--hud-face) 88%, #111111);
+}
+
+.hud-btn:active:not(:disabled) {
+  transform: translateY(3px);
+  background-color: color-mix(in hsl, var(--hud-face) 72%, #111111);
+}
+
+.hud-btn:focus-visible {
+  outline: 3px solid #4a76c9;
+  outline-offset: 6px;
+}
+
+.hud-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.hud-btn:disabled:active {
+  transform: none;
+}
+
+.hud-btn[data-static] {
+  cursor: default;
+}
+
+.hud-btn[data-tone="primary"] {
+  --hud-face: #3db4ff;
+  --hud-ink: #ffffff;
+  --hud-lip: color-mix(in hsl, #3db4ff 70%, #111111);
+}
+
+.hud-btn[data-tone="success"] {
+  --hud-face: #3ee07a;
+  --hud-ink: #ffffff;
+  --hud-lip: color-mix(in hsl, #3ee07a 70%, #111111);
+}
+
+.hud-btn[data-tone="warning"] {
+  --hud-face: #ffe14a;
+  --hud-ink: #111111;
+  --hud-lip: color-mix(in hsl, #ffe14a 70%, #202020);
+}
+
+.hud-btn[data-tone="error"] {
+  --hud-face: #ff5a4e;
+  --hud-ink: #ffffff;
+  --hud-lip: color-mix(in hsl, #ff5a4e 70%, #4d4d4d);
+}
+
+.hud-btn[data-tone="orange"] {
+  --hud-face: #ff8a32;
+  --hud-ink: #ffffff;
+  --hud-lip: color-mix(in hsl, #ff8a32 70%, #111111);
+}
+
+.hud-btn[data-tone="default"] {
+  --hud-face: #f4f4f4;
+  --hud-ink: #111111;
+  --hud-lip: color-mix(in hsl, #c8c8c8 70%, #111111);
+}
+
+.hud-lcd {
+  --box-shadow-width: 3px;
+  --pixel-box-shadow:
+    calc(-1 * var(--box-shadow-width)) 0 0 0 #111111,
+    var(--box-shadow-width) 0 0 0 #111111,
+    0 var(--box-shadow-width) 0 0 #111111,
+    0 calc(-1 * var(--box-shadow-width)) 0 0 #111111;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  margin: var(--box-shadow-width);
+  overflow: hidden;
+  background: #111111;
+  color: #ffffff;
+  box-shadow: var(--pixel-box-shadow);
+  image-rendering: pixelated;
+}
+
+.hud-icon {
+  display: block;
+  flex-shrink: 0;
+  overflow: visible;
+  shape-rendering: crispEdges;
+}
+
+@media (forced-colors: active) {
+  .hud-btn,
+  .hud-lcd {
+    --hud-face: Canvas;
+    --hud-ink: CanvasText;
+    --hud-lip: CanvasText;
+    forced-color-adjust: none;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow:
+      -4px 0 0 0 CanvasText,
+      4px 0 0 0 CanvasText,
+      0 4px 0 0 CanvasText,
+      0 -4px 0 0 CanvasText;
+  }
+}

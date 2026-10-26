@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   BACK_HONORS,
-  BACK_PROJECTS,
   BACK_SKILLS,
   type BackExperienceBadge,
   type BackExperienceStatus,
   type TabKey,
 } from "../portfolio/data";
+import { ProjectOldIcon } from "@/components/site/old-icons";
 import { SvgIcon } from "./card-icons";
 // oss orgs sit under here
 
@@ -62,7 +62,6 @@ export function OpenRecordBtn({ href }: { href: string }) {
 export function preloadCardBackAssets() {
   const urls =[
     ...BACK_HONORS.flatMap((h) => [h.cardArt, h.heroArt, h.heroArtMobile].filter(Boolean)),
-    ...BACK_PROJECTS.map((p) => `/sprites/proj_${p.icon}.webp`),
     ...BACK_SKILLS.flatMap((g) => g.icons.map((k) => `/logos/${k}.svg`)),
   ] as string[];
   for (const src of urls) {
@@ -219,18 +218,10 @@ export function ProjectThumb({
   color: string;
   size: number;
 }) {
-  const [ok, setOk] =useState(true);
-  if (!ok) {
-    return (
-      <span className= "rounded-[6px] flex items-center justify-center shrink-0" style ={{ width: size, height: size, background: color }}>
-        <span className= "font-pixel text-[11px] leading-none text-white" style ={{ textShadow: "1px 1px 0 rgba(0,0,0,0.35)" }}>
-          {name.slice(0, 1).toUpperCase()}
-        </span>
-      </span>
-    );
-  }
   return (
-    <img src= {`/sprites/proj_${icon}.webp`} alt ={name} width= {size} height ={size} className= "pixelated shrink-0 object-contain" style ={{ width: size, height: size }} onError= {() => setOk(false)} decoding ="async" />
+    <span className="flex shrink-0 items-center justify-center overflow-hidden rounded-[6px]" style={{ width: size, height: size, background: `${color}22` }}>
+      <ProjectOldIcon icon={icon} name={name} size={Math.round(size * 0.82)} />
+    </span>
   );
 }
 

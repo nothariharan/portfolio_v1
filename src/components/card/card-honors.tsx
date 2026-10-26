@@ -2,8 +2,10 @@
 
 import { NounIcon } from "../ui/noun-icon";
 import { retroSound } from "@/lib/sound";
+import { useTransition } from "@/hooks/use-transition";
 import type { BackHonor, TabKey } from "../portfolio/data";
 import { NAVY } from "./card-back-bits";
+import { TokenUsageGraph } from "./token-usage-graph";
 // sprite loop lives up here
 
 // honors grid plus the detail card under it
@@ -22,7 +24,7 @@ export function HonorWorldCard({
 }) {
   const fill= 
     honor.world === "forest"
-      ? "#2874e1"
+      ? "#2072e1"
       : honor.world === "garage"
         ? "#ff6014"
         : honor.world === "arena"
@@ -84,6 +86,10 @@ export function TokensHonorDetail({ honor, mobile= false }: { honor: BackHonor; 
       <div className ={`relative flex-1 min-h-0 overflow-hidden bg-[#f6f1e6] ${
           mobile ? "m-1 rounded-[5px]" : "m-1.5 rounded-[7px]"
         }`}>
+        {honor.world === "furnace" && honor.agents?.length ? (
+          <TokenUsageGraph agents={honor.agents} accent={accent} mobile={mobile} />
+        ) : (
+        <>
         <picture className= "absolute inset-0 block h-full w-full">
           {/* scroll follows the finger */}
           <source srcSet ={`${cardBase}.avif?v=tok4`} type= "image/avif" />
@@ -93,6 +99,8 @@ export function TokensHonorDetail({ honor, mobile= false }: { honor: BackHonor; 
 
         {showProofHit && (
           <a href= {honor.url} {...(proofExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})} onClick ={(e) => e.stopPropagation()} onPointerUp= {(e) => e.stopPropagation()} aria-label ="Open proof" title= "OPEN PROOF" className ={`absolute z-10 cursor-pointer hover:brightness-110 active:scale-[0.99] transition-transform rounded-[4px] ${proofHit}`} />
+        )}
+        </>
         )}
       </div>
     </div>
@@ -108,9 +116,11 @@ export function HonorWorldDetail({
   mobile?: boolean;
   onEnterPortfolio: (tab: TabKey) => void;
 }) {
+  const { startTransition } = useTransition();
   const accent =honor.color;
   const hasWins= Boolean(honor.wins?.length);
   const hasAgents =Boolean(honor.agents?.length);
+  const hasOrgs = Boolean(honor.orgs?.length);
   /* full-bleed only when this layout has art: desktop needs heroArt; mobile can use heroArtMobile alone */
   const useHeroArt= mobile
     ? Boolean(honor.heroArtMobile ?? honor.heroArt)
@@ -122,68 +132,49 @@ export function HonorWorldDetail({
     return <TokensHonorDetail honor= {honor} mobile ={mobile} />;
   }
 
-  const mobileArt= honor.artTileMobile ?? honor.artTile;
-  /* painted rank ribbon in hero art — skip duplicate HTML rank strip */
-  const mobileHeroBanner =
-    mobile &&
-    (honor.world === "forest" || honor.world === "garage" || honor.world === "arena");
-  const heroBannerBg= 
-    honor.world === "garage"
-      ? "#f4a15a"
-      : honor.world === "arena"
-        ? "#f0e2b0"
-        : "#0b1a33";
-
-  const artTile =mobile ? (
-    mobileHeroBanner ? (
-      <div className= "w-full shrink-0 rounded-[7px] border overflow-hidden" style ={{ borderColor: accent, background: heroBannerBg }}>
-        {/* shorter strip so Highlights chips get real room on mobile */}
-        <div className= "relative w-full aspect-[2.55/1] max-h-[108px]">
-          <picture className ="absolute inset-0 block h-full w-full">
-            <source srcSet= {`${mobileArt.replace(/\.(png|webp|avif)$/i, "")}.avif?v=hero2`} type ="image/avif" />
-            <source srcSet= {`${mobileArt.replace(/\.(png|webp|avif)$/i, "")}.webp?v=hero2`} type ="image/webp" />
-            <img src= {`${mobileArt.replace(/\.(png|webp|avif)$/i, "")}.png?v=hero2`} alt ="" className= {`h-full w-full object-cover select-none ${
-                /* YC: bias down so the building crown isn't cropped */
-                honor.world === "garage" ? "object-[center_18%]" : "object-center"
-              }`} draggable ={false} />
-          </picture>
-        </div>
-      </div>
-    ) : (
-    <div className= "w-full shrink-0 rounded-[7px] border overflow-hidden flex flex-col" style ={{ borderColor: accent, background: honor.tint }}>
-      <div className= "relative h-[56px] bg-[#fff3c4]">
-        <img src ={`${mobileArt}?v=7`} alt= "" className ="absolute inset-0 h-full w-full object-cover pixelated" style= {{ imageRendering: "pixelated" }} draggable ={false} />
-      </div>
-      <span className= "flex items-center justify-center gap-1 font-pixel text-[5px] leading-none text-center py-1 px-1.5 text-white" style ={{ background: accent }}>
-        <NounIcon name= "trophy" color ="#ffffff" size= {8} />
-        {honor.rank}
-      </span>
-    </div>
-    )
-  ) : (
-    <div className ="shrink-0 w-[96px] rounded-[8px] border overflow-hidden flex flex-col" style= {{ borderColor: accent, background: honor.tint }}>
-      <div className ="relative flex-1 min-h-[84px] bg-[#fff3c4]">
-        <img src= {`${honor.artTile}?v=5`} alt ="" className= "absolute inset-0 h-full w-full object-cover pixelated" style ={{ imageRendering: "pixelated" }} draggable= {false} />
-      </div>
-      <span className ="flex items-center justify-center gap-1 font-pixel text-[5px] leading-none text-center py-1.5 px-1 text-white" style= {{ background: accent }}>
-        <NounIcon name ="trophy" color= "#ffffff" size ={9} />
-        {honor.rank}
-      </span>
+  // mobile uses the same desktop marks, parked in the top-left, copy fills the rest
+  const artTile = (
+    <div
+      className={
+        mobile
+          ? "col-start-1 row-start-1 aspect-square w-full shrink-0 self-start overflow-hidden rounded-[7px] border-2 bg-white box-border"
+          : hasOrgs
+            ? "relative aspect-square h-auto max-h-full w-[36%] shrink-0 self-center overflow-hidden rounded-[8px] border-2 bg-white box-border"
+            : "relative aspect-square h-full max-h-full w-auto min-w-0 max-w-[46%] shrink-0 self-center overflow-hidden rounded-[8px] border-2 bg-white box-border"
+      }
+      style={{ borderColor: accent }}
+    >
+      <img
+        src={`${honor.artTile}?v=mark2`}
+        alt=""
+        className={`h-full w-full object-center select-none ${hasOrgs ? "object-contain" : "object-cover"}`}
+        draggable={false}
+      />
+      {!hasOrgs && !mobile ? (
+        <span className="absolute inset-x-0 bottom-0 flex h-[18px] items-center justify-center gap-1 rounded-b-[6px] px-1 text-center font-pixel text-[5px] leading-none text-white" style={{ background: accent }}>
+          <NounIcon name="trophy" color="#ffffff" size={9} />
+          {honor.rank}
+        </span>
+      ) : null}
     </div>
   );
 
   return (
     <div className= "relative flex-1 min-h-0 flex flex-col rounded-[10px] border-2 overflow-hidden bg-white" style ={{ borderColor: accent }}>
       <div className= {`min-h-0 flex-1 overflow-hidden ${
-          mobile ? "flex flex-col gap-2 p-2.5" : "flex gap-2.5 p-2.5"
+          mobile
+            ? "grid grid-cols-[104px_minmax(0,1fr)] grid-rows-[auto_minmax(0,1fr)] content-start gap-x-2 gap-y-1 p-1.5"
+            : hasOrgs
+              ? "flex min-h-0 min-w-0 flex-1 flex-row items-stretch gap-2.5 p-2.5"
+              : "flex min-w-0 gap-2.5 p-2.5"
         }`}>
         {artTile}
 
-        {/* no pr-16 gutter — OPEN PROOF sits in the title row so highlight can use full width */}
-        <div className ={`min-w-0 flex-1 flex flex-col overflow-hidden ${
-            mobile ? (hasWins ? "gap-2" : "gap-1.5") : "gap-2"
+        {/* OSS proof is the full-width bar under the orgs. Other honors keep it in the title row. */}
+        <div className ={mobile ? "contents" : `min-w-0 flex flex-col overflow-hidden ${
+            hasOrgs ? "min-h-0 min-w-0 flex-1 gap-2" : "min-h-0 flex-1 gap-2"
           }`}>
-          <div className= "flex items-start justify-between gap-2 shrink-0">
+          <div className= {`flex shrink-0 items-start justify-between gap-2 ${mobile ? "col-start-2 row-start-1 min-w-0" : ""}`}>
             <div className ={`min-w-0 flex-1 flex flex-col ${mobile ? "gap-1" : "gap-1"}`}>
               {/* card font — Press Start stretches long titles when forced into a wide row */}
               <span className= {`font-card font-bold leading-snug ${mobile ? "text-[14px]" : "text-[15px]"}`} style ={{ color: accent }}>
@@ -195,11 +186,11 @@ export function HonorWorldDetail({
                 <NounIcon name= {honor.tagIcon} color ="#ffffff" size= {mobile ? 8 : 10} />
                 {honor.tag}
               </span>
-              <span className ={`font-card font-semibold leading-snug ${mobile ? "text-[12px]" : "text-[13px]"}`} style= {{ color: accent }}>
+              <span className ={`font-card font-semibold ${mobile ? "text-[11px] leading-tight" : "text-[13px] leading-snug"}`} style= {{ color: accent }}>
                 {honor.sub}
               </span>
             </div>
-            {!honor.placeholder && (
+            {!honor.placeholder && !hasOrgs && (
               <a href ={honor.url} {...(proofExternal
                   ? { target: "_blank", rel: "noopener noreferrer" }
                   : {})} onClick= {(e) => e.stopPropagation()} onPointerUp ={(e) => e.stopPropagation()} className= {`shrink-0 font-pixel leading-none rounded-[4px] text-white border-2 cursor-pointer hover:brightness-110 active:scale-[0.97] transition-all ${
@@ -211,20 +202,32 @@ export function HonorWorldDetail({
           </div>
 
           {hasWins ? (
-            <div className= {`min-h-0 flex flex-col overflow-hidden ${
-                mobile ? "shrink-0 gap-2 pt-0.5 pb-1" : "flex-1 gap-1.5 justify-center"
+            <div className= {`flex flex-col ${
+                mobile ? "col-span-2 row-start-2 min-h-0 justify-center gap-0.5" : "min-h-0 flex-1 justify-center gap-0.5"
               }`}>
+              {mobile ? null : (
               <div className ="flex items-center gap-1.5 shrink-0">
-                <NounIcon name= "star" color ={accent} size= {mobile ? 10 : 11} />
+                <NounIcon name= "star" color ={accent} size= {11} />
                 <span className ="font-pixel text-[6px] leading-none" style= {{ color: accent }}>
                   Highlights
                 </span>
               </div>
+              )}
+              {honor.wins ? (
+                <ul className="flex shrink-0 flex-col gap-0.5">
+                  {honor.wins.map((win) => (
+                    <li key={win.label} className={`flex items-center justify-between gap-2 rounded-[4px] px-2 ${mobile ? "h-[14px]" : "h-[16px]"}`} style={{ background: honor.tint }}>
+                      <span className={`truncate font-card font-semibold leading-none ${mobile ? "text-[11px]" : "text-[13px]"}`} style={{ color: "#1f2a44" }}>{win.label}</span>
+                      <span className="shrink-0 font-pixel text-[6px] leading-none" style={{ color: accent }}>{win.result}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
               <button type ="button" onClick= {(e) => {
                   e.stopPropagation();
                   onEnterPortfolio("projects");
                 }} onPointerUp ={(e) => e.stopPropagation()} className= {`w-full flex items-center justify-center gap-2 rounded-[8px] border-2 cursor-pointer transition-all duration-150 ease-out hover:brightness-[1.03] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] ${
-                  mobile ? "min-h-[52px] px-3 py-3" : "min-h-[56px] px-4 py-3.5"
+                  mobile ? "h-[22px] shrink-0 px-2" : "min-h-[26px] shrink-0 px-3 py-1"
                 }`} style ={{
                   borderColor: accent,
                   background: honor.tint,
@@ -239,6 +242,36 @@ export function HonorWorldDetail({
                 </span>
               </button>
             </div>
+          ) : hasOrgs ? (
+            <div className={`flex w-full min-w-0 flex-col gap-1.5 ${mobile ? "col-span-2 row-start-2" : ""}`}>
+              {[honor.orgs!.slice(0, 6), honor.orgs!.slice(6)].map((row, rowIndex) => (
+                <div key={rowIndex} className={`flex w-full items-start justify-between ${mobile ? "gap-1" : "gap-1.5"}`}>
+                  {row.map((org) => (
+                    <div key={org.name} className={`flex min-w-0 flex-1 flex-col items-center gap-0.5 ${mobile ? "max-w-[40px]" : "max-w-[56px]"}`}>
+                      <span className={`flex items-center justify-center ${mobile ? "h-6 w-6" : "h-8 w-8"}`}>
+                        <img src={org.logo} alt="" className="max-h-full max-w-full object-contain" draggable={false} />
+                      </span>
+                      <span className="w-full truncate text-center font-pixel text-[5px] leading-none text-[#1f2a44]">{org.name}</span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+              <button
+                type="button"
+                data-no-flip
+                aria-label="More open source orgs"
+                onPointerDown={(event) => event.stopPropagation()}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  startTransition("/portfolio/experience#open-source");
+                }}
+                className={`flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[6px] border-2 bg-white ${mobile ? "h-[22px]" : "h-[26px]"}`}
+                style={{ borderColor: accent }}
+              >
+                <span className={`font-pixel leading-none ${mobile ? "text-[6px]" : "text-[7px]"}`} style={{ color: accent }}>more</span>
+                <span className={`font-pixel leading-none ${mobile ? "text-[8px]" : "text-[10px]"}`} style={{ color: accent }} aria-hidden>→</span>
+              </button>
+            </div>
           ) : (
             /*
              * highlight box — CSS grid so star stays left and copy always eats
@@ -247,7 +280,7 @@ export function HonorWorldDetail({
              */
             <div className ={`w-full min-h-0 flex-1 rounded-[10px] border grid grid-cols-[28px_minmax(0,1fr)] items-center overflow-hidden ${
                 mobile
-                  ? "pl-2 pr-2.5 py-2.5 gap-x-2.5 rounded-[8px]"
+                  ? "col-span-2 row-start-2 pl-2 pr-2.5 py-2 gap-x-2.5 rounded-[8px]"
                   : "pl-2.5 pr-3 py-3 gap-x-2.5"
               }`} style= {{ background: honor.tint, borderColor: accent }}>
               <NounIcon name ="star" color= {accent} size ={mobile ? 18 : 24} className= "justify-self-start" />
@@ -261,7 +294,13 @@ export function HonorWorldDetail({
         </div>
       </div>
 
-      {/* metrics footer — fixed height so every honor card matches Hacktoberfest chrome */}
+      {hasOrgs ? (
+        !honor.placeholder && (
+          <a href={honor.url} {...(proofExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})} onClick={(e) => e.stopPropagation()} onPointerUp={(e) => e.stopPropagation()} className={`flex shrink-0 items-center justify-center border-t font-pixel leading-none text-white cursor-pointer hover:brightness-110 active:brightness-95 ${mobile ? "h-[28px] text-[7px]" : "h-[32px] text-[8px]"}`} style={{ background: accent, borderColor: `${accent}44` }}>
+            OPEN PROOF {proofExternal ? "↗" : "→"}
+          </a>
+        )
+      ) : (
       <div className ={`shrink-0 grid grid-cols-3 border-t ${mobile ? "h-[48px]" : "h-[54px]"}`} style= {{ borderColor: `${accent}44` }}>
         {honor.metrics.map((m, i) => (
           <div key ={m.label} className= {`flex items-center min-w-0 h-full ${
@@ -283,6 +322,7 @@ export function HonorWorldDetail({
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }

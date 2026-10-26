@@ -7,31 +7,111 @@ import { useContactCard } from "./contact-card";
 import { Container, GitHubIcon, LinkedInIcon, MailIcon } from "./ui";
 // links sit in the note
 
-// sitting loop for the portfolio hero — frames are already lined up on the feet
-// s1 typing / s2 typing shift / s3 grab coffee / s4 sip / s5 back to typing
-const SIT_FRAMES =[
-  "/sprites/sit-norm/s1.webp",
-  "/sprites/sit-norm/s2.webp",
-  "/sprites/sit-norm/s3.webp",
-  "/sprites/sit-norm/s4.webp",
-  "/sprites/sit-norm/s5.webp",
-];
-// type for a bit, reach for coffee, sip twice, then back to work
-const SIT_SEQ= [0, 0, 0, 1, 1, 2, 3, 3, 4, 4, 0];
-const SIT_MS =750;
+const MARIO_GIFS =[
+  "/sprites/gifs/mario-start.gif",
+  "/sprites/gifs/mario-idle.gif",
+  "/sprites/gifs/mario-dance.gif",
+] as const;
 
-function SittingSprite() {
-  const [tick, setTick]= useState(0);
+const SONIC_GIFS =[
+  "/sprites/gifs/sonic-thumbs.gif",
+  "/sprites/gifs/sonic-wave.gif",
+  "/sprites/gifs/sonic-logo.gif",
+] as const;
+
+const RANDOM_KEYS =["pikachu", "elmo", "the-end", "sonic"] as const;
+
+const RANDOM_SRC: Record<Exclude<(typeof RANDOM_KEYS)[number], "sonic">, string> ={
+  pikachu: "/sprites/gifs/pikachu.gif",
+  elmo: "/sprites/gifs/elmo.gif",
+  "the-end": "/sprites/gifs/the-end.gif",
+};
+
+const GIF_HOLD_MS =1_500;
+
+type RandomKey =(typeof RANDOM_KEYS)[number];
+
+type ReelState ={
+  phase: "mario" | "random";
+  marioIdx: number;
+  bag: RandomKey[];
+  bagIdx: number;
+  sonicSrc: string;
+};
+
+function shuffleKeys(keys: RandomKey[]): RandomKey[] {
+  const next =[...keys];
+  for (let i =next.length - 1; i > 0; i--) {
+    const j =Math.floor(Math.random() * (i + 1));
+    const a =next[i];
+    const b =next[j];
+    if (a === undefined || b === undefined) continue;
+    next[i] =b;
+    next[j] =a;
+  }
+  return next;
+}
+
+function pickSonic(): string {
+  return SONIC_GIFS[Math.floor(Math.random() * SONIC_GIFS.length)] ?? SONIC_GIFS[0];
+}
+
+function nextReel(state: ReelState): ReelState {
+  if (state.phase === "mario") {
+    if (state.marioIdx < MARIO_GIFS.length - 1) {
+      return { ...state, marioIdx: state.marioIdx + 1 };
+    }
+    const bag =shuffleKeys([...RANDOM_KEYS]);
+    return { phase: "random", marioIdx: 0, bag, bagIdx: 0, sonicSrc: pickSonic() };
+  }
+  if (state.bagIdx < state.bag.length - 1) {
+    const bagIdx =state.bagIdx + 1;
+    return {
+      ...state,
+      bagIdx,
+      sonicSrc: state.bag[bagIdx] === "sonic" ? pickSonic() : state.sonicSrc,
+    };
+  }
+  return { ...state, phase: "mario", marioIdx: 0 };
+}
+
+function reelSrc(state: ReelState): string {
+  if (state.phase === "mario") {
+    return MARIO_GIFS[state.marioIdx] ?? MARIO_GIFS[0];
+  }
+  const key =state.bag[state.bagIdx];
+  if (key === "sonic") return state.sonicSrc;
+  return RANDOM_SRC[key ?? "pikachu"];
+}
+
+function GifReel() {
+  const [reel, setReel] =useState<ReelState>({
+    phase: "mario",
+    marioIdx: 0,
+    bag: [...RANDOM_KEYS],
+    bagIdx: 0,
+    sonicSrc: SONIC_GIFS[0],
+  });
 
   useEffect(() => {
-    const id =setInterval(() => setTick((t) => t + 1), SIT_MS);
-    return () => clearInterval(id);
-  }, []);
+    const id =window.setTimeout(() => setReel(nextReel), GIF_HOLD_MS);
+    return () => window.clearTimeout(id);
+  }, [reel]);
 
-  const src= SIT_FRAMES[SIT_SEQ[tick % SIT_SEQ.length]];
+  const src =reelSrc(reel);
 
   return (
-    <img src ={src} alt= "Hariharan" className ="pixelated h-52 w-auto object-contain object-bottom select-none" draggable= {false} decoding ="async" />
+    <motion.button
+      type="button"
+      aria-label="next gif"
+      onClick={() => setReel(nextReel)}
+      initial={{ opacity: 0, scale: 0.94 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+      className="hidden h-[22rem] w-[20rem] shrink-0 cursor-pointer items-end justify-center overflow-hidden rounded-xl border border-portfolio-border bg-gradient-to-b from-white/[0.05] to-transparent px-4 py-3 sm:flex"
+    >
+      <img key={src} src={src} alt="" className="pixelated h-[19rem] w-auto max-w-full object-contain object-bottom select-none" draggable={false} />
+    </motion.button>
   );
 }
 
@@ -85,10 +165,7 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* framed pixel portrait */}
-          <motion.div initial ={{ opacity: 0, scale: 0.94 }} animate= {{ opacity: 1, scale: 1 }} transition ={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }} className= "hidden shrink-0 rounded-xl border border-portfolio-border bg-gradient-to-b from-white/[0.05] to-transparent p-3 sm:block">
-            <SittingSprite />
-          </motion.div>
+          <GifReel />
         </div>
 
         {/* about */}

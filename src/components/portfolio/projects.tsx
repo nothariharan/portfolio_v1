@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ProjectOldIcon } from "@/components/site/old-icons";
 import { PROJECTS, PROJECT_META, TOTAL_BUILT } from "./data";
 import { LogoTile, MoreTile } from "./ui";
 // flip stays off the links
@@ -76,7 +77,9 @@ export function ProjectsSection() {
             const on= i === sel;
             return (
               <button key ={pr.id} onClick= {() => setSel(i)} className ="text-left rounded-[10px] p-3 flex gap-3 items-center cursor-pointer transition-all" style= {{ background: on ? "#fff" : "#ece8df", boxShadow: on ? `inset 0 0 0 2px ${pr.color}` : "inset 0 0 0 1px #ded9cd" }}>
-                <img src ={`/sprites/proj_${m.icon}.webp`} alt= {pr.short} className ="w-[50px] h-[50px] rounded-[8px] pixelated shrink-0" loading= "lazy" decoding ="async" />
+                <span className="flex h-[50px] w-[50px] shrink-0 items-center justify-center overflow-hidden rounded-[8px] bg-white" style={{ boxShadow: "inset 0 0 0 1.5px #ded9cd" }}>
+                  <ProjectOldIcon icon={m.icon} name={pr.short} size={40} />
+                </span>
                 <span className= "min-w-0 flex-1">
                   <span className ="block font-pixel text-[13px] leading-none mb-2" style= {{ color: on ? pr.color : "#34383e" }}>{pr.short}</span>
                   <span className ="block font-card text-[14px] leading-tight text-[#5a6068]">{m.listDesc}</span>

@@ -37,14 +37,7 @@ const SPRITE_SRC ={
 
 const PRELOAD= [
   "/harifinal.webp",
-  "/sprites/front_bg.webp",
-  "/ui/btn-skip-song.png",
-
-  // later workign here oit add mroe
-  "/ui/btn-mute.webp",
-  "/ui/btn-unmute.webp",
-  "/ui/btn-color.webp",
-  "/ui/btn-main-portfolio.webp",
+  "/sprites/claude_bg.png",
 ];
 
 function loadImage(src: string) {

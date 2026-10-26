@@ -6,7 +6,7 @@ import { formatPostDate, getAllPosts } from "@/lib/blog";
 
 export const metadata: Metadata= {
   title: "blog · Hariharan",
-  description: "notes on shipping products, ai agents, and building in public.",
+  description: "nothing to see here, yet.",
 };
 
 export default function BlogIndexPage() {
@@ -19,13 +19,13 @@ export default function BlogIndexPage() {
         <h1 className ="font-display text-3xl font-semibold tracking-tight text-portfolio-text">
           blog
         </h1>
-        <p className= "mt-2 max-w-xl text-[15px] text-portfolio-muted">
-          notes from shipping — agents, civic tools, portfolio experiments. read-only out here;
-          i write these as files and push them live.
-        </p>
 
         {posts.length === 0 ? (
-          <p className ="mt-10 text-[15px] text-portfolio-muted">no posts yet — check back soon.</p>
+          <div className="mt-20 flex min-h-[36vh] items-center justify-center text-center">
+            <p className="font-pixel text-[16px] leading-relaxed tracking-wide text-portfolio-text sm:text-[20px]">
+              nothing to see here, <span className="text-emerald-400">YET</span>
+            </p>
+          </div>
         ) : (
           <ul className= "mt-10 flex flex-col">
             {posts.map((post) => (

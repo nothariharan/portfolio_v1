@@ -55,28 +55,30 @@ function IdentityPanel({ layout }: { layout: CardLayout }) {
           </span>
         </div>
         <FocusGrid columns ={mobile ? 2 : 4} />
-        <div className= "h-px mt-1.5" style ={{ background: CARD_PINK_DIVIDER }} />
+        {mobile ? null : <div className= "h-px mt-1.5" style ={{ background: CARD_PINK_DIVIDER }} />}
       </div>
 
+      {mobile ? null : (
       <div>
-        <div className= {`flex items-center gap-2 ${mobile ? "mb-1" : "mb-1.5"}`}>
-          <Bullet size ={mobile ? 14 : 16} />
-          <span className= {`font-pixel leading-none text-[#56618c] ${mobile ? "text-[10px]" : "text-[12px]"}`}>
+        <div className= "flex items-center gap-2 mb-1.5">
+          <Bullet size ={16} />
+          <span className= "font-pixel leading-none text-[#56618c] text-[12px]">
             STACK:
           </span>
         </div>
-        <StackRows compact ={mobile} />
+        <StackRows />
       </div>
+      )}
     </div>
   );
 }
 
 function ExpPanel({ compact }: { compact?: boolean }) {
   return (
-    <div className= {`flex items-center justify-center w-fit max-w-full ${
+    <div className= {`flex items-center max-w-full ${
         compact
-          ? "min-h-[32px] h-auto self-stretch gap-1.5 rounded-[7px] px-2"
-          : "h-[40px] gap-2 rounded-[8px] px-3"
+          ? "h-[28px] w-full shrink-0 justify-start gap-1 rounded-[7px] px-1.5"
+          : "h-[40px] w-fit justify-center gap-2 rounded-[8px] px-3"
       }`} style ={CARD_PANEL_STYLE}>
       <span className= {`flex items-center ${compact ? "gap-1.5 translate-y-px" : "gap-2 translate-y-px"}`}>
         <Bullet size ={compact ? 14 : 17} />
@@ -102,33 +104,33 @@ function CurrentlyPanel({ layout }: { layout: CardLayout }) {
   return (
     <div className= {
         mobile
-          ? "relative z-10 flex-1 min-w-0 min-h-[96px] rounded-[8px] overflow-hidden pointer-events-none"
+          ? "relative z-10 min-h-0 w-full flex-1 rounded-[8px] overflow-hidden pointer-events-none"
           : "absolute right-0 bottom-0 z-20 w-[62%] max-w-[420px] h-[120px] rounded-[8px] overflow-hidden pointer-events-none"
       } style ={{
         boxShadow:
           "inset 0 0 0 2px #33406b, 0 0 0 2px rgba(255,255,255,0.35), 0 8px 18px rgba(0,0,0,0.35)",
       }}>
-      <img src= "/sprites/front_bg.webp" alt ="" className= "absolute inset-0 w-full h-full object-cover object-right pixelated" decoding ="async" />
+      <img src= "/sprites/claude_bg.png" alt ="" className= "absolute inset-0 w-full h-full object-cover object-right pixelated" decoding ="async" />
       <div className= "absolute inset-0" style ={{
           background:
             "linear-gradient(90deg, rgba(9,15,26,0.96) 38%, rgba(9,15,26,0.6) 62%, rgba(9,15,26,0) 82%)",
         }} />
-      <div className= {`relative z-10 h-full flex flex-col ${mobile ? "px-2 pt-1.5 pb-2" : "px-3 pt-2 pb-2.5"}`}>
-        <div className ="flex items-center gap-1.5 mb-1.5">
+      <div className= {`relative z-10 h-full flex flex-col ${mobile ? "px-2.5 py-2" : "px-3 pt-2 pb-2.5"}`}>
+        <div className ={`flex items-center gap-1.5 ${mobile ? "mb-1.5" : "mb-1.5"}`}>
           <Bullet size= {14} />
           <span className ="font-pixel text-[11px] leading-none text-white">CURRENTLY:</span>
           <span className= "w-[9px] h-[9px] rounded-full bg-[#46c463] ml-1 shadow-[0_0_6px_#46c463]" />
         </div>
-        <div className ={`flex flex-col ${mobile ? "gap-1" : "gap-1.5"}`}>
+        <div className ={`flex flex-col ${mobile ? "gap-1.5" : "gap-1.5"}`}>
           {CURRENT.map((c, i) => (
             <div key= {i} className ="flex items-center gap-1.5 min-w-0">
-              <span className= {`${mobile ? "w-[20px] h-[20px]" : "w-[23px] h-[23px]"} shrink-0 flex items-center justify-center rounded-[3px]`} style ={{
+              <span className= {`${mobile ? "w-[18px] h-[18px]" : "w-[23px] h-[23px]"} shrink-0 flex items-center justify-center overflow-hidden rounded-[3px]`} style ={{
                   background: "rgba(255,255,255,0.08)",
                   boxShadow: `inset 0 0 0 1.5px ${c.accent}66`,
                 }}>
                 {c.icon}
               </span>
-              <span className= {`font-card leading-none text-white truncate ${mobile ? "text-[13px]" : "text-[16px]"}`}>
+              <span className= {`font-card leading-none text-white truncate ${mobile ? "text-[12px]" : "text-[16px]"}`}>
                 {c.label}
               </span>
             </div>
@@ -145,7 +147,7 @@ function CardAvatar({ layout }: { layout: CardLayout }) {
   return (
     <div aria-hidden className= {
         mobile
-          ? "absolute right-0 top-0 z-20 h-[210px] w-[96px] pointer-events-none"
+          ? "absolute right-[10px] top-[5px] z-20 h-[210px] w-[96px] pointer-events-none"
           : "absolute right-[12px] top-[-8px] z-20 h-[290px] w-[170px] pointer-events-none"
       }>
       <span className ="absolute inset-0 drop-shadow-[2px_4px_4px_rgba(0,0,0,0.22)]">
@@ -252,9 +254,9 @@ export function CardFront({ layout ="desktop" }: { layout?: CardLayout }) {
         <IdentityPanel layout ={layout} />
 
         {mobile ? (
-          <div className= "relative z-30 mt-1.5 flex items-stretch gap-1.5 shrink-0">
-            <ExpPanel compact />
+          <div className= "relative z-30 mt-1 flex min-h-0 flex-1 flex-col gap-1">
             <CurrentlyPanel layout ="mobile" />
+            <ExpPanel compact />
           </div>
         ) : (
           <>

@@ -260,17 +260,17 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
         perspectiveOrigin: "50% 45%",
       }}>
       {/*
-        Focus ring lives on a flat wrapper — putting ring-* on the 3D-tilted /
-        flip face shears into a blue edge line mid-rotate (esp. on mobile).
+        No focus ring here. Pressing A focuses this shell, and a ring-offset
+        paints as blue lines down both sides of the card.
       */}
-      <div className= "w-full h-full rounded-lg outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#4a76c9] has-[:focus-visible]:ring-offset-4 has-[:focus-visible]:ring-offset-transparent">
+      <div className= "w-full h-full rounded-lg outline-none">
         {/* layout morph layer — device rotate / breakpoint cross */}
         <motion.div className ={`w-full h-full${busy ? " will-change-transform" : ""}`} initial= {false} animate ={morphControls} style= {{ transformOrigin: "center center" }}>
           {/*
             Hit + float + scale live here — no rotate. Measuring tilt
             against a foreshortened box is what made the hover feel lagged.
           */}
-          <motion.div className ={`w-full h-full relative cursor-pointer select-none outline-none rounded-lg${busy ? " will-change-transform" : ""}`} role= {isFlipped ? "group" : "button"} tabIndex ={0} data-flip-root aria-pressed= {isFlipped} aria-label ={
+          <motion.div className ={`pointer-events-none w-full h-full relative select-none outline-none rounded-lg${busy ? " will-change-transform" : ""}`} role= {isFlipped ? "group" : "button"} tabIndex ={0} data-flip-root aria-pressed= {isFlipped} aria-label ={
               isFlipped
                 ? "Trainer card back. Press A or Enter to flip."
                 : "Trainer card front. Press A or Enter to flip."
@@ -282,7 +282,15 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
                 ? { duration: 0.18, ease: "easeOut" }
                 : { duration: 4.2, repeat: Infinity, ease: "easeInOut" },
               scale: { duration: 0.18, ease: "easeOut" },
-            }} onMouseMove ={freezeTilt ? undefined : handleMouseMove} onMouseEnter= {() => setIsHovered(true)} onMouseLeave ={handleLeave} onPointerUp= {(e) => {
+            }} onMouseMove ={freezeTilt ? undefined : (e) => {
+              // a popped focus tile owns the tilt — flatten the shell so they don't stack
+              const t = e.target;
+              if (t instanceof Element && t.closest("[data-focus-tile]")) {
+                handleMouseLeave();
+                return;
+              }
+              handleMouseMove(e);
+            }} onMouseEnter= {() => setIsHovered(true)} onMouseLeave ={handleLeave} onPointerUp= {(e) => {
               // Primary path — one arm per tap. Ignore controls + near-miss margin.
               if (e.button !== 0) return;
               if (e.pointerType === "mouse" && e.detail > 1) return;
@@ -300,7 +308,7 @@ export function TrainerCard({ onEnterPortfolio, onOpenHariMd }: TrainerCardProps
               }
             }}>
             {/* tilt only — spring isn't fighting the hover scale / float */}
-            <motion.div className ={`w-full h-full${busy ? " will-change-transform" : ""}`} style= {{
+            <motion.div className ={`pointer-events-auto w-full h-full cursor-pointer${busy ? " will-change-transform" : ""}`} style= {{
                 rotateX: freezeTilt ? 0 : rotateX,
                 rotateY: freezeTilt ? 0 : rotateY,
                 transformStyle: "preserve-3d",

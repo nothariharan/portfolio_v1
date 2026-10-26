@@ -1,5 +1,6 @@
 "use client";
 
+import { ExperienceOldIcon } from "@/components/site/old-icons";
 import { Container, ExpIcon } from "@/components/site/ui";
 import { WORK, EDUCATION, type ExpRow } from "@/components/site/portfolio-data";
 import { OssOrgList } from "@/components/site/oss-orgs";
@@ -18,9 +19,13 @@ function RoleBlock({ rows }: { rows: ExpRow[] }) {
 
       {rows.map((r) => (
         <li key ={`${r.title}-${r.org}`} className= "flex items-start gap-4 border-t border-portfolio-border/70 py-5 first:border-t-0">
-          {r.logo ? (
+          {r.oldIcon ? (
+            <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center">
+              <ExperienceOldIcon name={r.oldIcon} size={32} />
+            </span>
+          ) : r.logo ? (
             <span className ="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md border border-portfolio-border bg-black">
-              <img src= {r.logo} alt ="" aria-hidden className= {`object-contain ${r.logo.endsWith(".png") ? "h-full w-full object-cover" : "h-[55%] w-[55%]"}`}/>
+              <img src= {r.logo} alt ="" aria-hidden className= {`object-contain ${r.logo.includes("/education/") || !r.logo.endsWith(".png") ? "h-[82%] w-[82%]" : "h-full w-full object-cover"}`}/>
             </span>
           ): (
             <span className ="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-portfolio-border bg-portfolio-card text-portfolio-muted">
@@ -79,7 +84,7 @@ export default function ExperiencePage() {
           <RoleBlock rows= {EDUCATION} />
         </div>
 
-        <h2 className ="mt-10 font-mono text-[12px] uppercase tracking-wider text-portfolio-muted">open source</h2>
+        <h2 id="open-source" className ="mt-10 font-mono text-[12px] uppercase tracking-wider text-portfolio-muted">open source</h2>
         <p className= "mt-2 max-w-xl text-[13px] text-portfolio-muted">
           when i am bored i love contributing and maintaining various oss
         </p>

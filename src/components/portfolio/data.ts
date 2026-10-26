@@ -447,6 +447,8 @@ export type BackExperience= {
   title: string;
   sub: string;
   icon: string;
+  oldIcon?: "stealth" | "webmaster" | "freelance";
+  logo?: string;
   tag: string;
   color: string;
   status: BackExperienceStatus;
@@ -457,10 +459,24 @@ export type BackExperience= {
 
 export const BACK_EXPERIENCE: BackExperience[] =[
   {
+    year: "2026 — NOW",
+    title: "Founding Intern — Graphify",
+    sub: "Graphify Labs · knowledge graph",
+    icon: "cloud",
+    logo: "/oss/graphify-labs.png",
+    tag: "INTERNSHIP",
+    color: "#22c55e",
+    status: "ACTIVE",
+    badge: "rocket",
+    url: "https://graphify.com",
+    github: "https://github.com/nothariharan",
+  },
+  {
     year: "JUN — AUG 2026",
     title: "Stealth Startup VC backed",
     sub: "Founding engineer — role ended Aug 2026",
     icon: "cloud",
+    oldIcon: "stealth",
     tag: "STARTUP",
     color: "#e8913a",
     status: "COMPLETED",
@@ -473,6 +489,7 @@ export const BACK_EXPERIENCE: BackExperience[] =[
     title: "Webmaster — IEEE ITSS",
     sub: "IIIT Sri City chapter site",
     icon: "globe",
+    oldIcon: "webmaster",
     tag: "CAMPUS",
     color: "#4a76c9",
     status: "ACTIVE",
@@ -497,6 +514,7 @@ export const BACK_EXPERIENCE: BackExperience[] =[
     title: "Freelance — 2 client projects",
     sub: "Full-stack & agent work, handed off",
     icon: "code",
+    oldIcon: "freelance",
     tag: "WORK",
     color: "#5a9bd6",
     status: "ACTIVE",
@@ -507,14 +525,26 @@ export const BACK_EXPERIENCE: BackExperience[] =[
   {
     year: "AUG 2025 — NOW",
     title: "B.Tech CS — IIIT SriCity",
-    sub: "dual degree with IIT Patna",
+    sub: "Computer science · cgpa 9.6",
     icon: "grad",
+    logo: "/education/iiit-sricity.png",
     tag: "EDUCATION",
     color: "#4a76c9",
     status: "IN PROGRESS",
     badge: "trophy",
-    url: "https://www.linkedin.com/in/nmhariharan/",
-    github: "https://github.com/nothariharan",
+    url: "https://www.iiits.ac.in/",
+  },
+  {
+    year: "AUG 2025 — NOW",
+    title: "B.Sc — IIT Patna",
+    sub: "AI & cybersecurity · cpi 9.53",
+    icon: "grad",
+    logo: "/education/iit-patna.png",
+    tag: "EDUCATION",
+    color: "#c4552a",
+    status: "IN PROGRESS",
+    badge: "trophy",
+    url: "https://www.iitp.ac.in/",
   },
 ];
 
@@ -605,31 +635,44 @@ export type BackHonor ={
   /** Optional mobile-only full-bleed hero (tokens); Hacktoberfest uses artTileMobile banner + HTML */
   heroArtMobile?: string;
   agents?: BackHonorAgent[];
+  /** upstream orgs shown on the OSS honor — names only, no PR counts */
+  orgs?: { name: string; logo: string }[];
   metrics: [BackHonorMetric, BackHonorMetric, BackHonorMetric];
 };
 
 export const BACK_HONORS: BackHonor[]= [
   {
-    title: "Hacktoberfest '25",
-    cardTitle: "Hack-t-Oberfest",
-    sub: "Top-tier open-source contributor",
+    title: "Open Source",
+    cardTitle: "OSS",
+    sub: "Upstream work in the orgs I ship into.",
     tag: "OPEN SOURCE",
     tagIcon: "code",
-    artTile: "/honors/hacktoberfest-tile.webp",
-    /** wide pixel hero (scene + GOLDEN TIER) — mobile detail uses HTML chrome below */
-    artTileMobile: "/honors/hacktoberfest-hero-mobile.webp",
-    color: "#33406b",
-    tint: "#e8eef8",
-    url: "https://github.com/nothariharan",
-    rank: "GOLDEN TIER",
+    artTile: "/honors/oss-meme.png",
+    color: "#2072e1",
+    tint: "#e8f1fc",
+    url: "/portfolio/experience#open-source",
+    rank: "UPSTREAM",
     verified: true,
     world: "forest",
-    cardArt: "/honors/hacktoberfest-card.webp",
-    highlight: "32 PRs merged · golden tier — a month deep in open source.",
+    cardArt: "/honors/oss-sticker.png",
+    highlight: "Google, OpenAI, Graphify, and the rest of the upstream list.",
+    orgs: [
+      { name: "Google", logo: "/logos/google.svg" },
+      { name: "OpenAI", logo: "/logos/openai.svg" },
+      { name: "Gemini", logo: "/oss/google-gemini.png" },
+      { name: "LangChain", logo: "/oss/langchain-ai.png" },
+      { name: "Graphify", logo: "/oss/graphify-labs.png" },
+      { name: "Mem0", logo: "/oss/mem0ai.png" },
+      { name: "foss42", logo: "/oss/foss42.png" },
+      { name: "C2SI", logo: "/oss/c2siorg.png" },
+      { name: "RUXAILAB", logo: "/oss/ruxailab.png" },
+      { name: "topoteretes", logo: "/oss/topoteretes.png" },
+      { name: "TraceRoot", logo: "/oss/traceroot-ai.png" },
+    ],
     metrics: [
-      { icon: "branch", label: "PRs Merged", value: "32" },
-      { icon: "trophy", label: "Rank", value: "Top 1%" },
-      { icon: "shield", label: "Status", value: "Verified" },
+      { icon: "code", label: "Kind", value: "Upstream" },
+      { icon: "globe", label: "Orgs", value: "11" },
+      { icon: "check", label: "More", value: "→" },
     ],
   },
   {
@@ -638,8 +681,7 @@ export const BACK_HONORS: BackHonor[]= [
     sub: "Y Combinator — India cohort",
     tag: "Y COMBINATOR",
     tagIcon: "rocket",
-    artTile: "/honors/yc-tile.webp",
-    /** wide pixel hero (campus + cohort ribbon) — mobile detail uses HTML chrome below */
+    artTile: "/honors/yc-mark.png",
     artTileMobile: "/honors/yc-hero-mobile.webp",
     color: "#fb651e",
     tint: "#fff0e6",
@@ -662,8 +704,7 @@ export const BACK_HONORS: BackHonor[]= [
     sub: "2+ international · 12+ national.",
     tag: "HACKATHONS",
     tagIcon: "trophy",
-    artTile: "/honors/hackathon-tile.webp",
-    /** wide pixel hero (trophy + champion pennant) — mobile HTML wins/chrome below */
+    artTile: "/honors/hackathon-mark.png",
     artTileMobile: "/honors/hackathon-hero-mobile.webp",
     color: "#c9a227",
     tint: "#f5edd0",
@@ -723,14 +764,13 @@ export const BACK_HONORS: BackHonor[]= [
       { label: "Claude Code", short: "Claude", blurb: "Deep reasoning & coding", logo: "claude" },
       { label: "Cursor", short: "Cursor", blurb: "AI-native IDE velocity", logo: "cursor" },
       { label: "Codex", short: "Codex", blurb: "Agentic coding at scale", logo: "openai" },
-      { label: "ChatGPT", short: "ChatGPT", blurb: "Chat, research & ship", logo: "openai" },
+      { label: "Gemini", short: "Gemini", blurb: "Models & reasoning", logo: "gemini" },
       { label: "OpenCode", short: "OpenCode", blurb: "Terminal agent loop", logo: "opencode" },
-      { label: "Hermes Agent", short: "Hermes", blurb: "Self-improving agent", logo: "hermes" },
       { label: "DeepSeek", short: "DeepSeek", blurb: "Models & reasoning", logo: "deepseek" },
     ],
     metrics: [
       { icon: "bolt", label: "Mode", value: "Ship" },
-      { icon: "code", label: "Tools", value: "7" },
+      { icon: "code", label: "Tools", value: "6" },
       { icon: "flame", label: "AI", value: "Prod" },
     ],
   },

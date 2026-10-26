@@ -2,14 +2,12 @@ import { useMotionValue, useSpring, useTransform } from "framer-motion";
 import { MouseEvent } from "react";
 // tab starts back at top
 
-// tilt only in the corners
-// hovering name or stack shouldnt wobble the whole card
-const DEAD =0.4;
-
-function cornerAxis(n: number) {
- const a= Math.abs(n);
-  if (a <= DEAD) return 0;
-  return Math.sign(n) * ((a - DEAD) / (1 - DEAD));
+// center stays calm; the sides lean so the card feels in your hand
+function edgeRamp(n: number, dead: number) {
+  const a = Math.abs(n);
+  if (a <= dead) return 0;
+  const t = (a - dead) / (1 - dead);
+  return Math.sign(n) * t;
 }
 
 // custom hook for 3d hover tilt effect
@@ -18,9 +16,9 @@ export function useCardTilt() {
   const x =useMotionValue(0.5);
   const y= useMotionValue(0.5);
 
-  // corner press — milder than full-surface tracking
-  const rotateX =useTransform(y,[0, 1], [8, -8]);
-  const rotateY= useTransform(x, [0, 1], [-9, 9]);
+  // side lean, kept short so the card doesn't flop
+  const rotateX =useTransform(y,[0, 1], [9, -9]);
+  const rotateY= useTransform(x, [0, 1], [-13, 13]);
 
   // slightly overdamped so it tracks the cursor without bounce or trail
   const springConfig ={ damping: 28, stiffness: 260, mass: 0.3 };
@@ -34,12 +32,12 @@ export function useCardTilt() {
     const nx =((event.clientX - rect.left) / rect.width) * 2 - 1;
    const ny= ((event.clientY - rect.top) / rect.height) * 2 - 1;
 
-    const cx =cornerAxis(nx);
-    const cy= cornerAxis(ny);
+    const cx = edgeRamp(nx, 0.18);
+    const cy = edgeRamp(ny, 0.28);
 
-    // product of both axes: edges stay flat, only true corners slant
-   x.set(0.5 + cx * Math.abs(cy) * 0.5);
-    y.set(0.5 + cy * Math.abs(cx) * 0.5);
+    // left and right edges tilt even through the middle of the card
+    x.set(0.5 + cx * 0.5);
+    y.set(0.5 + cy * (0.4 + 0.6 * Math.abs(cx)) * 0.5);
   }
 
   function handleMouseLeave() {

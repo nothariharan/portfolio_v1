@@ -11,8 +11,10 @@ import {
   BACK_EXPERIENCE,
   BACK_HONORS,
   BACK_SKILLS,
+  type BackExperience,
   type TabKey,
 } from "../portfolio/data";
+import { ExperienceOldIcon } from "@/components/site/old-icons";
 import type { CardLayout } from "./card-layout";
 import { retroSound } from "@/lib/sound";
 import { SvgIcon } from "./card-icons";
@@ -37,6 +39,21 @@ import {
   preloadCardBackAssets,
   rowStyle,
 } from "./card-back-bits";
+
+function ExperienceGlyph({ row, size }: { row: BackExperience; size: number }) {
+  const iconSize = Math.min(32, size - 4);
+  return (
+    <IconTile color={row.color} size={size}>
+      {row.oldIcon ? (
+        <ExperienceOldIcon name={row.oldIcon} size={iconSize} />
+      ) : row.logo ? (
+        <img src={row.logo} alt="" className={row.logo.includes("/education/") ? "h-[78%] w-[78%] object-contain" : "h-full w-full object-cover"} />
+      ) : (
+        <SvgIcon name={row.icon} color={row.color} />
+      )}
+    </IconTile>
+  );
+}
 
 interface CardBackProps {
   layout?: CardLayout;
@@ -281,9 +298,7 @@ export function CardBack({
                     {mobile ? (
                       <div className ="flex flex-col gap-2">
                         <div className= "flex items-start gap-2 min-w-0">
-                          <IconTile color ={e.color} size= {34}>
-                            <SvgIcon name ={e.icon} color= {e.color} />
-                          </IconTile>
+                          <ExperienceGlyph row={e} size={34} />
                           <div className ="min-w-0 flex-1">
                             <div className= "flex items-center gap-1 flex-wrap mb-1">
                               <span className ="font-pixel text-[8px] leading-none" style= {{ color: e.color }}>
@@ -321,9 +336,7 @@ export function CardBack({
                     ) : (
                       <div className= "flex items-start gap-2.5 pr-6">
                         <RedCursor />
-                        <IconTile color ={e.color} size= {42}>
-                          <SvgIcon name ={e.icon} color= {e.color} />
-                        </IconTile>
+                        <ExperienceGlyph row={e} size={42} />
                         <div className ="min-w-0 flex-1 pr-1">
                           <div className= "flex items-center gap-1.5 flex-wrap mb-1.5">
                             <span className ="font-pixel text-[9px] leading-none" style= {{ color: e.color }}>

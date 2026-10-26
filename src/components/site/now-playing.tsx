@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Pause, Play, SkipBack, SkipForward, Volume2, VolumeX, X } from "lucide-react";
 import { retroSound, type MusicSnapshot } from "@/lib/sound";
 import { useCardMobileLayout } from "@/hooks/use-media-query";
@@ -139,18 +139,33 @@ export function NowPlaying() {
     e.currentTarget.releasePointerCapture(e.pointerId);
   };
 
-  if (mobile && tucked) {
-    return (
-      <button type ="button" onClick= {untuck} aria-label ="show player" className= "fixed bottom-3 left-3 z-30 flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-portfolio-border bg-portfolio-card/95 text-portfolio-text shadow-[0_10px_30px_rgba(0,0,0,0.45)] backdrop-blur-md cursor-pointer">
-        <span className ="scale-[0.62]">
-          <EqCover playing= {snap.playing} />
-        </span>
-      </button>
-    );
-  }
+  const spring =reduce
+    ? { duration: 0.01 }
+    : { type: "spring" as const, stiffness: 480, damping: 32, mass: 0.72 };
 
   return (
-    <motion.div initial ={reduce ? false : { opacity: 0, y: 12 }} animate= {{ opacity: 1, y: 0 }} transition ={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className= "pointer-events-none fixed bottom-4 left-4 z-30 max-[720px]:bottom-3 max-[720px]:left-3" onMouseEnter ={() => setHover(true)} onMouseLeave= {() => setHover(false)}>
+    <AnimatePresence mode="popLayout">
+    {mobile && tucked ? (
+      <motion.button
+        key="player-orb"
+        type="button"
+        onClick={untuck}
+        aria-label="show player"
+        initial={reduce ? false : { opacity: 0, scale: 0.55 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={reduce ? undefined : { opacity: 0, scale: 0.7 }}
+        whileTap={reduce ? undefined : { scale: 0.92 }}
+        transition={spring}
+        className="fixed bottom-4 left-4 z-30 flex h-14 w-14 items-center justify-center rounded-full border border-white/15 bg-portfolio-card/75 text-portfolio-text shadow-[0_16px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl cursor-pointer"
+      >
+        <span className="flex h-6 items-end justify-center gap-[3px]" aria-hidden>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <span key={i} className={`now-eq-bar w-[3px] rounded-full bg-white/90 ${snap.playing ? "" : "is-idle"}`} style={{ height: `${8 + ((i * 3) % 11)}px` }} />
+          ))}
+        </span>
+      </motion.button>
+    ) : (
+    <motion.div key="player-panel" initial ={reduce ? false : { opacity: 0, scale: 0.86, y: 16 }} animate= {{ opacity: 1, scale: 1, y: 0 }} exit={reduce ? undefined : { opacity: 0, scale: 0.72, y: 12 }} transition ={spring} style={{ transformOrigin: "bottom left" }} className= "pointer-events-none fixed bottom-4 left-4 z-30 max-[720px]:bottom-3 max-[720px]:left-3" onMouseEnter ={() => setHover(true)} onMouseLeave= {() => setHover(false)}>
       <div className ="pointer-events-auto relative w-[280px] max-[720px]:w-[min(280px,calc(100vw-1.5rem))] rounded-2xl border border-portfolio-border bg-portfolio-card/95 p-3 shadow-[0_16px_50px_rgba(0,0,0,0.55)] backdrop-blur-md">
         <button type= "button" onClick ={tuck} aria-label= "hide player" className ="absolute -top-2 -right-2 hidden h-7 w-7 items-center justify-center rounded-full border border-portfolio-border bg-portfolio-bg text-portfolio-muted max-[720px]:flex cursor-pointer">
           <X className= "h-3.5 w-3.5" strokeWidth ={2} />
@@ -202,5 +217,7 @@ export function NowPlaying() {
         </div>
       </div>
     </motion.div>
+    )}
+    </AnimatePresence>
   );
 }

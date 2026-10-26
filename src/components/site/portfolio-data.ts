@@ -577,6 +577,8 @@ export type ExpRow= {
   desc: string;
   /** Quiet ExpIcon glyph fallback */
   icon: string;
+  /** Pixel mark from react-old-icons, rendered at 32px */
+  oldIcon?: "stealth" | "webmaster" | "freelance";
   /** Optional real logo path under /public (e.g. /logos/rinexis.png) */
   logo?: string;
   bullets?: string[];
@@ -584,11 +586,20 @@ export type ExpRow= {
 
 export const WORK: ExpRow[] =[
   {
+    title: "Founding Intern",
+    org: "Graphify Labs",
+    period: "2026 — Present",
+    desc: "founding intern on graphify's knowledge graph.",
+    icon: "laptop",
+    logo: "/oss/graphify-labs.png",
+  },
+  {
     title: "Founding Engineer",
     org: "Stealth Startup (VC-backed)",
     period: "Jun 2026 — Aug 2026",
     desc: "shipped the product in quiet mode. role ended this month.",
     icon: "laptop",
+    oldIcon: "stealth",
   },
   {
     title: "Webmaster",
@@ -596,6 +607,7 @@ export const WORK: ExpRow[] =[
     period: "May 2026 — Present",
     desc: "run the chapter site — live at iiits-itss.vercel.app.",
     icon: "globe",
+    oldIcon: "webmaster",
   },
   {
     title: "Freelance",
@@ -603,6 +615,7 @@ export const WORK: ExpRow[] =[
     period: "Jan 2026 — Present",
     desc: "two client builds — full-stack products and agent work, shipped and handed off.",
     icon: "code",
+    oldIcon: "freelance",
   },
   {
     title: "SAP Security Intern",
@@ -625,6 +638,7 @@ export const EDUCATION: ExpRow[]= [
     period: "Aug 2025 — Present",
     desc: "dual degree with iit patna · cgpa 9.6/10.",
     icon: "grad",
+    logo: "/education/iiit-sricity.png",
   },
   {
     title: "B.Sc, AI & Cybersecurity",
@@ -632,6 +646,7 @@ export const EDUCATION: ExpRow[]= [
     period: "Aug 2025 — Present",
     desc: "cpi 9.53/10.",
     icon: "grad",
+    logo: "/education/iit-patna.png",
   },
 ];
 

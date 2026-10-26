@@ -12,12 +12,18 @@ export type MusicTrack ={
 };
 
 export const MUSIC_POOL: MusicTrack[]= [
-  { id: "theme-2", label: "THEME 2", src: "/audio/theme-2.mp3" },
-  { id: "theme-3", label: "THEME 3", src: "/audio/theme-3.mp3" },
-  { id: "theme-5", label: "THEME 5", src: "/audio/theme-5.mp3" },
-  { id: "theme-6", label: "THEME 6", src: "/audio/theme-6.mp3" },
-  { id: "theme-7", label: "THEME 7", src: "/audio/theme-7.mp3" },
-  { id: "theme-8", label: "THEME 8", src: "/audio/theme-8.mp3" },
+  { id: "theme-2", label: "LINK SUPER MUSHROOM", src: "/audio/theme-2.mp3" },
+  { id: "theme-3", label: "ZELDA WARP PIPE", src: "/audio/theme-3.mp3" },
+  { id: "theme-5", label: "KIRBY MASTER SWORD", src: "/audio/theme-5.mp3" },
+  { id: "theme-6", label: "SAMUS POWER STAR", src: "/audio/theme-6.mp3" },
+  { id: "theme-7", label: "SONIC HEART CONTAINER", src: "/audio/theme-7.mp3" },
+  { id: "theme-8", label: "MEGAMAN POKEBALL", src: "/audio/theme-8.mp3" },
+  { id: "pikachu-star", label: "PIKACHU STAR", src: "/audio/pikachu-star.mp3" },
+  { id: "squirtle-shell", label: "SQUIRTLE KOOPA", src: "/audio/squirtle-shell.mp3" },
+  { id: "gengar-boo", label: "GENGAR BOO", src: "/audio/gengar-boo.mp3" },
+  { id: "snorlax-thwomp", label: "SNORLAX THWOMP", src: "/audio/snorlax-thwomp.mp3" },
+  { id: "eevee-fireflower", label: "EEVEE FIRE FLOWER", src: "/audio/eevee-fireflower.mp3" },
+  { id: "jigglypuff-1up", label: "JIGGLYPUFF 1-UP", src: "/audio/jigglypuff-1up.mp3" },
 ];
 
 const MUSIC_ORDER: string[] =["off", ...MUSIC_POOL.map((t) => t.id)];
@@ -64,6 +70,7 @@ class RetroAudioEngine {
   private noiseBuf: AudioBuffer | null= null;
   private musicListeners: Set<(track: string) => void> =new Set();
   private listeners= new Set<() => void>();
+  private shuffleBag: string[] =[];
 
   constructor() {
     if (typeof window !== "undefined") {
@@ -236,13 +243,37 @@ class RetroAudioEngine {
     return false;
   }
 
+  private refillShuffleBag() {
+    const pool =MUSIC_POOL.map((t) => t.id);
+    this.shuffleBag =[...pool];
+    for (let i =this.shuffleBag.length - 1; i > 0; i--) {
+      const j =Math.floor(Math.random() * (i + 1));
+      const a =this.shuffleBag[i];
+      const b =this.shuffleBag[j];
+      if (a === undefined || b === undefined) continue;
+      this.shuffleBag[i] =b;
+      this.shuffleBag[j] =a;
+    }
+  }
+
+  private nextShuffledTrack(): string {
+    const pool =MUSIC_POOL.map((t) => t.id);
+    if (pool.length === 0) return this.musicTrack;
+    if (this.shuffleBag.length === 0) {
+      this.refillShuffleBag();
+    }
+    if (this.shuffleBag[0] === this.musicTrack && this.shuffleBag.length > 1) {
+      const first =this.shuffleBag.shift();
+      if (first) this.shuffleBag.push(first);
+    }
+    return this.shuffleBag.shift() ?? pool[0];
+  }
+
   public skipTrack(): string {
     this.musicUnlocked= true;
     this.initContext();
     const wasOff =this.musicTrack === "off";
-    const pool= MUSIC_POOL.map((t) => t.id);
-    const idx =pool.indexOf(this.musicTrack);
-    const next= pool[(idx + 1) % pool.length] ?? pool[0];
+    const next= this.nextShuffledTrack();
     this.setMusicTrack(next, { keepMute: !wasOff && this.muted });
     if (!this.muted) {
       this.playSelect();
@@ -261,10 +292,7 @@ class RetroAudioEngine {
       return this.musicTrack;
     }
     const wasOff= this.musicTrack === "off";
-    const pool =MUSIC_POOL.map((t) => t.id);
-    const idx= pool.indexOf(this.musicTrack);
-    const prev =idx <= 0 ? pool[pool.length - 1] : pool[idx - 1];
-    this.setMusicTrack(prev ?? pool[0], { keepMute: !wasOff && this.muted });
+    this.setMusicTrack(this.nextShuffledTrack(), { keepMute: !wasOff && this.muted });
     if (!this.muted) {
       this.playSelect();
     }
@@ -309,12 +337,8 @@ class RetroAudioEngine {
   private advanceNextTrack() {
     if (this.ignoreEnded) return;
     if (this.musicTrack === "off" || !this.enabled) return;
-    const poolIds =MUSIC_POOL.map((t) => t.id);
-    if (poolIds.length === 0) return;
-    const currIdx= poolIds.indexOf(this.musicTrack);
-    const nextIdx =currIdx >= 0 ? (currIdx + 1) % poolIds.length : 0;
-    const nextTrack= poolIds[nextIdx];
-    this.setMusicTrack(nextTrack, { keepMute: this.muted });
+    if (MUSIC_POOL.length === 0) return;
+    this.setMusicTrack(this.nextShuffledTrack(), { keepMute: this.muted });
   }
 
   public setMusicTrack(track: string, opts?: { keepMute?: boolean }) {

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { ExperienceOldIcon } from "./old-icons";
 import { Section, SectionHeading, ExpIcon, ArrowIcon } from "./ui";
 import { WORK, EDUCATION, type ExpRow } from "./portfolio-data";
 import { useTransition } from "@/hooks/use-transition";
@@ -13,9 +14,13 @@ function RowList({ rows }: { rows: ExpRow[] }) {
       {/* adding blogs here later on */}
       {rows.map((r) => (
         <li key= {`${r.title}-${r.org}`} className ="flex items-start gap-4 border-t border-portfolio-border/70 py-5 first:border-t-0">
-          {r.logo ? (
+          {r.oldIcon ? (
+            <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center">
+              <ExperienceOldIcon name={r.oldIcon} size={32} />
+            </span>
+          ) : r.logo ? (
             <span className= "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md border border-portfolio-border bg-black">
-              <img src ={r.logo} alt= "" aria-hidden className ={`object-contain ${r.logo.endsWith(".png") ? "h-full w-full object-cover" : "h-[55%] w-[55%]"}`} />
+              <img src ={r.logo} alt= "" aria-hidden className ={`object-contain ${r.logo.includes("/education/") || !r.logo.endsWith(".png") ? "h-[82%] w-[82%]" : "h-full w-full object-cover"}`} />
             </span>
           ) : (
             <span className= "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-portfolio-border bg-portfolio-card text-portfolio-muted">

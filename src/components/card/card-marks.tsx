@@ -1,6 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MouseEvent as ReactMouseEvent } from "framer-motion";
 import { retroSound } from "@/lib/sound";
 // still cooking this bit
 
@@ -158,33 +159,134 @@ function StackTile({
   );
 }
 
+// popped focus tile — short lean, corners only, never flips
+function useFocusTilt(active: boolean) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [6, -6]), { damping: 26, stiffness: 280, mass: 0.28 });
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), { damping: 26, stiffness: 280, mass: 0.28 });
+
+  useEffect(() => {
+    if (!active) {
+      x.set(0);
+      y.set(0);
+    }
+  }, [active, x, y]);
+
+  function onMove(event: ReactMouseEvent<HTMLElement>) {
+    if (!active) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const nx = (event.clientX - rect.left) / rect.width - 0.5;
+    const ny = (event.clientY - rect.top) / rect.height - 0.5;
+    x.set(Math.abs(nx) < 0.16 ? 0 : nx);
+    y.set(Math.abs(ny) < 0.16 ? 0 : ny);
+  }
+
+  function onLeave() {
+    x.set(0);
+    y.set(0);
+  }
+
+  return { rotateX, rotateY, onMove, onLeave };
+}
+
+function FocusCard({
+  f,
+  columns,
+  open,
+  onToggle,
+}: {
+  f: Focus;
+  columns: 2 | 4;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  const reduce = useReducedMotion();
+  const { rotateX, rotateY, onMove, onLeave } = useFocusTilt(open && !reduce);
+  const wide = columns === 4;
+
+  return (
+    <div
+      data-no-flip
+      data-focus-tile=""
+      className={wide ? "relative flex min-w-0 flex-1 flex-col items-center gap-1" : "relative flex flex-col items-center gap-1"}
+      style={{ zIndex: open ? 30 : 1 }}
+    >
+      <div className={wide ? "aspect-square w-full" : "aspect-square w-full max-w-[82px]"} style={{ perspective: 460 }}>
+        <motion.button
+          type="button"
+          data-no-flip
+          data-focus-tile=""
+          data-focus-open={open ? "" : undefined}
+          aria-pressed={open}
+          aria-label={f.label}
+          onPointerDown={(e) => {
+            e.stopPropagation();
+            if (e.button !== 0) return;
+            retroSound.playSelect();
+            onToggle();
+          }}
+          onPointerUp={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            // pointerdown already toggled; this is the keyboard path
+            if (e.detail !== 0) return;
+            retroSound.playSelect();
+            onToggle();
+          }}
+          onMouseEnter={() => retroSound.playCursor()}
+          onMouseMove={onMove}
+          onMouseLeave={onLeave}
+          className="block h-full w-full cursor-pointer border-0 bg-transparent p-0 outline-none"
+          style={{
+            rotateX: open && !reduce ? rotateX : 0,
+            rotateY: open && !reduce ? rotateY : 0,
+            transformStyle: "preserve-3d",
+            transformOrigin: "center center",
+          }}
+          initial={false}
+          animate={
+            open
+              ? { scale: wide ? 1.22 : 1.16, y: -8, filter: "drop-shadow(0 12px 8px rgba(0,0,0,0.32))" }
+              : { scale: 1, y: 0, filter: "drop-shadow(0 0 0 rgba(0,0,0,0))" }
+          }
+          whileHover={
+            open
+              ? undefined
+              : { scale: 1.06, y: -4, filter: "drop-shadow(0 3px 0 rgba(0,0,0,0.28))" }
+          }
+          whileTap={open ? undefined : { scale: 0.98, y: 0 }}
+          transition={{ type: "spring", stiffness: 460, damping: 30, mass: 0.55 }}
+        >
+          <FocusFrame edge={f.edge} border={f.border} lip={f.lip} fill={f.fill}>
+            <img src={f.img} alt="" className="h-full w-full object-contain pixelated select-none" draggable={false} decoding="async" />
+          </FocusFrame>
+        </motion.button>
+      </div>
+      <span className={`text-center font-pixel leading-none tracking-tight ${wide ? "text-[8px]" : "text-[7px]"}`} style={{ color: f.labelColor }}>
+        {f.label}
+      </span>
+    </div>
+  );
+}
+
 export function FocusGrid({ columns }: { columns: 2 | 4 }) {
+  const [open, setOpen] = useState<string | null>(null);
+
   return (
     <div className= {
         columns === 2
-          ? "grid grid-cols-2 gap-x-2 gap-y-1.5 pl-[18px] max-w-[200px]"
-          : "flex gap-1.5 pl-[18px]"
+          ? "relative grid grid-cols-2 gap-x-2 gap-y-1.5 pl-[18px] max-w-[200px]"
+          : "relative flex gap-1.5 pl-[18px]"
       }>
       {FOCUS.map((f) => (
-        <div key ={f.label} onMouseEnter= {() => retroSound.playCursor()} className ={
-            columns === 2
-              ? "flex flex-col items-center gap-1"
-              : "flex-1 min-w-0 flex flex-col items-center gap-1"
-          }>
-          <div className= {
-              (columns === 2
-                ? "w-full max-w-[82px] aspect-square"
-                : "w-full aspect-square") +
-              " cursor-pointer transition-all duration-150 ease-out hover:-translate-y-1 hover:scale-[1.06] hover:brightness-[1.04] hover:[filter:drop-shadow(0_3px_0_rgba(0,0,0,0.28))] active:translate-y-0 active:scale-[0.98] active:brightness-[0.97]"
-            }>
-            <FocusFrame edge={f.edge} border={f.border} lip={f.lip} fill={f.fill}>
-              <img src={f.img} alt={f.label} className="h-full w-full object-contain pixelated select-none" draggable={false} decoding="async" />
-            </FocusFrame>
-          </div>
-          <span className ={`font-pixel leading-none tracking-tight text-center ${columns === 2 ? "text-[7px]" : "text-[8px]"}`} style= {{ color: f.labelColor }}>
-            {f.label}
-          </span>
-        </div>
+        <FocusCard
+          key={f.label}
+          f={f}
+          columns={columns}
+          open={open === f.label}
+          onToggle={() => setOpen((cur) => (cur === f.label ? null : f.label))}
+        />
       ))}
     </div>
   );
@@ -235,14 +337,9 @@ export function BarChartIcon({ size =16 }: { size?: number }) {
   );
 }
 
-function BuildMini() {
+function GraphifyMini() {
   return (
-    <svg viewBox ="0 0 16 16" className= "w-[11px] h-[11px]" aria-hidden>
-      <rect x ="2" y= "9" width ="12" height= "5" fill ="#5a9bd6" />
-      <rect x= "4" y ="5" width= "8" height ="4" fill= "#7eb6e8" />
-      <rect x ="6" y= "2" width ="4" height= "3" fill ="#a8d2f2" />
-      <rect x= "7" y ="11" width= "2" height ="3" fill= "#2f78bf" />
-    </svg>
+    <img src="/oss/graphify-labs.png" alt="" className="h-full w-full object-cover" draggable={false} />
   );
 }
 
@@ -271,7 +368,7 @@ function GrindMini() {
 }
 
 export const CURRENT =[
-  { icon: <BuildMini />, label: "Freelancing (2 clients)", accent: "#5a9bd6" },
+  { icon: <GraphifyMini />, label: "Graphiyfyingg..", accent: "#3dbe7a" },
   { icon: <GrindMini />, label: "Shipping products", accent: "#f0c84a" },
   { icon: <LearnMini />, label: "Sem 3 @ IIIT", accent: "#8a5bc4" },
 ];
