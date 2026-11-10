@@ -3,6 +3,10 @@ import remarkGfm from "remark-gfm";
 import type { Components } from "react-markdown";
 // more pages land here later
 
+// markdown renderer for blog posts using react-markdown and remark-gfm basically
+// custom elements styled directly to match the dark portfolio aesthetic
+// disables raw html injection so random markdown files can't run scripts ( for now ig )
+
 const components: Components ={
   h1: ({ children }) => (
     <h1 className= "mt-0 scroll-mt-24 font-display text-3xl font-semibold tracking-tight text-portfolio-text sm:text-[2.15rem]">

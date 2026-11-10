@@ -1,5 +1,9 @@
 "use client";
 
+// vintage windows-era pixel icons mapped to projects and work history basically
+// react-old-icons sprites matched to project vibes instead of boring modern glyphs
+// defaults safely to minesweeper so unknown project slugs never crash the card ( for now ig )
+
 import type { ComponentType } from "react";
 import {
   FrostAndFire,
@@ -19,6 +23,8 @@ import {
   type OldIconProps,
 } from "react-old-icons";
 
+// project slug → retro icon. fallback to Minesweeper in ProjectOldIcon if a slug
+// isnt in here, so a new project never crashes the card, just gets a minesweeper.
 export const PROJECT_OLD_ICON: Record<string, ComponentType<OldIconProps>> = {
   scout: WindowsXPPhone,
   slopmark: SpybotSearchDestroy,
@@ -34,6 +40,8 @@ export const PROJECT_OLD_ICON: Record<string, ComponentType<OldIconProps>> = {
   raksha: FrostAndFire,
 };
 
+// thin wrapper so every icon gets pixelated rendering + pointer-events none,
+// keeps the sprite crisp at small sizes instead of blurring.
 export function OldPixelIcon({
   Icon,
   size,
@@ -55,6 +63,7 @@ export function OldPixelIcon({
   );
 }
 
+// experience row → retro icon, same vibe-matching idea as projects above.
 export const EXPERIENCE_OLD_ICON = {
   stealth: WindowsXPSecurityCenter,
   webmaster: WindowsVistaWindowsWebSite,

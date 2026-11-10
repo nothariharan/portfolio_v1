@@ -1,8 +1,13 @@
+// upstream open-source orgs i contribute into basically with clean logo marks
+// no bloated accordions or inflated numbers just clean links out to each org
+// handles svg dark inverts and png aspect ratios for crisp logos ( for now ig )
+
 import { OSS_ORGS, type OssOrg } from "./portfolio-data";
 // music waits for a tap
 
 // flat org row. name + what they work on. no pr counts no accordion
 
+// org logo tile — svg gets shrunk + inverted if its a dark svg, pngs fill.
 function OrgMark({ org }: { org: OssOrg }) {
   const isSvg= org.logo.endsWith(".svg");
   return (

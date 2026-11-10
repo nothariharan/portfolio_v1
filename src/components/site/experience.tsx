@@ -1,5 +1,9 @@
 "use client";
 
+// experience section on the portfolio home listing featured work rows and org icons basically
+// renders clean timeline items with retro pixel icons, education tabs, and bullet lists
+// animated with framer-motion so expanding details stays smooth on mobile ( for now ig )
+
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ExperienceOldIcon } from "./old-icons";

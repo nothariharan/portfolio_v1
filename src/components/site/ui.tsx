@@ -4,10 +4,9 @@ import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 // flip stays off the links
 
-// ------------------------------------------------------------------
-// Shared primitives for the minimal (tedawf-inspired) portfolio.
-// Narrow centered column, grayscale palette, subtle blur-fade reveals.
-// ------------------------------------------------------------------
+// shared primitives for the minimal /portfolio layout basically
+// provides centered container, blur-fade scroll reveals, and section headings
+// locked to a quiet ~768px column so long copy reads comfortably without visual clutter ( for now ig )
 
 // centered ~768px content column
 export function Container({ children, className ="" }: { children: ReactNode; className?: string }) {

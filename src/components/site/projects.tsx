@@ -1,5 +1,9 @@
 "use client";
 
+// featured work section on /portfolio home filtered across project lanes basically
+// lane buttons let ppl toggle between civic, systems, and in-use tools on the fly
+// shows the curated subset so the landing doesnt turn into a huge scrolling wall ( for now ig )
+
 import { useMemo, useState } from "react";
 import { Section, Reveal, SectionHeading, ArrowIcon } from "./ui";
 import { ProjectCard } from "./project-card";

@@ -1,11 +1,6 @@
-// icons stay on the tile
-// ------------------------------------------------------------------
-// Full portfolio catalog for the main site (/portfolio + sub-routes).
-// Every fact here is sourced from the /Desktop/Hariharan knowledge base
-// (wiki/projects, wiki/achievements, wiki/life). Taglines keep Hari's
-// lowercase, punchy voice. Live URLs are exact — real screenshots of
-// deployed apps live in /public/shots (captured from production).
-// ------------------------------------------------------------------
+// project catalog and category metadata driving all /portfolio pages basically
+// pairs live demo links and screenshots with taglines pulled straight from the knowledge vault
+// keeps awards and project lanes strictly typed so cards render without layout shift ( for now ig )
 
 export type Category= 
   | "AI / Agents"

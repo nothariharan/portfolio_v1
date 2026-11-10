@@ -1,5 +1,9 @@
 "use client";
 
+// skills & tools section for /portfolio showing tag chips grouped by category basically
+// pulls from BACK_SKILLS data and renders a clean responsive wall of tech tags
+// mapped lowercase labels and staggered reveal animations keep the list minimal ( for now ig )
+
 import { Section, Reveal, SectionHeading, TechTag } from "./ui";
 import { BACK_SKILLS } from "../portfolio/data";
 // tab starts back at top

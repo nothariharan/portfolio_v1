@@ -1,5 +1,9 @@
 "use client";
 
+// project card for the whole /portfolio grid basically
+// shows the preview shot or falls back to radial gradient covers with giant category glyphs
+// tags max 4 stack chips with extra counts and links out to live repos cleanly ( for now ig )
+
 import { CATEGORY_META, type SiteProject } from "./portfolio-data";
 import { TechTag, PillLink, GitHubIcon, ArrowIcon } from "./ui";
 // tab starts back at top

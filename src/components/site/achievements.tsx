@@ -1,5 +1,9 @@
 "use client";
 
+// achievements section on /portfolio home showing curated hackathon & project wins basically
+// links out to the full /portfolio/achievements archive so the landing stays concise
+// reveals featured cards in a clean responsive grid without noisy fluff metrics ( for now ig )
+
 import { Section, Reveal, SectionHeading, ArrowIcon } from "./ui";
 import { FEATURED_ACHIEVEMENTS, ACHIEVEMENTS } from "./portfolio-data";
 import { useTransition } from "@/hooks/use-transition";
@@ -11,6 +15,7 @@ export function Achievements() {
   return (
     <Section id= "achievements">
       {/* adding blogs here later on */}
+      {/* featured wins only, staggered reveal on scroll. */}
       <SectionHeading title ="selected" action= {
           <button
             onClick ={() => startTransition("/portfolio/achievements")}
