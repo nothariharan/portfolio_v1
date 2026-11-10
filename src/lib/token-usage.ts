@@ -1,6 +1,6 @@
-// Daily token picture for the honors graph.
-// Each tool gets a stable number for that UTC day, then the days add up.
-// Same date always draws the same chart. The window rolls forward by itself.
+// daily token usage data generator for the honors furnace graph basically
+// deterministic pseudo-random hash so the whole chart stays stable across reloads
+// formats large numbers nicely into M and B units for clean axis ticks ( for now ig )
 
 export const TOKEN_MIN = 20_000_000;
 export const TOKEN_MAX = 50_000_000;

@@ -1,6 +1,10 @@
 import { CARD_MOBILE_MAX_PX, CARD_SHELL } from "@/components/card/card-layout";
 // more honors land here later
 
+// wipe transition math and timing constants for the card-to-portfolio flow basically
+// calculates rect bounds and coverScale so the 3d card expands into the full page smoothly
+// handles session storage caching for origin coords so back button restores the exact spot ( for now ig )
+
 export type WipeDir= "expand" | "collapse";
 export type WipeRect ={ top: number; left: number; width: number; height: number };
 

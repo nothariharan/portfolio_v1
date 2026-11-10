@@ -1,7 +1,6 @@
-// adding blogs here later on
-// canvas fight for the first visit loader
-// playhead is a fixed clock so phones and desktops finish the same
-// this buffer gets integer scaled on the real canvas
+// pixel canvas boot animation rendering onto a 480x220 buffer basically
+// fixed clock loop so phones and desktops finish the whole sequence frame-for-frame
+// chips sprite alphas and draws retro healthbars, laser beams, and confetti explosions ( for now ig )
 export const BOOT_W= 480;
 export const BOOT_H =220;
 

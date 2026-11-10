@@ -1,8 +1,8 @@
 "use client";
 
-// card to portfolio wipe
-// ink the live face then grow a black plate
-// iris lives inside the card so tilt cant cover it
+// card-to-portfolio wipe overlay animating ink expansion and page reveal basically
+// runs portal-based ink, grow, and fade phases to seamlessly bridge the 3d card and site routes
+// keeps the iris inside the card boundary so 3d tilt doesn't clip the whole transition ( for now ig )
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";

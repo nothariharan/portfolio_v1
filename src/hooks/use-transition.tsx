@@ -1,8 +1,8 @@
 "use client";
 
-// wipe from the card into portfolio
-// whoosh is homemade not a music sting
-// first tap also kicks bgm if nothing is playing yet
+// route transition context coordinating the card-extend wipe across pages basically
+// intercepts internal navigation to trigger the chiptune whoosh sfx and portal ink overlay
+// busyRef locks out double triggers while router.push switches routes under the hood ( for now ig )
 
 import {
   createContext,useCallback,useContext,useEffect,useRef,useState,

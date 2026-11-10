@@ -1,5 +1,6 @@
-// noun icons from public/icons/noun
-// pixel pngs when we have them svg otherwise
+// noun icon component using css maskImage spans so backgroundColor tints the sprite directly basically
+// renders clean monochrome glyphs from png or svg assets without needing duplicate colored assets
+// centers and contains the mask with inline sizes so icons drop seamlessly into retro tags ( for now ig )
 
 import type { NounIconName } from "@/components/portfolio/data";
 // cream bar stays put

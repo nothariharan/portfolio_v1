@@ -2,6 +2,9 @@ import { useMotionValue, useSpring, useTransform } from "framer-motion";
 import { MouseEvent } from "react";
 // tab starts back at top
 
+// 3d card tilt hook with framer-motion springs tracking the cursor basically
+// edgeRamp keeps the center calm so small jitter doesn't violently flip the whole card ( for now ig )
+
 // center stays calm; the sides lean so the card feels in your hand
 function edgeRamp(n: number, dead: number) {
   const a = Math.abs(n);
@@ -10,7 +13,9 @@ function edgeRamp(n: number, dead: number) {
   return Math.sign(n) * t;
 }
 
-// custom hook for 3d hover tilt effect
+// framer motion spring hook that maps cursor coordinates to 3d card rotation basically
+// tuned damping and stiffness so the tilt follows snappy without rubberbanding all over the place
+// handles mouse move and resets back flat to 0.5 center when ppl leave the card ( for now ig )
 export function useCardTilt() {
   // raw values from 0 to 1 — 0.5 is flat /centered
   const x =useMotionValue(0.5);

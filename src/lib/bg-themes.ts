@@ -1,6 +1,6 @@
-// hud stays in the corners
-// cream teal and the rest of the stage colors
-// cycle these from the color plaque on the landing
+// stage background theme colors cycled from the landing palette chip basically
+// sets the pastel backdrop hex for the retro trainer card stage on the main screen
+// persists selected theme index to local storage so visits remember your preference ( for now ig )
 
 export const BG_THEMES =[
   { id: "teal", label: "TEAL", color: "#d0e8e0" },

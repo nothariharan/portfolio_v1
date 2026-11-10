@@ -3,6 +3,10 @@ import path from "node:path";
 import matter from "gray-matter";
 // player tucks on a phone
 
+// file-based blog loader reading markdown from content/blog with gray-matter basically
+// ( no db here coz i write and redeploy directly :))) ) filters drafts and sorts by date
+// parses frontmatter tags and date metadata for static generation and dynamic slug pages ( for now ig )
+
 export type BlogPostMeta ={
   slug: string;
   title: string;
@@ -66,6 +70,8 @@ export function getAllPosts(): BlogPostMeta[] {
 }
 
 /** Full post by slug, or null if missing / unpublished. */
+// slug comes straight from the route param — next normalizes it, but if we ever
+// expose this elsewhere, sanitize with an allowlist (/^[a-z0-9-]+$/) first.
 export function getPostBySlug(slug: string): BlogPost | null {
   const md= path.join(BLOG_DIR, `${slug}.md`);
   const mdx =path.join(BLOG_DIR, `${slug}.mdx`);

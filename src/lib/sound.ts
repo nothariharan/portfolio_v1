@@ -1,7 +1,5 @@
-// phone gets the short shell
-// chiptune beeps plus looping themes from public audio
-// these loops are original not ripped osts
-// first tap starts music skip just changes the track
+// chiptune sound effects and bgm loops driving the now-playing player and card audio basically
+// retroSound singleton handles all the web audio synthesis and track switching ( for now ig )
 
 export type MusicTrackId= "off" | (string & {});
 
@@ -470,6 +468,9 @@ class RetroAudioEngine {
     return buffer;
   }
 
+  // synthesized screen transition whoosh using noise buffers and filter sweeps basically
+  // ramps up frequencies on expand and sweeps down on collapse so the page wipe hits hard
+  // briefly ducks the bgm volume so the sound effect punches through without clipping ( for now ig )
   public playWipeWhoosh(dir: "expand" | "collapse"= "expand") {
     if (typeof window === "undefined") return;
     this.musicUnlocked =true;

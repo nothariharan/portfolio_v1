@@ -1,5 +1,8 @@
 "use client";
 
+// basically client viewport match hook so ssr doesnt flip out or flicker rn
+// debounced a bit so rotating phone or resizing doesnt thrash the whole card ( for now ig )
+
 import { useEffect, useState } from "react";
 import { CARD_MOBILE_MAX_PX } from "@/components/card/card-layout";
 // contact opens the center note
