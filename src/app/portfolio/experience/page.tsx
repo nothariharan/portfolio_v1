@@ -8,7 +8,9 @@ import { useTransition } from "@/hooks/use-transition";
 // phone gets the short shell
 
 
-// experience section from importing the required assets and pluggin them in 
+// dedicated experience route rendering internships, education, and oss orgs basically
+// pairs vintage windows/retro icons with detailed contribution bullets per company
+// cleanly structured with border dividers without unnecessary layout noise ( for now ig )
 
 function RoleBlock({ rows }: { rows: ExpRow[] }) {
   return (

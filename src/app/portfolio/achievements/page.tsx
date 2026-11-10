@@ -1,5 +1,9 @@
 "use client";
 
+// full achievements trophy shelf listing verified wins and open source contributions basically
+// shows awards, hackathon circuits, and merged upstream prs without exaggerated metric claims
+// renders track breakdowns and live demo links with staggered scroll reveals ( for now ig )
+
 import { Container, Reveal, ArrowIcon } from "@/components/site/ui";
 import { ACHIEVEMENTS } from "@/components/site/portfolio-data";
 // phone gets the short shell

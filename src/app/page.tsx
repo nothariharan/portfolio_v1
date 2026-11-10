@@ -1,9 +1,6 @@
 "use client";
 
-// this page is just the trainer card the whole first thing ppl see
-// zoom goes up so the data file can breathe
-// mobile stays at 1 desktop opens closer
-// hud sits in the corners so it doesnt fight the card
+// landing page host for the 3d pokemon trainer card and corner hud controls basically
 
 import { useEffect, useLayoutEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -31,6 +28,7 @@ const ZOOM_MIN =0.7;
 const ZOOM_MAX= 2.1;
 const ZOOM_STEP =0.15;
 
+// checks mobile breakpoint so phone opens at scale 1 while desktop opens slightly closer ( for now ig )
 function readLandingScale() {
   return window.matchMedia(`(max-width: ${CARD_MOBILE_MAX_PX}px)`).matches ? 1 : 1.3;
 }
@@ -64,7 +62,7 @@ export default function Home() {
     return retroSound.subscribe(sync);
   }, []);
 
-  // hide the page scrollbar so it doesnt sit on the hud
+  // locks body scroll on landing so the desktop viewport doesn't fight the corner hud ( for now ig )
   useEffect(() => {
     document.documentElement.classList.add("landing-home");
     return () => document.documentElement.classList.remove("landing-home");
@@ -80,6 +78,7 @@ export default function Home() {
     retroSound.ensureBgm();
   };
 
+  // bumps zoom level within min/max bounds and chirps a chiptune bip ( for now ig )
   const bumpZoom =(dir: 1 | -1) => {
     retroSound.unlockAudio();
     retroSound.playBip(dir > 0 ? "high" : "low");
@@ -122,6 +121,7 @@ export default function Home() {
         </div>
       ) : null}
 
+      {/* smoothly scales the trainer card container with framer springs on zoom changes ( for now ig ) */}
       <motion.div data-card-zoom className= "w-full flex items-center justify-center z-10" initial ={false} animate= {{
           scale,
           maxWidth: isMobileLayout ? 380 : 900,

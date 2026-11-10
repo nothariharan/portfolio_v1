@@ -1,3 +1,7 @@
+// blog archive index loading published markdown posts from content/blog basically
+// shows the retro 'nothing to see here, YET' pixel message whenever no posts are found
+// links through TransitionLink so clicking into post details keeps the smooth page wipe ( for now ig )
+
 import type { Metadata } from "next";
 import { Container } from "@/components/site/ui";
 import { TransitionLink } from "@/components/site/transition-link";

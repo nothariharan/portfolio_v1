@@ -1,5 +1,9 @@
 "use client";
 
+// root shell for the entire /portfolio section wrapping nav, footer, and audio player basically
+// flips document body backdrop to dark #030712 and restores gba-teal when transitioning back to the card
+// derives the active tab key directly from current pathname so the navbar stays highlighted ( for now ig )
+
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useTransition } from "@/hooks/use-transition";

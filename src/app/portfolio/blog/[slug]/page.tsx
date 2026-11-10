@@ -1,3 +1,7 @@
+// individual blog post page rendering raw markdown by slug basically
+// static params generated at build time with dynamic frontmatter titles
+// triggers nextjs notFound() whenever a post is missing or unpublished ( for now ig )
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/site/ui";

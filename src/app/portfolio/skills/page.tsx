@@ -1,5 +1,9 @@
 "use client";
 
+// dedicated skills page laying out the entire toolkit grouped across core domains basically
+// categorizes ai/ml models, full-stack frameworks, devops tools, and cloud infrastructure
+// bottom action buttons provide quick route transitions directly to projects or experience ( for now ig )
+
 import { Container, Reveal, TechTag } from "@/components/site/ui";
 import { BACK_SKILLS } from "@/components/portfolio/data";
 import { useTransition } from "@/hooks/use-transition";

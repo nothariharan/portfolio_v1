@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 // boot skips the next visit
 
-// view count for the eye chip
+// server-side api route fetching real pageviews from vercel web analytics basically
+// proxies the request so read tokens stay securely on the server instead of leaking to client bundles
+// gracefully returns null if tokens are absent so local dev doesn't spam errors ( for now ig )
+
 // vercel analytics count api token stays on the server
 
 const PROJECT_ID= 
@@ -14,6 +17,8 @@ type AnalyticsCount ={
   data?: { pageviews?: number; visitors?: number };
 };
 
+// token resolution: prefer the dedicated read token, fall back to the vercel
+// cli token. empty string means "no views shown", chip degrades gracefully.
 function readToken() {
   return process.env.ANALYTICS_READ_TOKEN || process.env.VERCEL_TOKEN || "";
 }

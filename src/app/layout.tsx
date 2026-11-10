@@ -48,6 +48,10 @@ const pokemonDS= localFont({
   display: "swap",
 });
 
+// root html layout configuring font variables, metadata, and analytics basically
+// pairs pokemon ds bitmap fonts with clean google fonts and sets metadataBase for og images
+// injects vercel analytics and the wipe transition provider at the application root ( for now ig )
+
 export const metadata: Metadata ={
   metadataBase: new URL("https://hariharann.me"),
   // app/favicon.ico + icon.png + apple-icon.png are picked up by the file convention

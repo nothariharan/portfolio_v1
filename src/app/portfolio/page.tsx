@@ -1,5 +1,9 @@
 "use client";
 
+// main /portfolio landing page composing hero, experience, and featured projects basically
+// deep links coming from the 3d trainer card (?tab=) smoothly transition into sub-routes
+// wrapped inside suspense so searchParam reading doesn't bust client hydration ( for now ig )
+
 import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTransition } from "@/hooks/use-transition";

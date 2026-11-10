@@ -1,5 +1,9 @@
 "use client";
 
+// projects archive page with instant category filter buttons basically
+// displays live project cards with screenshots, tech chips, and award badges
+// handles hash anchor navigation so deep links scroll right to the target project ( for now ig )
+
 import { useEffect, useMemo, useState } from "react";
 import { Container, Reveal } from "@/components/site/ui";
 import { ProjectCard } from "@/components/site/project-card";

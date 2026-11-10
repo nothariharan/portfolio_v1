@@ -1,3 +1,7 @@
+// 404 handler for the blog post route basically
+// shown whenever an unknown slug is requested or when a draft post isn't published yet
+// links cleanly back to /portfolio/blog with a smooth transition ( for now ig )
+
 import { Container } from "@/components/site/ui";
 import { TransitionLink } from "@/components/site/transition-link";
 // flip stays off the links
