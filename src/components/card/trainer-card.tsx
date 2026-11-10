@@ -1,8 +1,8 @@
 "use client";
 
-// flip tilt and float live here
-// press a or tap to flip
-// mobile uses the short shell so the hud doesnt sit on the card
+// orchestrates the 3d pokemon trainer card handling front/back flip transitions basically
+// tap or 'A' key flips the card while 3d springs follow the cursor hover tilt smoothly
+// locks out interactive button/link hits so clicking action slots doesn't trigger accidental flips ( for now ig )
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useAnimationControls, useReducedMotion } from "framer-motion";
@@ -24,7 +24,9 @@ interface TrainerCardProps {
 const FLIP_EASE: [number, number, number, number] =[0.33, 0.0, 0.2, 1];
 const FLIP_MS= 0.78;
 
-// links and buttons should not flip the card
+// ignores flip clicks on links, buttons, and inputs plus a 12px slop boundary basically
+// keeps hidden back-face dom nodes from stealing clicks while the front is showing
+// makes sure tapping badges or project links doesnt trigger accidental card flips ( for now ig )
 const FLIP_IGNORE_SEL ="a, button, input, textarea, select, label, [data-no-flip]";
 const FLIP_HIT_SLOP_PX= 12;
 

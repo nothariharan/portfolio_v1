@@ -1,8 +1,8 @@
 "use client";
 
-// data file back of the card
-// four tabs and honors is the spicy one
-// copy lives in portfolio data this file is mostly chrome
+// data file face for the back of the trainer card holding four navigable tabs basically
+// projects, experience, honors, and skills tabs with retro sound feedback on switch
+// chrome stays faithful to the pokemon summary screen with navy and cream panels ( for now ig )
 
 import { useEffect, useState } from "react";
 import {
@@ -80,6 +80,9 @@ export function CardBack({
     const root =document.querySelector("[data-flip-root]");
     if (!(root instanceof HTMLElement)) return;
 
+    // custom hit test since 3d perspective flip messes up normal pointer clicks basically
+    // pads each tab box and snaps to the closest horizontal tab center if u tap near the row
+    // prevents phantom misses when ppl tap tabs while the card is tilted in 3d ( for now ig )
     const tabAtPoint= (x: number, y: number) => {
       const tabs =[...root.querySelectorAll<HTMLElement>('[role="tab"]')];
       if (!tabs.length) return -1;

@@ -1,5 +1,8 @@
 "use client";
 
+// inline gba marks and emblems across the whole card front basically
+// kept as raw svgs so they stay crisp when scaling without any blur ( still cooking rn )
+
 import { useEffect, useState, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { retroSound } from "@/lib/sound";
@@ -41,6 +44,9 @@ type Focus= {
   img: string;
 };
 
+// focus area badge tokens matching pokemon type styles (psychic/water/grass/normal) basically
+// each domain configures custom borders, pixel sprite art, and chamfered color fills
+// renders in a clean 2x2 or 4x1 grid across mobile and desktop card layouts ( for now ig )
 const FOCUS: Focus[] =[
   {
     label: "AI / ML",
@@ -126,6 +132,9 @@ const INFRA_STACK =[
   { key: "vercel", name: "Vercel" },
 ];
 
+// retro square tech stack icon tile with inset bevel borders and hover lift basically
+// plays chiptune cursor click audio on mouseenter and pops a dark pixel tooltip
+// compact mode scales down cleanly so the rows fit on mobile without wrapping ( for now ig )
 function StackTile({
   name,
   logo,

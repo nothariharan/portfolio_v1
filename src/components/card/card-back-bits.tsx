@@ -12,7 +12,9 @@ import { ProjectOldIcon } from "@/components/site/old-icons";
 import { SvgIcon } from "./card-icons";
 // oss orgs sit under here
 
-// palette and little chrome for the back face
+// shared palette and little ui chrome for the back face of the trainer card basically
+// keeping navy and cream tokens consistent across all the data tabs like honors and skills
+// renders retro status dots, corner badges, and record buttons with pixel shadows ( for now ig )
 
 export const NAVY= "#33406b";
 export const NAVY_SOFT ="#3d4d78";
@@ -59,6 +61,9 @@ export function OpenRecordBtn({ href }: { href: string }) {
   );
 }
 
+// preloads honors art, hero illustrations, and skill svg logos in background threads basically
+// iterates asynchronously through card back media so switching tabs feels instant without layout flash
+// keeps heavy pixel artwork cached in memory ahead of user interaction ( for now ig )
 export function preloadCardBackAssets() {
   const urls =[
     ...BACK_HONORS.flatMap((h) => [h.cardArt, h.heroArt, h.heroArtMobile].filter(Boolean)),

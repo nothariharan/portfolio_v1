@@ -1,8 +1,9 @@
 "use client";
 // boot skips the next visit
 
-// tiny svg marks for the data file rows
-// grad brief cloud and the rest
+// hand-crafted inline svg icons for card data rows so we dont drag in a heavy icon package basically
+// returns custom vector paths for grad caps, code brackets, trophies, and retro rocket glyphs
+// configurable color tint with sharp viewBox bounds so icons render clean at 20px ( for now ig )
 
 export function SvgIcon({ name, color= "#5d6b7a" }: { name: string; color?: string }) {
   switch (name) {

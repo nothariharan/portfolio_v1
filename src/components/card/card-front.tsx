@@ -1,8 +1,8 @@
 "use client";
 
-// front of the trainer card
-// desktop is wide with the badge strip
-// mobile is the short portrait so the hud has room
+// front face of the pokemon trainer card showing identity stats and badge strip basically
+// desktop stretches wide with side badges while mobile switches to the compact portrait layout
+// keeps all text and pixel bullets aligned inside the retro panel frame ( for now ig )
 
 import { TRAINER_ID } from "../portfolio/data";
 import {
@@ -98,6 +98,9 @@ function ExpPanel({ compact }: { compact?: boolean }) {
   );
 }
 
+// dark status panel showing what im working on rn layered over the claude pixel sprite basically
+// glowing emerald dot gives it that active live status feel with crisp gradient shading
+// tucks into the bottom-right corner on desktop and expands full width on mobile ( for now ig )
 function CurrentlyPanel({ layout }: { layout: CardLayout }) {
   const mobile =layout === "mobile";
 

@@ -3,6 +3,9 @@
 import { useState } from "react";
 // sprite loop lives up here
 
+// gym badge row for the card basically showing tech stack as pokemon badges
+// hover updates the readout bar so ppl can see what each shape stands for ( for now ig )
+
 // badge data structure
 interface Badge {
   id: number;
@@ -27,7 +30,9 @@ const BADGES: Badge[] =[
 export function BadgeRow() {
   const [activeBadge, setActiveBadge]= useState<Badge | null>(null);
 
-  // helper to render gym badge icons as svgs
+  // renders raw svg vector paths for all 8 retro gym badge shapes basically
+  // matches each tech stack skill to a classic pokemon gym token like flame or droplet
+  // pixel-border-sm keeps the silhouette sharp on high-dpi screens ( for now ig )
   function renderBadgeShape(shape: string, color: string) {
     // get the background color class
     const colorClass =color.split(" ")[0];
@@ -88,6 +93,9 @@ export function BadgeRow() {
     }
   }
 
+  // renders the gym badge case with inline svg shapes and live name readouts basically
+  // hovering any badge updates the header label with the tech name in bold red
+  // maps custom pixel-border-sm styling to emulate physical pokemon gameboy cartridges ( for now ig )
   return (
     <div className ="relative flex flex-col mt-4">
       {/* header strip for the badge row */}

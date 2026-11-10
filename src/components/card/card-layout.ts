@@ -1,6 +1,6 @@
-// icons stay on the tile
-// shell sizes and cream chrome
-// keep this in sync with the 720 mobile query
+// dimensions and cream panel style constants for the trainer card shell basically
+// desktop is 680x525 while mobile drops to 360x512 synced with the 720px breakpoint
+// card panel shadows and divider colors give it that authentic retro gba game look ( for now ig )
 
 export type CardLayout= "desktop" | "mobile";
 

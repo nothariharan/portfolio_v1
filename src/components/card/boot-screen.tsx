@@ -1,8 +1,8 @@
 "use client";
 
-// first visit canvas fight
-// clock is fixed so phones and desktops match
-// bootHold query freezes t if u wanna screenshot a frame
+// canvas-based retro intro boot sequence playing before the trainer card renders basically
+// runs a mini rock-paper-scissors sprite duel with chiptune sfx and victory fanfares
+// integer scales up to 3x on crisp pixels while preloading the heavy card images in parallel ( for now ig )
 
 import { useEffect, useRef } from "react";
 import { retroSound } from "@/lib/sound";
@@ -50,6 +50,7 @@ function loadImage(src: string) {
   });
 }
 
+// preloads heavy card assets like the portrait webp in parallel while the fight animates ( for now ig )
 function preloadCard(): Promise<void> {
   return Promise.all(
     PRELOAD.map(
@@ -100,6 +101,9 @@ const frozenT= hold && HOLD_T[hold] !== undefined ? HOLD_T[hold] : null;
       doneRef.current();
     };
 
+    // integer scales the 480x220 canvas buffer based on viewport dimensions basically
+    // forces imageSmoothingEnabled to false so all the retro sprites stay crisp and sharp
+    // matches phones and desktops frame-for-frame so nobody gets weird drift ( for now ig )
     const paint =() => {
       const scale= Math.max(
         1,
@@ -155,6 +159,9 @@ const frozenT= hold && HOLD_T[hold] !== undefined ? HOLD_T[hold] : null;
 
     void preloadCard();
 
+    // fixed-duration game loop driving laser blasts, sprite frame swaps, and victory audio basically
+    // clamps normalized timeline t from 0 to 1 so the sequence finishes at the exact same tick on all devices
+    // hold buffer at the end lets the victory pose linger for a split second before tearing down ( for now ig )
     const tick =(now: number) => {
       if (frozenT === null) {
         t= Math.min(1, (now - startedAt) / BOOT_MS);

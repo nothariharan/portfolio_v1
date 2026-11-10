@@ -1,5 +1,9 @@
 "use client";
 
+// the furnace token graph on the card back basically showing per-model stacked bars
+// uses a deterministic seed from model+date so the whole readout stays consistent across reloads
+// smooth svg line chart with hover scrubber and model filter pins for deep inspections ( for now ig )
+
 import { useEffect, useId, useMemo, useRef, useState, type PointerEvent } from "react";
 import type { BackHonorAgent } from "../portfolio/data";
 import { buildTokenWeek, formatTokens } from "@/lib/token-usage";

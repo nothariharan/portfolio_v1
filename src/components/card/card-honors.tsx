@@ -1,5 +1,8 @@
 "use client";
 
+// honors grid for the card back with the detail pane sitting right under it basically
+// ring highlight instead of scale so the whole tile grid doesnt jump when tapped ( for now ig )
+
 import { NounIcon } from "../ui/noun-icon";
 import { retroSound } from "@/lib/sound";
 import { useTransition } from "@/hooks/use-transition";
@@ -8,8 +11,9 @@ import { NAVY } from "./card-back-bits";
 import { TokenUsageGraph } from "./token-usage-graph";
 // sprite loop lives up here
 
-// honors grid plus the detail card under it
-// selected tile is a ring not a scale so the grid stays still
+// interactive honor world card tile with custom retro world fills and crisp border frames basically
+// plays select chiptunes on tap and applies a clean outer ring shadow instead of scaling
+// keeps the grid layout completely frozen so the card face never jumps on click ( for now ig )
 
 export function HonorWorldCard({
   honor,

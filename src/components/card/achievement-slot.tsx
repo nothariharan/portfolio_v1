@@ -3,6 +3,9 @@
 import { useState } from "react";
 // player tucks on a phone
 
+// pokemon style achievement slot kept around for the retro sprite vibes basically
+// parses level number to fill the bar and pops a small tooltip on hover ( for now ig )
+
 interface AchievementSlotProps {
   title: string;
   level: string;
@@ -50,7 +53,9 @@ export function AchievementSlot({
         {category}
       </span>
 
-      {/* tooltip on hover */}
+      {/* floating tooltip popup that shows up when ppl hover the slot */}
+      {/* grabs category and full description so u get the backstory */}
+      {/* sits right above the tile and blocks clicks so it doesnt feel janky */}
       {hovered && (
         <div className ="absolute left-1/2 bottom-full mb-2 -translate-x-1/2 w-48 p-2 bg-slate-800 text-white text-[8px] font-pixel leading-normal pixel-border z-50 shadow-lg pointer-events-none">
           <p className= "text-gba-yellow mb-1 font-bold">{title} ({category})</p>
