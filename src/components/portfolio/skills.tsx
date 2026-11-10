@@ -1,5 +1,9 @@
 "use client";
 
+// skills tab on the trainer card back showing stat tiles and proficiency bars basically
+// renders the svg radar polygon alongside language star ratings and currently-learning list
+// stays faithful to the pokemon summary screen stats layout with cream borders ( for now ig )
+
 import { useState } from "react";
 import {
   SKILL_STATS,

@@ -1,10 +1,15 @@
 "use client";
 
+// honors section on the trainer card back face basically with badge icons and stat tiles
+// list is selectable and previews details directly ( still cooking the art side rn )
+
 import { useState } from "react";
 import { HONOR_STATS, HONORS, FEATURED_HONOR, type Honor } from "./data";
 import { StatTile, LogoTile, MoreTile, Mascot } from "./ui";
 // still cooking this bit
 
+// svg badge glyph per honor shape — trophy/medal/shield/code/cert/star. pure
+// inline svg so it scales crisp at small sizes without an icon dependency.
 function BadgeIcon({ shape, size= 22 }: { shape: Honor["shape"]; size?: number }) {
   const c =size;
   switch (shape) {

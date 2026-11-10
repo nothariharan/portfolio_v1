@@ -1,5 +1,9 @@
 "use client";
 
+// experience tab on the trainer card back face displaying timeline and work history basically
+// retro pixel icons for laptops, brains, and code blocks mapped per role category
+// breaks down key achievements and education without excessive corporate fluff ( for now ig )
+
 import { useState } from "react";
 import {
   EXP_STATS,

@@ -1,5 +1,9 @@
 "use client";
 
+// projects tab on the trainer card back face displaying selectable app entries basically
+// each project row pairs retro icons with external github/demo action buttons
+// shows a simulated retro dashboard window preview alongside category tags ( for now ig )
+
 import { useState } from "react";
 import { ProjectOldIcon } from "@/components/site/old-icons";
 import { PROJECTS, PROJECT_META, TOTAL_BUILT } from "./data";

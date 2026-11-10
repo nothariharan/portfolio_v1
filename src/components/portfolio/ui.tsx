@@ -1,5 +1,9 @@
 "use client";
 
+// shared pixel ui primitives for the /portfolio data-file screens basically
+// provides segmented bars, star ratings, logo tiles, and pokeball emblems
+// styled to look chunky and retro like pokemon ds summary screens ( for now ig )
+
 import type { ReactNode } from "react";
 import { TRAINER_ID, PANELS, type TabKey } from "./data";
 // flip stays off the links
@@ -116,7 +120,9 @@ export function TabIcon({ tab, active }: { tab: TabKey; active: boolean }) {
   }
 }
 
-// data file display frame
+// data file display frame — the whole /portfolio shell: red header bar with
+// trainer id, tab buttons with panel art, scrollable body, bottom back bar.
+// children is whatever the active tab renders.
 
 export function DataFileShell({
   active,
@@ -196,7 +202,8 @@ export function DataFileShell({
   );
 }
 
-// sprite mascot used in sections
+// sprite mascot used in sections — the hari stand sprite, pixelated, with a
+// soft drop shadow. pointer-events none so it never blocks clicks.
 export function Mascot({ className ="" }: { className?: string }) {
   return (
     <img src= "/sprites/hari_stand.webp" alt ="Hariharan" className= {`object-contain pixelated drop-shadow-[2px_4px_3px_rgba(0,0,0,0.18)] pointer-events-none select-none ${className}`} decoding ="async" />

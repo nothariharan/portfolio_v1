@@ -1,7 +1,6 @@
-// links sit in the note
-// copy and ranks live here
-// ui just renders whatever BACK_* exports
-// honors art is under public/honors fix css dont regen the pngs
+// ground truth dataset driving all four tabs of the trainer card basically
+// holds projects, work history, honors, and skill categories matched directly to the knowledge vault
+// ui components consume these exports directly without needing any runtime database lookups ( for now ig )
 
 export const TRAINER_ID ="67420";
 
