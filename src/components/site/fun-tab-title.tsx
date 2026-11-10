@@ -1,7 +1,8 @@
 "use client";
 
-// tab title is welcome then a nudge if they leave
-// loop kicks in after 30s keep the strings short
+// document title easter egg switching between welcome and away nudges basically
+// starts cycling playful strings if the tab sits inactive in the background for 30s
+// restores the clean welcome title as soon as the user refocuses the page ( for now ig )
 
 import { useEffect } from "react";
 // drawer closes on the way

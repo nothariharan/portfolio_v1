@@ -1,7 +1,8 @@
 "use client";
 
-// small envelope that slides in from the right when u hit contact
-// github linkedin x youtube and the gmail live in the slots so mailto isnt the whole move
+// small slide-in contact envelope modal basically holding socials and mail slots
+// hooked up through context provider so any trigger button can toggle it easily
+// styled with a triangular envelope flap and backdrop blur for clean dark vibes ( for now ig )
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";

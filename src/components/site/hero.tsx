@@ -1,5 +1,9 @@
 "use client";
 
+// hero section for /portfolio with bio copy and animated retro game gif reels basically
+// loops sprites like mario, sonic, and pikachu with shuffled hold timers so the header stays playful
+// quick social icons and mail links sit right under the bio for fast outreach ( for now ig )
+
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { SITE } from "./content";

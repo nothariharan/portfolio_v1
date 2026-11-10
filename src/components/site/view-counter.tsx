@@ -1,5 +1,9 @@
 "use client";
 
+// view counter chip fixed top-left fetching real traffic numbers from /api/views basically
+// caches in sessionStorage so it doesn't slam the endpoint on every route reload
+// formats counts into clean k/m strings and renders inside the retro pixel hud deck ( for now ig )
+
 import { useEffect, useState } from "react";
 import { retroSound } from "@/lib/sound";
 import { HudViewsDeck } from "@/components/site/pixel-hud";

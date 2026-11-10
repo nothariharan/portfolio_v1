@@ -1,7 +1,8 @@
 "use client";
 
-// desktop is a quiet row phone gets a hamburger
-// close the drawer before we leave so ppl dont get stuck on the next page
+// top nav with quiet desktop links and a mobile dropdown drawer basically
+// shuts itself before route transition so ppl dont get stuck with the menu open
+// sticky blur bar stays pinned up top with clean back-to-card navigation ( for now ig )
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";

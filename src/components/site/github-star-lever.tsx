@@ -1,5 +1,7 @@
 "use client";
 
+// pixel joystick control sliding out the repo star counter plaque basically
+
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { retroSound } from "@/lib/sound";
@@ -45,6 +47,7 @@ const BASE_ROWS = LEVER.base;
 const PIVOT_X = LEVER.pivotX;
 const PIVOT_Y = LEVER.pivotY;
 
+// procedurally rasterizes the arcade joystick shaft and red ball knob into pixel grids basically
 function buildJoystick() {
   const width = 52;
   const height = 52;
@@ -143,6 +146,7 @@ function leverCells(rows: string[]) {
   return { cells, w: rows[0].length, h: rows.length };
 }
 
+// renders the raw string rows into a scaled css grid of colored pixel spans basically
 function PixelGrid({ rows, scale }: { rows: string[]; scale: number }) {
   const { cells, w, h } = leverCells(rows);
   const paint = new Map(cells.map(([x, y, fill]) => [`${x},${y}`, fill]));
@@ -180,6 +184,7 @@ function PixelGrid({ rows, scale }: { rows: string[]; scale: number }) {
   );
 }
 
+// yellow pixel badge showing star count with pixel octocat and direct repo link ( for now ig )
 function StarPlaque({ count, large }: { count: number | null; large?: boolean }) {
   return (
     <a
@@ -258,6 +263,7 @@ export function GithubStarLever({ mobile }: { mobile: boolean }) {
     };
   }, []);
 
+  // pulls the lever, plays the retro chiptune bip and flips the open state ( for now ig )
   function toggle() {
     retroSound.unlockAudio();
     retroSound.playBip(open ? "low" : "high");

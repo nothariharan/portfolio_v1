@@ -1,5 +1,9 @@
 "use client";
 
+// footer across all /portfolio pages with quick social icons and back-to-card button basically
+// nav row lets ppl jump between individual subpages using smooth route transitions
+// email trigger opens the slide-in contact envelope directly through context ( for now ig )
+
 import { SITE } from "./content";
 import { Container, GitHubIcon, LinkedInIcon, MailIcon } from "./ui";
 import { useContactCard } from "./contact-card";

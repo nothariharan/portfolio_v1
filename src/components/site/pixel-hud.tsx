@@ -1,5 +1,7 @@
 "use client";
 
+// pixel-art sprite hud buttons and plaques for the landing card controls basically
+
 import type { ReactNode } from "react";
 
 function HudSprite({ src, className }: { src: string; className: string }) {
@@ -24,6 +26,7 @@ type HudBtnProps = {
   children: ReactNode;
 };
 
+// base pixel-art hud button handling retro click tones, disabled states, and static plaque styling ( for now ig )
 function HudBtn({
   label,
   tone,
@@ -109,6 +112,7 @@ function SkipMark() {
   );
 }
 
+// pixel speaker icon drawing clean rect waves or a red muted cross directly in svg ( for now ig )
 function SpeakerMark({ muted }: { muted: boolean }) {
   return (
     <PixelIcon size={40}>
@@ -158,6 +162,7 @@ const KIRBY = [
   [0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0],
 ] as const;
 
+// handmade 16x16 pixel kirby sprite mapped from a 2d color matrix basically
 function KirbyMark() {
   return (
     <svg
@@ -297,6 +302,7 @@ export function HudColorDeck({
   );
 }
 
+// lcd traffic counter deck with kirby emblem showing real page visits ( for now ig )
 export function HudViewsDeck({
   label,
   value,

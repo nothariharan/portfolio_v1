@@ -1,5 +1,7 @@
 "use client";
 
+// bottom-left floating chiptune audio remote synced right with retroSound basically
+
 import { useCallback, useEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Pause, Play, SkipBack, SkipForward, Volume2, VolumeX, X } from "lucide-react";
@@ -7,8 +9,10 @@ import { retroSound, type MusicSnapshot } from "@/lib/sound";
 import { useCardMobileLayout } from "@/hooks/use-media-query";
 // contact opens the center note
 
+// local storage key so tucked phone player stays tucked across reloads ( for now ig )
 const TUCK_KEY= "hari-player-tuck";
 
+// fallback empty music snapshot so the whole widget doesnt flash undefined rn
 const EMPTY: MusicSnapshot ={
   track: "off",
   title: "nothing playing",
@@ -19,6 +23,7 @@ const EMPTY: MusicSnapshot ={
   duration: 0,
 };
 
+// mm:ss timestamp formatter with finite bounds so we dont get NaN:NaN on track swaps
 function formatTime(seconds: number) {
   if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
   const m= Math.floor(seconds / 60);
@@ -26,6 +31,7 @@ function formatTime(seconds: number) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
+// mini css animated equalizer bars so the player widget feels alive without heavy gif art
 function EqCover({ playing }: { playing: boolean }) {
   return (
     <div className= "relative flex h-12 w-12 shrink-0 items-end justify-center gap-[3px] overflow-hidden rounded-lg bg-gradient-to-b from-white/12 to-white/[0.03] px-2 pb-2 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]" aria-hidden>
@@ -53,6 +59,8 @@ function Hit({
   );
 }
 
+// main player component: tuck state, live snapshot sync, scrubber drag handling,
+// and the orb-vs-panel render. mobile gets the tuck chip, desktop always shows.
 export function NowPlaying() {
   const reduce =useReducedMotion();
   const mobile= useCardMobileLayout();

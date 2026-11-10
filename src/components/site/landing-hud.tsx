@@ -1,5 +1,7 @@
 "use client";
 
+// corner pixel hud controls for color palette, zoom level, and audio toggles basically
+
 import { motion } from "framer-motion";
 import {
   HudColorDeck,
@@ -24,6 +26,7 @@ function muteLabel(music: MusicSnapshot) {
   return music.muted ? "unmute music" : "mute music";
 }
 
+// top-right escape hatch for ppl who want to skip the whole trainer card and jump to /portfolio
 export function PortfolioEscape({ onOpen }: { onOpen: () => void }) {
   return (
     <motion.div
@@ -40,6 +43,7 @@ export function PortfolioEscape({ onOpen }: { onOpen: () => void }) {
   );
 }
 
+// bottom-left pixel plaque cycling through backdrop theme colors on tap ( for now ig )
 function ColorPlaque({ bg, onCycle }: { bg: BgTheme; onCycle: () => void }) {
   return (
     <div className="flex flex-col items-start gap-1">
@@ -51,6 +55,7 @@ function ColorPlaque({ bg, onCycle }: { bg: BgTheme; onCycle: () => void }) {
   );
 }
 
+// skip song trigger showing live music status text and advancing the track pool on tap ( for now ig )
 function SkipSongBtn({ music, onSkip }: { music: MusicSnapshot; onSkip: () => void }) {
   const line = musicLine(music);
   return (
@@ -86,6 +91,7 @@ export function LandingLeftHud({
   );
 }
 
+// bottom-right hud cluster for card zoom stepping and global audio mute toggle ( for now ig )
 export function LandingRightHud({
   music,
   scale,
