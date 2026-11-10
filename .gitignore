@@ -88,6 +88,14 @@ Thumbs.db
 /scripts/dismiss-chatgpt-modal.mjs
 /scripts/make-hacktoberfest-card.mjs
 
+# root level scratch art drops, one off reports and python cache — working files, not the site
+/*.gif
+/*.png
+/*.webp
+/*.jpg
+/SECURITY_AUDIT_REPORT.md
+/__pycache__/
+
 # noun project keys must never land in the repo (use env when running fetch scripts)
 .env.noun
 .env.local
